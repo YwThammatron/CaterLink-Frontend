@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronDown,CloudUpload } from "lucide-react";
 
-import NavbarRestCustom from "../components/ui/Navbar-rest-custom";
+import SidebarCustom from "../components/ui/Sidebar-custom";
 
 function WriteBlog() {
 
@@ -21,7 +21,7 @@ function WriteBlog() {
     <>
       {/*หน้าเขียน Blog*/}
       <div className="flex flex-row">
-          <NavbarRestCustom />
+          <SidebarCustom />
           {/* Container */}
           <div className="w-[1200px] h-auto bg-[#F9FAFB]">
             {/* Header Navigation */}
