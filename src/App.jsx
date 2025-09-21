@@ -2,14 +2,11 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ScrollToTop from "./components/ui/scrolltotop";
 import CustomerHomepage from "./pages/CustomerHomepage";
 import CustomerRestaurant from "./pages/CustomerRestaurant";
-<<<<<<< HEAD
 import WriteBlog from "./pages/WriteBlog";
-=======
 import Cardpage from "./pages/CartPage";
 import CustomerReservation from "./pages/CustomerReservation";
 import { Toaster } from "./components/ui/sonner";
 import ComparePage from "./pages/ComparePage";
->>>>>>> origin/dev
 
 function App() {
   return (
