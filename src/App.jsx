@@ -2,10 +2,10 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ScrollToTop from "./components/ui/scrolltotop";
 import CustomerHomepage from "./pages/CustomerHomepage";
 import CustomerRestaurant from "./pages/CustomerRestaurant";
+import Cardpage from "./pages/CartPage";
 import CustomerReservation from "./pages/CustomerReservation";
 import { Toaster } from "./components/ui/sonner";
 import ComparePage from "./pages/ComparePage";
-
 
 function App() {
   return (
@@ -14,8 +14,10 @@ function App() {
       <Routes>
         <Route path="/" element={<CustomerHomepage />} />
         <Route path="/customerrestaurant" element={<CustomerRestaurant />} />
+        <Route path="/cart" element={<Cardpage />} />
         <Route path="/customerreservation" element={<CustomerReservation />} />
         <Route path="/compare" element={<ComparePage />} />
+
         <Route
           path="/welcome"
           element={
