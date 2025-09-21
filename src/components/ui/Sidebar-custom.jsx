@@ -1,7 +1,7 @@
 import Logo from "./Logo";
 import { ChevronDown } from "lucide-react";
 
-function NavbarRestCustom(){
+function SidebarCustom(){
     return (
         <div className="w-[240px] h-auto bg-[#F9FAFB] shadow-[inset_-24px_0_60px_rgba(0,0,0,0.03)]">
             {/* Logo wrap */}
@@ -33,4 +33,4 @@ function NavbarRestCustom(){
     );
 }
 
-export default NavbarRestCustom;
+export default SidebarCustom;
