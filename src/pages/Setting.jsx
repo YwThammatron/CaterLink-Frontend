@@ -3,7 +3,7 @@ import { useState } from "react";
 
 import UserAccount from "../subpages/setting/UserAccount";
 
-import NavbarRestCustom from "../components/ui/Navbar-rest-custom";
+import SidebarCustom from "../components/ui/Sidebar-custom";
 
 const subpages = [
     {label: 'ข้อมูลบัญชีผู้ใช้',Content: <UserAccount />}
@@ -16,7 +16,7 @@ return (
     <>
       {/*หน้าการตั้งค่า*/}
       <div className="flex flex-row">
-          <NavbarRestCustom />
+          <SidebarCustom />
           {/* Container */}
           <div className="w-[1200px] h-auto bg-[#F9FAFB]">
             {/* Header Navigation */}
