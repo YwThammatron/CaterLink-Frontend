@@ -1,7 +1,8 @@
 import axios from "axios";
 import { useState } from "react";
 
-import NavbarRestCustom from "../components/ui/Navbar-rest-custom";
+import SidebarCustom from "../components/ui/Sidebar-custom";
+
 import CartPage from "./CartPage";
 
 const subpages = [
@@ -13,9 +14,9 @@ function PackageCategory() {
 
 return (
     <>
-      {/*หน้าการตั้งค่า*/}
+      {/*หน้าดู Package + สร้าง Package*/}
       <div className="flex flex-row">
-          <NavbarRestCustom />
+          <SidebarCustom />
           {/* Container */}
           <div className="w-[1200px] h-auto bg-[#F9FAFB]">
             {/* Header Navigation */}
