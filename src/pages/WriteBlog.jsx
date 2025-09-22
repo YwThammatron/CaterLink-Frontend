@@ -25,7 +25,7 @@ function WriteBlog() {
           {/* Container */}
           <div className="w-[1200px] h-auto bg-[#F9FAFB]">
             {/* Header Navigation */}
-            <div className="flex flex-col w-auto h-[63px] pl-[calc(50%-552px)] justify-center mb-[32px]">
+            <div className="flex flex-col w-auto h-[63px] pl-[calc(50%-552px)] justify-center border-b-[1px] border-[#EDEEF0] mb-[32px]">
                 <p className="text-[24px] font-[600]">สร้างบทความทั่วไป</p>
             </div>
 
@@ -34,37 +34,10 @@ function WriteBlog() {
                 {/* Table */}
                 <div className="grid justify-center items-center border-[1px] border-[#F2F4F7] rounded-[24px] w-[1104px] h-[934px] bg-white">
                     {/* Content (Blog Infomation) */}
-                    <div className="flex w-[1056px] h-[404px]">
+                    <div className="flex w-[1056px] h-[222px]">
                         <p className="text-[14px] font-[600] w-[312px]">ข้อมูลบทความ</p>
                         {/* Input Field */}
                         <form className="grid w-[512px] gap-[16px]">
-                            <div className="grid h-fit gap-[6px]">
-                                <label><p className="flex h-[21px] text-[14px]">ร้านค้า<p className="text-[#F78E1E] pl-[3px]">*</p></p></label>
-                                <div className="relative">
-                                    <select id="restaurants" className="appearance-none w-[512px] h-[48px] pl-[14px] pr-[42px] pt-[12px] pb-[12px] border-[1px] border-[#D0D5DD] rounded-md">
-                                        <option value="volvo">Volvo</option>
-                                        <option value="saab">Saab</option>
-                                        <option value="fiat">Fiat</option>
-                                        <option value="audi">Audi</option>
-                                    </select>
-                                    <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
-                                        <ChevronDown className="w-[20px] h-[20px] text-[#86878A]" />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="grid h-fit gap-[6px]">
-                                <label><p className="flex h-[21px] text-[14px]">วันที่เผยแพร่ <p className="text-[#F78E1E] pl-[3px]">*</p></p></label>
-                                <input 
-                                type="date"
-                                id="timestamp"
-                                value={Payload.timestamp}
-                                placeholder="เลือกข้อมูล"
-                                className="appearance-none h-[48px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md"
-                                />
-                            </div>
-
-
                             <div className="grid h-fit gap-[6px]">
                                 <label><p className="flex h-[21px] text-[14px]">หัวข้อบทความ <p className="text-[#F78E1E] pl-[3px]">*</p></p></label>
                                 <input 
@@ -169,7 +142,7 @@ function WriteBlog() {
                 {/* Action */}
                 <div className="flex items-center gap-[642px] w-[1104px] h-[48px]">
                     {/* Left */}
-                    <Button className="w-[150px] h-[48px] bg-transparent text-[#F78E1E] text-[16px] shadow-none hover:bg-transparent"><span className="hover:bg-transparent cursor-pointer transition">ยกเลิก</span></Button>
+                    <Button className="w-[150px] h-[48px] bg-transparent font-[500] text-[#BA1100] text-[16px] shadow-none hover:bg-transparent"><span className="hover:bg-transparent cursor-pointer transition">ยกเลิก</span></Button>
 
                     {/* Right */}
                     <div className="flex gap-[12px]">
