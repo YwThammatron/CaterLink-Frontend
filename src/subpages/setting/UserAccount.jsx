@@ -43,6 +43,14 @@ function UserAccount() {
         passwd:"dffdfdfdfdf"
     })
 
+    const handleChange = (e) => {
+        const { id,value } = e.target
+        setPayload((data) => ({
+            ...data,
+            [id]:value
+        }))
+    }
+
     return (
         <>
             {/* Table */}
@@ -53,43 +61,47 @@ function UserAccount() {
                         {/* Input Field */}
                         <form className="grid w-[512px] gap-[16px]">
                             <div className="grid h-fit gap-[6px]">
-                                <label><p className="flex h-[21px] text-[14px]">ชื่อบริษัทหรือร้านค้า</p></label>
+                                <label><p className="flex h-[21px] font-[500] text-[#6D6E71] text-[14px]">ชื่อบริษัทหรือร้านค้า</p></label>
                                 <input 
                                 type="text"
                                 id="restaurant"
                                 value={Payload.restaurant}
+                                onChange={handleChange}
                                 placeholder="กรุณาระบุ"
                                 className="h-[48px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md"
                                 />
                             </div>
 
                             <div className="grid h-fit gap-[6px]">
-                                <label><p className="flex h-[21px] text-[14px]">เลขประจำตัวผู้เสียภาษี</p></label>
+                                <label><p className="flex h-[21px] font-[500] text-[#6D6E71] text-[14px]">เลขประจำตัวผู้เสียภาษี</p></label>
                                 <input 
                                 type="text"
                                 id="vatid"
                                 value={Payload.vatid}
+                                onChange={handleChange}
                                 placeholder="กรุณาระบุ"
                                 className="h-[48px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md"
                                 />
                             </div>
 
                             <div className="grid h-fit gap-[6px]">
-                                <label><p className="flex h-[21px] text-[14px]">สถานที่ตั้งบริษัทหรือร้านค้า</p></label>
+                                <label><p className="flex h-[21px] font-[500] text-[#6D6E71] text-[14px]">สถานที่ตั้งบริษัทหรือร้านค้า</p></label>
                                 <textarea
                                 id="address"
                                 value={Payload.address}
+                                onChange={handleChange}
                                 placeholder="กรุณากรอกข้อมูล"
                                 className="resize-none h-[126px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md"
                                 />
                             </div>
 
                             <div className="grid h-fit gap-[6px]">
-                                <label><p className="flex h-[21px] text-[14px]">สถานที่รับจัด</p></label>
+                                <label><p className="flex h-[21px] font-[500] text-[#6D6E71] text-[14px]">สถานที่รับจัด</p></label>
                                 <input 
                                 type="text"
                                 id="zone"
                                 value={Payload.zone}
+                                onChange={handleChange}
                                 placeholder="กรุณาระบุ"
                                 className="h-[48px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md"
                                 />
@@ -111,7 +123,7 @@ function UserAccount() {
                         {/* Input Field */}
                         <form className="grid w-[512px] gap-[24px]">
                             <div className="grid gap-[6px]">
-                                <label><p className="flex h-[21px] text-[14px] text-[Colors/Tertiary/500] font-[500]">หมวดหมู่หลัก</p></label>
+                                <label><p className="flex h-[21px] font-[500] text-[#6D6E71] text-[14px]">หมวดหมู่หลัก</p></label>
                                 <div className="grid gap-[8px]">
                                     {mainctgs.map((content, index) => (
                                 <div className="flex items-center gap-[10px]">
@@ -133,7 +145,7 @@ function UserAccount() {
                             </div>
 
                             <div className="grid gap-[6px]">
-                                <label><p className="flex h-[21px] text-[14px] text-[Colors/Tertiary/500] font-[500]">ประเภทงานอีเวนต์</p></label>
+                                <label><p className="flex h-[21px] font-[500] text-[#6D6E71] text-[14px]">ประเภทงานอีเวนต์</p></label>
                                 <div className="flex gap-[6px] text-[12px] font-[500]">
                                     {eventtypes.map((content, index) => (
                                     <div
@@ -152,7 +164,7 @@ function UserAccount() {
                             </div>
 
                             <div className="grid gap-[6px]">
-                                <label><p className="flex h-[21px] text-[14px] text-[Colors/Tertiary/500] font-[500]">ประเภทอาหาร</p></label>
+                                <label><p className="flex h-[21px] font-[500] text-[#6D6E71] text-[14px]">ประเภทอาหาร</p></label>
                                 <div className="flex gap-[6px] text-[12px] font-[500]">
                                     {foodtypes.map((content, index) => (
                                     <div
@@ -182,23 +194,25 @@ function UserAccount() {
                         {/* Input Field */}
                         <form className="grid gap-[20px] w-[512px]">
                             <div className="grid h-fit gap-[6px]">
-                            <label><p className="text-[14px] text-[Colors/Tertiary/500] font-[500]">Username / Email</p></label>
+                            <label><p className="text-[14px] font-[500] text-[#6D6E71]">Username / อีเมล</p></label>
                             <input 
                                 type="email"
                                 id="email"
                                 value={Payload.email}
+                                onChange={handleChange}
                                 placeholder="เพิ่ม Email"
                                 className="pl-[14px] pr-[14px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md"
                             />
                             </div>
 
                             <div className="grid h-fit gap-[6px]">
-                                <label><p className="text-[14px] text-[Colors/Tertiary/500] font-[500]">Password</p></label>
+                                <label><p className="text-[14px] font-[500] text-[#6D6E71]">Password</p></label>
                                 <div className="relative">
                                     <input 
                                         type={Visible ? "text" : "password"}
                                         id="passwd"
                                         value={Payload.passwd}
+                                        onChange={handleChange}
                                         placeholder="Input password"
                                         className="w-[512px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     />
@@ -214,7 +228,7 @@ function UserAccount() {
                     {/* Right */}
                     <div className="flex gap-[12px] ml-[792px]">
                         <Button className="w-[150px] h-[48px] rounded-[10000px] text-[#F78E1E] text-[16px] bg-transparent border-[1px] border-[#F78E1E] hover:bg-transparent cursor-pointer transition">ยกเลิก</Button>
-                        <Button className="w-[150px] h-[48px] rounded-[10000px] text-[16px] bg-[#F78E1E] hover:cursor-pointer transition">สร้างร้านค้า</Button>
+                        <Button className="w-[150px] h-[48px] rounded-[10000px] text-[16px] bg-[#F78E1E] hover:cursor-pointer transition">บันทึกข้อมูล</Button>
                     </div>
                 </div>
         </>

@@ -20,7 +20,7 @@ return (
           {/* Container */}
           <div className="w-[1200px] h-auto bg-[#F9FAFB]">
             {/* Header Navigation */}
-            <div className="flex flex-col w-auto h-[63px] pl-[calc(50%-552px)] justify-center mb-[32px]">
+            <div className="flex flex-col w-auto h-[63px] pl-[calc(50%-552px)] border-b-[1px] border-[#EDEEF0] justify-center mb-[32px]">
                 <p className="text-[24px] font-[600]">จัดการร้านค้า</p>
             </div>
 
