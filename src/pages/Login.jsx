@@ -5,10 +5,18 @@ import { Button } from "@/components/ui/button";
 import Logo from "../components/ui/Logo";
 
 function Login() {
-  const loginData = useState({
+  const [Logindata,setLogindata] = useState({
     email:"",
     passwd:""
   })
+
+  const handleChange = (e) => {
+    const { id,value } = e.target
+    setLogindata((data) => ({
+      ...data,
+      [id]:value
+    }))
+  }
 
   const handleLogin = () => {
     //when click Login
@@ -32,23 +40,25 @@ function Login() {
               {/* form */}
               <form className="grid gap-[20px] mt-[32px] mb-[24px]">
                 <div className="grid h-fit gap-[6px]">
-                  <label><p>Email</p></label>
+                  <label className="flex"><p>อีเมล</p><p className="text-[#D92D20]">*</p></label>
                   <input 
                     type="email"
                     id="email"
-                    value={loginData.email}
-                    placeholder="เพิ่ม Email"
+                    value={Logindata.email}
+                    onChange={handleChange}
+                    placeholder="เพิ่มอีเมล"
                     className="pl-[14px] pr-[14px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md"
                   />
                 </div>
 
                 <div className="grid h-fit gap-[6px]">
-                  <label><p>Password</p></label>
+                  <label className="flex"><p>รหัสผ่าน</p><p className="text-[#D92D20]">*</p></label>
                   <input 
                     type="password"
                     id="passwd"
-                    value={loginData.passwd}
-                    placeholder="Input password"
+                    value={Logindata.passwd}
+                    placeholder="เพิ่มรหัสผ่าน"
+                    onChange={handleChange}
                     className="pl-[14px] pr-[14px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md"
                   />
                 </div>

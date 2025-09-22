@@ -5,15 +5,31 @@ import { Button } from "@/components/ui/button";
 import Logo from "../components/ui/Logo";
 
 function Signup() {
-  const regData = useState({
-    fname:"",
-    lname:"",
+  const [Regdata,setRegdata] = useState({
     email:"",
     passwd:""
   })
 
+  const handleChange = (e) => {
+    const { id,value } = e.target
+    setRegdata((data) => ({
+      ...data,
+      [id]:value
+    }))
+  }
+
   const handleReg = () => {
-    //when click register
+    //when click signup
+
+    //confirm password
+    const passwdcf = document.getElementById("passwdcf").value
+    console.log(passwdcf,Regdata.passwd)
+    if(Regdata.passwd != passwdcf && Regdata.email != "" && Regdata.passwd != ""){
+      window.alert("password confirm error")
+    }
+    else{
+      window.alert("complete")
+    }
   }
 
   return (
@@ -34,23 +50,35 @@ function Signup() {
               {/* form */}
               <form className="grid gap-[20px] mt-[32px] mb-[24px]">
                 <div className="grid h-fit gap-[6px]">
-                  <label><p>อีเมล*</p></label>
+                  <label className="flex"><p>อีเมล</p><p className="text-[#D92D20]">*</p></label>
                   <input 
                     type="email"
                     id="email"
-                    value={regData.email}
-                    placeholder="เพิ่ม Email"
+                    value={Regdata.email}
+                    onChange={handleChange}
+                    placeholder="เพิ่มอีเมล"
                     className="pl-[14px] pr-[14px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md"
                   />
                 </div>
 
                 <div className="grid h-fit gap-[6px]">
-                  <label><p>Password*</p></label>
+                  <label className="flex"><p>รหัสผ่าน</p><p className="text-[#D92D20]">*</p></label>
                   <input 
                     type="password"
                     id="passwd"
-                    value={regData.passwd}
-                    placeholder="Create a password"
+                    value={Regdata.passwd}
+                    placeholder="เพิ่มรหัสผ่าน"
+                    onChange={handleChange}
+                    className="pl-[14px] pr-[14px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md"
+                  />
+                </div>
+
+                <div className="grid h-fit gap-[6px]">
+                  <label className="flex"><p>ยืนยันรหัสผ่าน</p><p className="text-[#D92D20]">*</p></label>
+                  <input 
+                    type="password"
+                    id="passwdcf"
+                    placeholder="ยืนยันรหัสผ่าน"
                     className="pl-[14px] pr-[14px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md"
                   />
                 </div>
