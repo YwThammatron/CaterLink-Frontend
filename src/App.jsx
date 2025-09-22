@@ -18,7 +18,7 @@ function App() {
         <Route path="/cart" element={<Cardpage />} />
         <Route path="/customerreservation" element={<CustomerReservation />} />
         <Route path="/compare" element={<ComparePage />} />
-        <Route path="/package" element={<PackageCategory/>}/>
+        <Route path="/packagectg" element={<PackageCategory/>}/>
 
         <Route
           path="/welcome"

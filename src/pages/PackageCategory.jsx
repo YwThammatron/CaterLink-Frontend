@@ -4,7 +4,8 @@ import { useState } from "react";
 import SidebarCustom from "../components/ui/Sidebar-custom";
 
 const subpages = [
-    {label: 'ข้อมูลบัญชีผู้ใช้',Content: ""}
+    {label: 'แพคเกจ',content: ""},
+    {label: 'สร้างแพคเกจ',content: ""}
 ]
 
 function PackageCategory() {
@@ -18,8 +19,8 @@ return (
           {/* Container */}
           <div className="w-[1200px] h-auto bg-[#F9FAFB]">
             {/* Header Navigation */}
-            <div className="flex flex-col w-auto h-[63px] pl-[calc(50%-552px)] justify-center mb-[32px]">
-                <p className="text-[24px] font-[600]">จัดการร้านค้า</p>
+            <div className="flex flex-col w-auto h-[63px] pl-[calc(50%-552px)] justify-center border-b-[1px] border-[#EDEEF0] mb-[32px]">
+                <p className="text-[24px] font-[600]">จัดการแพคเกจ</p>
             </div>
 
             {/* Tab */}
@@ -41,7 +42,7 @@ return (
 
             {/* Content */}
             <div className="flex flex-col gap-[24px] w-auto h-[1145px] items-center mb-[32px]">
-                {subpages[Tabindex].Content}
+                {subpages[Tabindex].content}
             </div>
           </div>
       </div>
