@@ -7,8 +7,8 @@ import CreatePackage from "../subpages/PackageCategory/CreatePackage"
 import ViewPackage from "../subpages/PackageCategory/ViewPackage"
 
 const subpages = [
-    {label: 'แพคเกจ',content: <CreatePackage/>},
-    {label: 'สร้างแพคเกจ',content: <ViewPackage/>}
+    {label: 'แพคเกจ',content: <ViewPackage/>},
+    {label: 'สร้างแพคเกจ',content: <CreatePackage/>}
 ]
 
 function PackageCategory() {
@@ -43,10 +43,7 @@ return (
                     ))}
             </div>
 
-            {/* Content */}
-            <div className="flex flex-col gap-[24px] w-auto h-[1145px] items-center mb-[32px]">
-                {subpages[Tabindex].content}
-            </div>
+            {subpages[Tabindex].content}
           </div>
       </div>
     </>

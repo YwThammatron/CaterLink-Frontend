@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Eye,EyeOff,HandPlatter,Inbox,UtensilsCrossed } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { data } from "react-router-dom";
 
 
@@ -10,14 +10,19 @@ function CreatePackage() {
         name:"",
         category:"",
         remark:"",
-        set:[
+        sets:[
             {
                 id:1,
                 name:"",
+                price:"",
                 detail:""
             }
         ]
     })
+
+    const [Index,setIndex] = useState(2)
+    const [Tableheight, setTableheight] = useState(669)
+    const [Contentheight, setContentheight] = useState(282)
 
     const handleChange = (e) => {
         const {id,value} = e.target
@@ -27,99 +32,173 @@ function CreatePackage() {
         }))
     }
 
-    const [Index,setIndex] = useState(1)
+    const handleChangeSet = (e,index) => {
+        const {name,value} = e.target
+        setPayload((data) => ({
+            ...data,
+            sets: data.sets.map(set => set.id == index ? {...set , [name]:value} : set)
+        }))
+    }
+
+    const handleClickAdd = () => {
+        Payload.sets.push({
+            id:Index,
+            name:"",
+            price:"",
+            detail:""
+        })
+
+        setIndex(Index+1)
+        setTableheight(669 + (294*(Index-1)))
+        setContentheight(282 + (294*(Index-1)))
+    }
+
+    const handleChangeCancel = () => {
+        //When click cancel
+    }
+
+    const handleChangeSave = () => {
+        //when click save
+    }
 
     return (
         <>
-            {/* Table */}
-            <div className="grid justify-center items-center border-[1px] border-[#F2F4F7] rounded-[24px] w-[1104px] h-[1073px] bg-white">
-                {/* Content (Restaurant Infomation) */}
-                <div className="flex w-[1056px] h-[426px]">
-                    <p className="text-[14px] font-[600] w-[312px]">ข้อมูลแพตเกจ</p>
-                    {/* Input Field */}
-                    <form className="grid w-[512px] gap-[16px]">
-                        <div className="grid h-fit gap-[6px]">
-                            <label className="flex"><p className="h-[21px] font-[500] text-[#6D6E71] text-[14px]">ชื่อแพคเกจ</p><p className="text-[#D50A0A] pl-[3px]">*</p></label>
-                            <input 
-                            type="text"
-                            id="name"
-                            value={Payload.name}
-                            onChange={handleChange}
-                            placeholder="เพิ่มชื่อแพคเกจ"
-                            className="h-[48px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md"
-                            />
-                        </div>
-            
-                        <div className="grid h-fit gap-[6px]">
-                            <label><p className="flex h-[21px] font-[500] text-[#6D6E71] text-[14px]">เลขประจำตัวผู้เสียภาษี</p></label>
-                            <input 
-                            type="text"
-                            id="vatid"
-                            value={Payload.vatid}
-                            onChange={handleChange}
-                            placeholder="กรุณาระบุ"
-                            className="h-[48px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md"
-                            />
-                        </div>
-            
-                        <div className="grid h-fit gap-[6px]">
-                            <label><p className="flex h-[21px] font-[500] text-[#6D6E71] text-[14px]">สถานที่ตั้งบริษัทหรือร้านค้า</p></label>
-                            <textarea
-                            id="address"
-                            value={Payload.address}
-                            onChange={handleChange}
-                            placeholder="กรุณากรอกข้อมูล"
-                            className="resize-none h-[126px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md"
-                            />
-                        </div>
-                                        
-                    </form>
-                </div>
-                                
-                {/* Divider */}
-                <div className="w-[1056px] h-[0.5px] bg-[#EAECF0]"></div>
-            
-                {/* Content (Blog Detail) */}
-                <div className="flex w-[1056px] h-[166px]">
-                    <p className="text-[14px] w-[312px] font-[600]">ข้อมูลผู้ใช้งาน</p>
-                    {/* Input Field */}
-                    <form className="grid gap-[20px] w-[512px]">
-                        <div className="grid h-fit gap-[6px]">
-                            <label><p className="text-[14px] font-[500] text-[#6D6E71]">Username / อีเมล</p></label>
-                            <input 
-                            type="email"
-                            id="email"
-                            value={Payload.email}
-                            onChange={handleChange}
-                            placeholder="เพิ่ม Email"
-                            className="pl-[14px] pr-[14px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md"
-                            />
-                        </div>
-            
-                        <div className="grid h-fit gap-[6px]">
-                            <label><p className="text-[14px] font-[500] text-[#6D6E71]">Password</p></label>
-                            <div className="relative">
+            {/* Content */}
+            <div className="flex flex-col gap-[24px] w-auto h-auto items-center mb-[32px]">
+                {/* Table */}
+                <div style={{ height: Tableheight }} className="grid justify-center items-center border-[1px] border-[#F2F4F7] rounded-[24px] w-[1104px] bg-white">
+                    {/* Content (Package Infomation) */}
+                    <div className="flex w-[1056px] h-[261px]">
+                        <p className="text-[14px] font-[600] w-[312px]">ข้อมูลแพคเกจ</p>
+                        {/* Input Field */}
+                        <form className="grid w-[512px] gap-[16px]">
+                            <div className="grid h-fit gap-[6px]">
+                                <label className="flex h-[20px]"><p className="h-[21px] font-[500] text-[#6D6E71] text-[14px]">ชื่อแพคเกจ</p><p className="text-[#D50A0A] pl-[3px]">*</p></label>
                                 <input 
-                                type={Visible ? "text" : "password"}
-                                id="passwd"
-                                value={Payload.passwd}
+                                type="text"
+                                id="name"
+                                value={Payload.name}
                                 onChange={handleChange}
-                                placeholder="Input password"
-                                className="w-[512px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="เพิ่มชื่อแพคเกจ"
+                                className="h-[36px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] text-[14px] border-[1px] border-[#D0D5DD] rounded-md"
                                 />
-                                {Visible ? <Eye className="absolute text-[#F78E1E] w-[16px] h-[16px] right-[14px] top-1/2 -translate-y-1/2 hover:cursor-pointer" onClick={() => setVisible(!Visible)}/> : <EyeOff className="absolute text-[#F78E1E] w-[16px] h-[16px] right-[14px] top-1/2 -translate-y-1/2 hover:cursor-pointer" onClick={() => setVisible(!Visible)}/>}
                             </div>
+                
+                            <div className="grid h-fit gap-[6px]">
+                                <label className="flex h-[20px]"><p className="h-[21px] font-[500] text-[#6D6E71] text-[14px]">หมวดหมู่แพคเกจ</p><p className="text-[#D50A0A] pl-[3px]">*</p></label>
+                                <div className="relative">
+                                    <select 
+                                    id="category" 
+                                    className="appearance-none w-[512px] h-[40px] pl-[14px] pr-[42px] pt-[10px] pb-[10px] text-[14px] border-[1px] border-[#D0D5DD] rounded-md"
+                                    value={Payload.category}
+                                    onChange={handleChange}
+                                    >
+                                        <option value="volvo">Volvo</option>
+                                        <option value="saab">Saab</option>
+                                        <option value="fiat">Fiat</option>
+                                        <option value="audi">Audi</option>
+                                    </select>
+                                    <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
+                                        <ChevronDown className="w-[20px] h-[20px] text-[#86878A]" />
+                                    </div>
+                                </div>
+                            </div>
+                
+                            <div className="grid h-fit gap-[6px]">
+                                <label className="flex h-[20px]"><p className="h-[21px] font-[500] text-[#6D6E71] text-[14px]">หมายเหตุ</p><p className="text-[#D50A0A] pl-[3px]">*</p></label>
+                                <textarea
+                                id="remark"
+                                value={Payload.remark}
+                                onChange={handleChange}
+                                placeholder="เพิ่มหมายเหตุ"
+                                className="resize-none h-[75px] pl-[14px] pr-[14px] pt-[12px] pb-[12px] text-[14px] border-[1px] border-[#D0D5DD] rounded-md"
+                                />
+                            </div>
+                                            
+                        </form>
+                    </div>
+                                    
+                    {/* Divider */}
+                    <div className="w-[1056px] h-[0.5px] bg-[#EAECF0]"></div>
+                
+                    {/* Content (Package Set Infomation) */}
+                    <div style={{ height: Contentheight }} className="flex w-[1056px]">
+                        <div className="grid w-[312px] h-[40px]">
+                            <p className="text-[14px] font-[600]">ชุดอาหาร</p>
+                            <p className="text-[14px]">ถ้ามี</p>
                         </div>
-                    </form>
+                        {/* Input Field */}
+                        <form className="grid gap-[20px] w-[512px]">
+                            {Payload.sets.map((content, index) => (
+                            <div key={index} className="grid gap-[16px]">
+                                <p className="text-[14px] font-[500] text-black">ชุดอาหารที่ {content.id}</p>
+
+                                <div className="grid h-fit gap-[6px]">
+                                    <label><p className="text-[14px] font-[500] text-[#6D6E71]">ชื่อชุดอาหาร</p></label>
+                                    <input 
+                                    type="text"
+                                    name="name"
+                                    id={"name"+content.id}
+                                    onChange={(event) => handleChangeSet(event,content.id)}
+                                    placeholder="เพิ่มชื่อชุดอาหาร"
+                                    className="h-[36px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] text-[14px] border-[1px] border-[#D0D5DD] rounded-md"
+                                    />
+                                </div>
+
+                                <div className="grid h-fit gap-[6px]">
+                                    <label><p className="text-[14px] font-[500] text-[#6D6E71]">ราคา</p></label>
+                                    <input 
+                                    type="number"
+                                    name="price"
+                                    id={"price"+content.id}
+                                    onChange={(event) => handleChangeSet(event,content.id)}
+                                    placeholder="เพิ่มตัวเลข"
+                                    className="h-[36px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] text-[14px] border-[1px] border-[#D0D5DD] rounded-md"
+                                    />
+                                </div>
+
+                                <div className="grid h-fit gap-[6px]">
+                                    <label><p className="text-[14px] font-[500] text-[#6D6E71]">คำอธิบาย</p></label>
+                                    <textarea 
+                                    name="detail"
+                                    id={"detail"+content.id}
+                                    onChange={(event) => handleChangeSet(event,content.id)}
+                                    placeholder="เพิ่มคำอธิบาย"
+                                    className="resize-none h-[44px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] text-[14px] border-[1px] border-[#D0D5DD] rounded-md"
+                                    />
+                                </div>
+                            </div>
+                            ))}
+                        </form>
+
+                        {/* Package Set Add Button */}
+                        <Button 
+                        className="w-[150px] h-[48px] ml-[32px] rounded-[10000px] text-[#F78E1E] text-[16px] bg-transparent border-[1px] border-[#F78E1E] hover:bg-transparent cursor-pointer transition"
+                        onClick={handleClickAdd}
+                        >
+                            เพิ่มชุดอาหาร
+                        </Button>
+                    </div>
                 </div>
-            </div>
-            
-            {/* Action */}
-            <div className="flex items-center gap-[642px] w-[1104px] h-[48px]">
-                {/* Right */}
-                <div className="flex gap-[12px] ml-[792px]">
-                    <Button className="w-[150px] h-[48px] rounded-[10000px] text-[#F78E1E] text-[16px] bg-transparent border-[1px] border-[#F78E1E] hover:bg-transparent cursor-pointer transition">ยกเลิก</Button>
-                    <Button className="w-[150px] h-[48px] rounded-[10000px] text-[16px] bg-[#F78E1E] hover:cursor-pointer transition">บันทึกข้อมูล</Button>
+                
+                {/* Action */}
+                <div className="flex items-center gap-[642px] w-[1104px] h-[48px]">
+                    {/* Right */}
+                    <div className="flex gap-[12px] ml-[792px]">
+                        <Button
+                        className="w-[150px] h-[48px] rounded-[10000px] text-[#F78E1E] text-[16px] bg-transparent border-[1px] border-[#F78E1E] hover:bg-transparent cursor-pointer transition"
+                        onClick={handleChangeCancel}
+                        >
+                            ยกเลิก
+                        </Button>
+                        
+                        <Button 
+                        className="w-[150px] h-[48px] rounded-[10000px] text-[16px] bg-[#F78E1E] hover:cursor-pointer transition"
+                        onClick={handleChangeSave}
+                        >
+                            บันทึกข้อมูล
+                        </Button>
+                    </div>
                 </div>
             </div>
         </>
