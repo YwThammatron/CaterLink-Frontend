@@ -7,8 +7,8 @@ import CreatePackage from "../subpages/PackageCategory/CreatePackage"
 import ViewPackage from "../subpages/PackageCategory/ViewPackage"
 
 const subpages = [
-    {label: 'แพคเกจ',content: ""},
-    {label: 'สร้างแพคเกจ',content: ""}
+    {label: 'แพคเกจ',content: <CreatePackage/>},
+    {label: 'สร้างแพคเกจ',content: <ViewPackage/>}
 ]
 
 function PackageCategory() {
