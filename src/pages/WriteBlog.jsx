@@ -17,6 +17,14 @@ function WriteBlog() {
     detail:""
   })
 
+  const handleChange = (e) => {
+    const { id,value } = e.target
+    setPayload((data) => ({
+      ...data,
+      [id]:value
+    }))
+  }
+
   return (
     <>
       {/*หน้าเขียน Blog*/}
@@ -44,6 +52,7 @@ function WriteBlog() {
                                 type="text"
                                 id="title"
                                 value={Payload.title}
+                                onChange={handleChange}
                                 placeholder="กรุณาระบุ"
                                 className="h-[48px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md"
                                 />
@@ -57,6 +66,7 @@ function WriteBlog() {
                                         accept=".jpg,.jpeg,.png"
                                         id="img"
                                         value={Payload.imgurl}
+                                        onChange={handleChange}
                                         className="hidden w-[512px] h-[104px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md"
                                     />
                                     <label
@@ -128,6 +138,8 @@ function WriteBlog() {
                                 <label><p className="flex h-[21px] text-[14px]">เนื้อหา <p className="text-[#F78E1E] pl-[4px]">*</p></p></label>
                                 <textarea
                                 id="detail"
+                                value={Payload.detail}
+                                onChange={handleChange}
                                 placeholder="กรุณากรอกข้อมูล"
                                 className="resize-none h-[126px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md"
                                 />
