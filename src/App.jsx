@@ -6,6 +6,7 @@ import Cardpage from "./pages/CartPage";
 import CustomerReservation from "./pages/CustomerReservation";
 import { Toaster } from "./components/ui/sonner";
 import ComparePage from "./pages/ComparePage";
+import PackageCategory from "./pages/PackageCategory";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/cart" element={<Cardpage />} />
         <Route path="/customerreservation" element={<CustomerReservation />} />
         <Route path="/compare" element={<ComparePage />} />
+        <Route path="/package" element={<PackageCategory/>}/>
 
         <Route
           path="/welcome"

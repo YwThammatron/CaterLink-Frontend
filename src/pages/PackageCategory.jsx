@@ -3,10 +3,8 @@ import { useState } from "react";
 
 import SidebarCustom from "../components/ui/Sidebar-custom";
 
-import CartPage from "./CartPage";
-
 const subpages = [
-    {label: 'ข้อมูลบัญชีผู้ใช้',Content: <CartPage />}
+    {label: 'ข้อมูลบัญชีผู้ใช้',Content: ""}
 ]
 
 function PackageCategory() {
