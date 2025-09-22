@@ -47,7 +47,7 @@ function WriteBlog() {
                         {/* Input Field */}
                         <form className="grid w-[512px] gap-[16px]">
                             <div className="grid h-fit gap-[6px]">
-                                <label><p className="flex h-[21px] text-[14px]">หัวข้อบทความ <p className="text-[#F78E1E] pl-[3px]">*</p></p></label>
+                                <label><p className="flex h-[21px] font-[500] text-[#6D6E71] text-[14px]">หัวข้อบทความ <p className="text-[#F78E1E] pl-[3px]">*</p></p></label>
                                 <input 
                                 type="text"
                                 id="title"
@@ -59,7 +59,7 @@ function WriteBlog() {
                             </div>
 
                             <div className="grid h-fit gap-[6px]">
-                                <label><p className="flex h-[21px] text-[14px]">รูปปกบทความ <p className="text-[#F78E1E] pl-[3px]">*</p></p></label>
+                                <label><p className="flex h-[21px] font-[500] text-[#6D6E71] text-[14px]">รูปปกบทความ <p className="text-[#F78E1E] pl-[3px]">*</p></p></label>
                                 <div className="relative">
                                      <input 
                                         type="file"
@@ -97,7 +97,7 @@ function WriteBlog() {
                         </div>
                         {/* Input Field */}
                         <form className="grid w-[512px] gap-[6px]">
-                            <label><p className="flex h-[21px] text-[14px]">หมวดหมู่หลัก<p className="text-[#F78E1E] pl-[4px]">*</p></p></label>
+                            <label><p className="flex h-[21px] font-[500] text-[#6D6E71] text-[14px]">หมวดหมู่หลัก<p className="text-[#F78E1E] pl-[4px]">*</p></p></label>
                             <div className="relative">
                                 <select id="category" className="appearance-none w-[512px] h-[48px] pl-[14px] pr-[42px] pt-[12px] pb-[12px] border-[1px] border-[#D0D5DD] rounded-md">
                                     <option value="volvo">Volvo</option>
@@ -110,7 +110,7 @@ function WriteBlog() {
                                 </div>
                             </div>
 
-                            <label><p className="flex h-[21px] text-[14px]">ประเภทงานอีเวนต์ <p className="text-[#F78E1E] pl-[4px]">*</p></p></label>
+                            <label><p className="flex h-[21px] font-[500] text-[#6D6E71] text-[14px]">ประเภทงานอีเวนต์ <p className="text-[#F78E1E] pl-[4px]">*</p></p></label>
                             <div className="relative">
                                 <select id="type" className="appearance-none w-[512px] h-[48px] pl-[14px] pr-[42px] pt-[12px] pb-[12px] border-[1px] border-[#D0D5DD] rounded-md">
                                     <option value="volvo">Volvo</option>
@@ -135,7 +135,7 @@ function WriteBlog() {
                         {/* Input Field */}
                         <form className="grid w-[512px]">
                             <div className="grid h-fit gap-[6px]">
-                                <label><p className="flex h-[21px] text-[14px]">เนื้อหา <p className="text-[#F78E1E] pl-[4px]">*</p></p></label>
+                                <label><p className="flex h-[21px] font-[500] text-[#6D6E71] text-[14px]">เนื้อหา <p className="text-[#F78E1E] pl-[4px]">*</p></p></label>
                                 <textarea
                                 id="detail"
                                 value={Payload.detail}
