@@ -19,7 +19,7 @@ function Login() {
       {/*หน้าลงทะเบียน*/}
       <div className="flex justify-center">
           {/* Container */}
-          <div className="flex justify-center w-[1280px] h-[602px] mt-[96px]">
+          <div className="flex justify-center items-center w-[720px] h-[864px] mb-[96px]">
             {/* Content (outer) */}
             <div className="w-[360px] h-[602px]">
 
@@ -63,6 +63,15 @@ function Login() {
                 <a href="./signup"><p className="font-bold text-[#FF8A00]">สร้างบัญชีใหม่</p></a>
               </div>
             </div>
+          </div>
+
+          {/* Section (Image) */}
+          <div className="w-[720px] h-[960px]">
+            <img 
+              src="https://plus.unsplash.com/premium_photo-1683707120444-7318975c7ba6?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              alt="login-img"
+              className="object-cover w-[720px] h-[960px]"
+            />
           </div>
       </div>
     </>

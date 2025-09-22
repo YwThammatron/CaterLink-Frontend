@@ -21,7 +21,7 @@ function Signup() {
       {/*หน้าลงทะเบียน*/}
       <div className="flex justify-center">
           {/* Container */}
-          <div className="flex justify-center w-[1280px] h-[602px] mt-[96px]">
+          <div className="flex justify-center items-center w-[720px] h-[864px] mb-[96px]">
             {/* Content (outer) */}
             <div className="w-[360px] h-[602px]">
 
@@ -34,28 +34,7 @@ function Signup() {
               {/* form */}
               <form className="grid gap-[20px] mt-[32px] mb-[24px]">
                 <div className="grid h-fit gap-[6px]">
-                  <label><p>ชื่อ*</p></label>
-                  <input 
-                    type="text"
-                    id="fname"
-                    value={regData.fname}
-                    placeholder="เพิ่มชื่อ"
-                    className="pl-[14px] pr-[14px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md"
-                  />
-                </div>
-
-                <div className="grid h-fit gap-[6px]">
-                  <label><p>นามสกุล*</p></label>
-                  <input 
-                    type="text"
-                    id="lname"
-                    value={regData.lname}
-                    placeholder="เพิ่มนามสกุล"
-                    className="pl-[14px] pr-[14px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md"
-                  />
-                </div>
-                <div className="grid h-fit gap-[6px]">
-                  <label><p>Email*</p></label>
+                  <label><p>อีเมล*</p></label>
                   <input 
                     type="email"
                     id="email"
@@ -86,6 +65,15 @@ function Signup() {
                 <a href="./login"><p className="font-bold text-[#FF8A00]">เข้าสู่ระบบ</p></a>
               </div>
             </div>
+          </div>
+
+          {/* Section (Image) */}
+          <div className="w-[720px] h-[960px]">
+            <img 
+              src="https://images.unsplash.com/photo-1592868859049-dfdcd6c07c29?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              alt="signup-img"
+              className="object-cover w-[720px] h-[960px]"
+            />
           </div>
       </div>
     </>
