@@ -52,6 +52,10 @@ function NavbarCustom() {
     navigate("/cart");
   };
 
+  const goToPlanning = () => {
+    navigate("/planning");
+  };
+
   return (
     <nav className="w-full h-fit flex flex-col py-5 gap-4 bg-white shadow-[0_2px_8px_0px_#0000001A]">
       {/* Top */}
@@ -158,7 +162,10 @@ function NavbarCustom() {
           <p className={getNavItemClasses("/compare")}>เปรียบเทียบ</p>
         </button>
         <button className="cursor-pointer hover:scale-105 transition-transform duration-200">
-          <p className="text-[#475467] font-semibold hover:bg-gradient-to-r hover:from-[#FF8A00] hover:to-[#E9580A] hover:bg-clip-text hover:text-transparent transition-all duration-200">
+          <p
+            className="text-[#475467] font-semibold hover:bg-gradient-to-r hover:from-[#FF8A00] hover:to-[#E9580A] hover:bg-clip-text hover:text-transparent transition-all duration-200"
+            onClick={goToPlanning}
+          >
             วางแผนงานเลี้ยง
           </p>
         </button>

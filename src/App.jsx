@@ -8,6 +8,7 @@ import CustomerReservation from "./pages/CustomerReservation";
 import ComparePage from "./pages/ComparePage";
 import Payment from "./pages/Payment";
 import ViewAllBlog from "./pages/ViewAllBlog";
+import PlanningPage from "./pages/PlanningPage";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/compare" element={<ComparePage />} />
         <Route path="/payment" element={<Payment />} />
         <Route path="/allblog" element={<ViewAllBlog />} />
+        <Route path="/planning" element={<PlanningPage />} />
         <Route
           path="/welcome"
           element={
