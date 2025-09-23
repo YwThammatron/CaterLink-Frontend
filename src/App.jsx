@@ -3,10 +3,11 @@ import { Toaster } from "./components/ui/sonner";
 import ScrollToTop from "./components/ui/scrolltotop";
 import CustomerHomepage from "./pages/CustomerHomepage";
 import CustomerRestaurant from "./pages/CustomerRestaurant";
-import Cardpage from "./pages/CartPage";
+import Cartpage from "./pages/CartPage";
 import CustomerReservation from "./pages/CustomerReservation";
 import ComparePage from "./pages/ComparePage";
 import Payment from "./pages/Payment";
+import ViewAllBlog from "./pages/ViewAllBlog";
 
 function App() {
   return (
@@ -15,10 +16,11 @@ function App() {
       <Routes>
         <Route path="/" element={<CustomerHomepage />} />
         <Route path="/customerrestaurant" element={<CustomerRestaurant />} />
-        <Route path="/cart" element={<Cardpage />} />
+        <Route path="/cart" element={<Cartpage />} />
         <Route path="/customerreservation" element={<CustomerReservation />} />
         <Route path="/compare" element={<ComparePage />} />
         <Route path="/payment" element={<Payment />} />
+        <Route path="/allblog" element={<ViewAllBlog />} />
         <Route
           path="/welcome"
           element={

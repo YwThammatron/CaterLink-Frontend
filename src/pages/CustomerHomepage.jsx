@@ -19,6 +19,18 @@ function CustomerHomepage() {
     navigate("/customerrestaurant");
   };
 
+  const goToCompare = () => {
+    navigate("/compare");
+  };
+
+  const goToBlog = () => {
+    navigate("/allblog");
+  };
+
+  const goToPackage = () => {
+    navigate("/customerreservation");
+  };
+
   return (
     <>
       <NavbarCustom />
@@ -142,7 +154,10 @@ function CustomerHomepage() {
         <div className="flex flex-col gap-4 py-10 ">
           <div className="flex justify-between">
             <h3>Top 5 ร้านขายดี</h3>
-            <div className="flex gap-2 items-center">
+            <div
+              className="flex gap-2 items-center cursor-pointer"
+              onClick={goToRestaurant}
+            >
               <p className="font-bold text-gradient">ดูทั้งหมด</p>
               <ArrowRight className="text-[#EB5B0A]" />
             </div>
@@ -177,7 +192,10 @@ function CustomerHomepage() {
                   ทำให้วางใจได้ว่าตัดสินใจเลือกสิ่งที่ตรงใจที่สุด
                 </p>
               </div>
-              <Button className="bg-gradient px-8 py-3 text-lg font-bold w-fit h-fit">
+              <Button
+                className="bg-gradient px-8 py-3 text-lg font-bold w-fit h-fit cursor-pointer"
+                onClick={goToCompare}
+              >
                 เปรียบเทียบแพคเกจ
               </Button>
             </div>
@@ -190,7 +208,10 @@ function CustomerHomepage() {
         <div className="flex flex-col gap-4 px-32 py-10">
           <div className="flex justify-between items-center">
             <h3>ร้านแนะนำจาก CaterLink </h3>
-            <div className="flex gap-2 items-center">
+            <div
+              className="flex gap-2 items-center cursor-pointer"
+              onClick={goToRestaurant}
+            >
               <p className="font-bold text-gradient">ดูทั้งหมด</p>
               <ArrowRight className="text-[#EB5B0A]" />
             </div>
@@ -211,7 +232,10 @@ function CustomerHomepage() {
         <div className="flex flex-col gap-4 px-32 py-10">
           <div className="flex justify-between items-center">
             <h3>แพคเกจแนะนำจาก CaterLink </h3>
-            <div className="flex gap-2 items-center">
+            <div
+              className="flex gap-2 items-center cursor-pointer"
+              onClick={goToPackage}
+            >
               <p className="font-bold text-gradient">ดูทั้งหมด</p>
               <ArrowRight className="text-[#EB5B0A]" />
             </div>
@@ -243,7 +267,10 @@ function CustomerHomepage() {
         <div className="flex flex-col gap-4 py-10">
           <div className="flex justify-between items-center">
             <h3>บทความล่าสุด</h3>
-            <div className="flex gap-2 items-center">
+            <div
+              className="flex gap-2 items-center cursor-pointer"
+              onClick={goToBlog}
+            >
               <p className="font-bold text-gradient">ดูทั้งหมด</p>
               <ArrowRight className="text-[#EB5B0A]" />
             </div>
