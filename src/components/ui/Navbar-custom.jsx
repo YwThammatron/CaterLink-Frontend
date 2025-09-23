@@ -161,13 +161,11 @@ function NavbarCustom() {
         >
           <p className={getNavItemClasses("/compare")}>เปรียบเทียบ</p>
         </button>
-        <button className="cursor-pointer hover:scale-105 transition-transform duration-200">
-          <p
-            className="text-[#475467] font-semibold hover:bg-gradient-to-r hover:from-[#FF8A00] hover:to-[#E9580A] hover:bg-clip-text hover:text-transparent transition-all duration-200"
-            onClick={goToPlanning}
-          >
-            วางแผนงานเลี้ยง
-          </p>
+        <button
+          className="cursor-pointer hover:scale-105 transition-transform duration-200"
+          onClick={goToPlanning}
+        >
+          <p className={getNavItemClasses("/planning")}>วางแผนงานเลี้ยง</p>
         </button>
         <button
           onClick={goToBlog}
