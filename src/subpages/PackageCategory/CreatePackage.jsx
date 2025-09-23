@@ -9,7 +9,6 @@ function CreatePackage() {
     const [Payload,setPayload] = useState({
         name:"",
         category:"",
-        remark:"",
         sets:[
             {
                 id:1,
@@ -21,8 +20,8 @@ function CreatePackage() {
     })
 
     const [Index,setIndex] = useState(2)
-    const [Tableheight, setTableheight] = useState(669)
-    const [Contentheight, setContentheight] = useState(282)
+    const [Tableheight, setTableheight] = useState(474)
+    const [Contentheight, setContentheight] = useState(184)
 
     const handleChange = (e) => {
         const {id,value} = e.target
@@ -49,8 +48,8 @@ function CreatePackage() {
         })
 
         setIndex(Index+1)
-        setTableheight(669 + (294*(Index-1)))
-        setContentheight(282 + (294*(Index-1)))
+        setTableheight(474 + (216*(Index-1)))
+        setContentheight(184 + (216*(Index-1)))
     }
 
     const handleChangeCancel = () => {
@@ -68,7 +67,7 @@ function CreatePackage() {
                 {/* Table */}
                 <div style={{ height: Tableheight }} className="grid justify-center items-center border-[1px] border-[#F2F4F7] rounded-[24px] w-[1104px] bg-white">
                     {/* Content (Package Infomation) */}
-                    <div className="flex w-[1056px] h-[261px]">
+                    <div className="flex w-[1056px] h-[144px]">
                         <p className="text-[14px] font-[600] w-[312px]">ข้อมูลแพคเกจ</p>
                         {/* Input Field */}
                         <form className="grid w-[512px] gap-[16px]">
@@ -102,19 +101,7 @@ function CreatePackage() {
                                         <ChevronDown className="w-[20px] h-[20px] text-[#86878A]" />
                                     </div>
                                 </div>
-                            </div>
-                
-                            <div className="grid h-fit gap-[6px]">
-                                <label className="flex h-[20px]"><p className="h-[21px] font-[500] text-[#6D6E71] text-[14px]">หมายเหตุ</p><p className="text-[#D50A0A] pl-[3px]">*</p></label>
-                                <textarea
-                                id="remark"
-                                value={Payload.remark}
-                                onChange={handleChange}
-                                placeholder="เพิ่มหมายเหตุ"
-                                className="resize-none h-[75px] pl-[14px] pr-[14px] pt-[12px] pb-[12px] text-[14px] border-[1px] border-[#D0D5DD] rounded-md"
-                                />
-                            </div>
-                                            
+                            </div>          
                         </form>
                     </div>
                                     
@@ -122,49 +109,51 @@ function CreatePackage() {
                     <div className="w-[1056px] h-[0.5px] bg-[#EAECF0]"></div>
                 
                     {/* Content (Package Set Infomation) */}
-                    <div style={{ height: Contentheight }} className="flex w-[1056px]">
+                    <div style={{ height: Contentheight }} className="flex">
                         <div className="grid w-[312px] h-[40px]">
                             <p className="text-[14px] font-[600]">ชุดอาหาร</p>
-                            <p className="text-[14px]">ถ้ามี</p>
+                            <p className="text-[14px]">ต้องมีอย่างน้อย 1 ชุดอาหาร</p>
                         </div>
                         {/* Input Field */}
                         <form className="grid gap-[20px] w-[512px]">
                             {Payload.sets.map((content, index) => (
                             <div key={index} className="grid gap-[16px]">
                                 <p className="text-[14px] font-[500] text-black">ชุดอาหารที่ {content.id}</p>
+                                
+                                <div className="flex gap-[16px]">
+                                    <div className="grid w-[248px] h-fit gap-[6px]">
+                                        <label><p className="h-[20px] text-[14px] font-[500] text-[#6D6E71]">ชื่อชุดอาหาร</p></label>
+                                        <input 
+                                        type="text"
+                                        name="name"
+                                        id={"name"+content.id}
+                                        onChange={(event) => handleChangeSet(event,content.id)}
+                                        placeholder="เพิ่มชื่อชุดอาหาร"
+                                        className="h-[36px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] text-[14px] border-[1px] border-[#D0D5DD] rounded-md"
+                                        />
+                                    </div>
 
-                                <div className="grid h-fit gap-[6px]">
-                                    <label><p className="text-[14px] font-[500] text-[#6D6E71]">ชื่อชุดอาหาร</p></label>
-                                    <input 
-                                    type="text"
-                                    name="name"
-                                    id={"name"+content.id}
-                                    onChange={(event) => handleChangeSet(event,content.id)}
-                                    placeholder="เพิ่มชื่อชุดอาหาร"
-                                    className="h-[36px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] text-[14px] border-[1px] border-[#D0D5DD] rounded-md"
-                                    />
+                                    <div className="grid w-[248px] h-fit gap-[6px]">
+                                        <label><p className="h-[20px] text-[14px] font-[500] text-[#6D6E71]">ราคา</p></label>
+                                        <input 
+                                        type="number"
+                                        name="price"
+                                        id={"price"+content.id}
+                                        onChange={(event) => handleChangeSet(event,content.id)}
+                                        placeholder="เพิ่มตัวเลข"
+                                        className="h-[36px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] text-[14px] border-[1px] border-[#D0D5DD] rounded-md"
+                                        />
+                                    </div>
                                 </div>
 
                                 <div className="grid h-fit gap-[6px]">
-                                    <label><p className="text-[14px] font-[500] text-[#6D6E71]">ราคา</p></label>
-                                    <input 
-                                    type="number"
-                                    name="price"
-                                    id={"price"+content.id}
-                                    onChange={(event) => handleChangeSet(event,content.id)}
-                                    placeholder="เพิ่มตัวเลข"
-                                    className="h-[36px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] text-[14px] border-[1px] border-[#D0D5DD] rounded-md"
-                                    />
-                                </div>
-
-                                <div className="grid h-fit gap-[6px]">
-                                    <label><p className="text-[14px] font-[500] text-[#6D6E71]">คำอธิบาย</p></label>
+                                    <label><p className="h-[20px] text-[14px] font-[500] text-[#6D6E71]">คำอธิบาย</p></label>
                                     <textarea 
                                     name="detail"
                                     id={"detail"+content.id}
                                     onChange={(event) => handleChangeSet(event,content.id)}
                                     placeholder="เพิ่มคำอธิบาย"
-                                    className="resize-none h-[44px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] text-[14px] border-[1px] border-[#D0D5DD] rounded-md"
+                                    className="resize-none w-[512px] h-[44px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] text-[14px] border-[1px] border-[#D0D5DD] rounded-md"
                                     />
                                 </div>
                             </div>
@@ -179,6 +168,9 @@ function CreatePackage() {
                             เพิ่มชุดอาหาร
                         </Button>
                     </div>
+
+                    {/* Divider */}
+                    <div className="w-[1056px] h-[0.5px] bg-[#EAECF0]"></div>
                 </div>
                 
                 {/* Action */}
