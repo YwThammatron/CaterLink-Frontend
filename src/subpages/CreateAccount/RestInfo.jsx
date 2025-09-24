@@ -1,10 +1,11 @@
 import axios from "axios";
 import { useState } from "react";
 
-function RestInfo() {
+function RestInfo({ onClick }) {
 
 return (
     <>
+    <button onClick={onClick}>Click1</button>
     </>
   );
 }

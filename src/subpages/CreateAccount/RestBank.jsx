@@ -1,11 +1,11 @@
 import axios from "axios";
 import { useState } from "react";
 
-function RestBank({ handleClick }) {
+function RestBank({ backClick }) {
 
     return (
         <>
-        <button onClick={handleClick}>Click3</button>
+        <button onClick={backClick}>back</button>
         </>
     );
 }

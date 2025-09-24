@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import Logo from "../components/ui/Logo";
 import { Circle,CircleDot } from "lucide-react";
 
@@ -9,36 +9,68 @@ import RestBank from "../subpages/CreateAccount/RestBank"
 
 
 function CreateAccount() {
-    const [Tabindex,setTabindex] = useState(1)
+    const [Tabindex,setTabindex] = useState(0)
 
     const handleClickBank = (e) => {
         e.preventDefault()
-        setSubpages(Subpages.map(item => 
-            item.label === 'บัญชีธนาคาร' ? {...item,index:true} : item
-        ))
+        setTabindex(Tabindex => Tabindex + 1)
+        const updated = Subpages.map(item => 
+            item.label === 'บัญชีธนาคาร' || item.label === 'ประเภทร้านค้า' ? {...item,index:true} : item
+        )
+        setSubpages(updated)
+        console.log(Subpages,Tabindex)
+    }
 
-        console.log(Subpages)
+    const handleClickBackBank = (e) => {
+        e.preventDefault()
+        const updated = Subpages.map(item => {
+            if(item.label === 'บัญชีธนาคาร' && item.index == true){
+                return {...item,index:false}
+            }
+            else if(item.label === 'ประเภทร้านค้า' && item.index == false){
+                return {...item,index:true}
+            }
+            else{return item}
+        })
+        setTabindex(Tabindex => Tabindex - 1)
+        setSubpages(updated)
+    }
+
+    const handleClickBackType = (e) => {
+        e.preventDefault()
+        const updated = Subpages.map(item => {
+            if(item.label === 'ประเภทร้านค้า' && item.index == true){
+                return {...item,index:false}
+            }
+            else{return item}
+        })
+        setTabindex(Tabindex => Tabindex - 1)
+        setSubpages(updated)
     }
 
     const handleClickType = (e) => {
         e.preventDefault()
         setTabindex(Tabindex => Tabindex + 1)
-        setSubpages(Subpages.map(item => 
-            item.label === 'ประเภทร้านค้า' ? {...item,index:true} : item
-        ))
-        console.log(Subpages,Tabindex)
+        const updated = Subpages.map(item => 
+            item.label === 'ประเภทร้านค้า' && item.index == false ? {...item,index:true} : item
+        )
+        setSubpages(updated)
     }
 
     const [Subpages,setSubpages] = useState([
-        {label: 'ข้อมูลร้านค้า',content: <RestInfo/>,index:true},
-        {label: 'ประเภทร้านค้า',content: <RestType handleClick={handleClickType} />,index:false},
-        {label: 'บัญชีธนาคาร',content: <RestBank handleClick={handleClickBank} />,index:false}
+        {label: 'ข้อมูลร้านค้า',content: <RestInfo onClick={handleClickType}/>,index:true},
+        {label: 'ประเภทร้านค้า',content: <RestType onClick={handleClickBank} backClick={handleClickBackType} />,index:false},
+        {label: 'บัญชีธนาคาร',content: <RestBank backClick={handleClickBackBank} />,index:false}
     ])
+
+    useEffect(() => {
+        console.log('subpages changed',Subpages,Tabindex)
+    },[Subpages,Tabindex])
 
 
 return (
     <>
-        {/*หน้าลงทะเบียน*/}
+        {/* หน้าสร้าง Account */}
         <div className="flex justify-center">
             {/* Container */}
             <div className="flex flex-col justify-center items-center w-[1280px] h-[988px] mb-[64px] gap-[32px]">
