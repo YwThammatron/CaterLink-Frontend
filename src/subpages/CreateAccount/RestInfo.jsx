@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 
 import { Button } from "../../components/ui/button";
 
@@ -19,6 +19,18 @@ function RestInfo({ onClick }) {
       ...data,[id]:value
     }))
   }
+
+  useEffect(() => {
+      const btn = document.getElementById('nextbtn')
+          if(Payload.name != "" && Payload.detail != "" && Payload.vatid != "" && Payload.location != "" && Payload.address != ""){
+              btn.disabled = false
+              btn.style.backgroundColor = "#FF8A00"
+          }
+          else{
+              btn.disabled = true
+              btn.style.backgroundColor = "#D0D5DD"
+          }
+  },[Payload])
 
 return (
     <>
@@ -76,6 +88,7 @@ return (
                     id="location"
                     value={Payload.location}
                     placeholder="เช่น ถนนลาดกระบัง"
+                    onChange={handleChange}
                     className="h-[44px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md"
                   />
                 </div>
@@ -93,7 +106,7 @@ return (
               </form>
 
               {/* action */}
-              <Button onClick={onClick} className="w-[100%] h-[44px] text-[16px] bg-[#FF8A00] rounded-[8px] hover:cursor-pointer">ต่อไป</Button>
+              <Button id="nextbtn" onClick={onClick} className="w-[100%] h-[44px] text-[16px] rounded-[8px] hover:ฺbg-black cursor-pointer transition">ต่อไป</Button>
             </div>
           </div>
     </>

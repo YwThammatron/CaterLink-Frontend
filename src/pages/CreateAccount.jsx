@@ -1,11 +1,12 @@
 import axios from "axios";
 import { useState,useEffect } from "react";
 import Logo from "../components/ui/Logo";
-import { Circle,CircleDot } from "lucide-react";
+import { Circle,CircleDot,CircleCheck } from "lucide-react";
 
 import RestInfo from "../subpages/CreateAccount/RestInfo"
 import RestType from "../subpages/CreateAccount/RestType"
 import RestBank from "../subpages/CreateAccount/RestBank"
+import Complete from "../subpages/CreateAccount/Complete"
 
 function CreateAccount() {
     const [Tabindex,setTabindex] = useState(0)
@@ -19,6 +20,21 @@ function CreateAccount() {
         setSubpages(updated)
         const pline2 = document.getElementById('pline2')
         pline2.style.backgroundColor = 'orange'
+
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+
+    const handleClickType = (e) => {
+        e.preventDefault()
+        setTabindex(Tabindex => Tabindex + 1)
+        const updated = Subpages.map(item => 
+            item.label === 'ประเภทร้านค้า' && item.index == false ? {...item,index:true} : item
+        )
+        setSubpages(updated)
+        const pline1 = document.getElementById('pline1')
+        pline1.style.backgroundColor = 'orange'
+
+        window.scrollTo({ top: 0, behavior: 'smooth' })
     }
 
     const handleClickBackBank = (e) => {
@@ -52,27 +68,28 @@ function CreateAccount() {
 
         const pline1 = document.getElementById('pline1')
         pline1.style.backgroundColor = 'black'
+
     }
 
-    const handleClickType = (e) => {
+    const handleSend = (e) => {
         e.preventDefault()
         setTabindex(Tabindex => Tabindex + 1)
-        const updated = Subpages.map(item => 
-            item.label === 'ประเภทร้านค้า' && item.index == false ? {...item,index:true} : item
-        )
-        setSubpages(updated)
-        const pline1 = document.getElementById('pline1')
-        pline1.style.backgroundColor = 'orange'
+
+        window.scrollTo({ top: 0, behavior: 'smooth' })
     }
 
     const [Subpages,setSubpages] = useState([
-        {label: 'ข้อมูลร้านค้า',content: <RestInfo onClick={handleClickType}/>,index:true},
-        {label: 'ประเภทร้านค้า',content: <RestType onClick={handleClickBank} backClick={handleClickBackType} />,index:false},
-        {label: 'บัญชีธนาคาร',content: <RestBank backClick={handleClickBackBank} />,index:false}
+        {label: 'ข้อมูลร้านค้า' ,height:754 ,content: <RestInfo onClick={handleClickType}/>,index:true},
+        {label: 'ประเภทร้านค้า',height:574  ,content: <RestType onClick={handleClickBank} backClick={handleClickBackType} />,index:false},
+        {label: 'บัญชีธนาคาร',height:488 ,content: <RestBank onClick={handleSend} backClick={handleClickBackBank} />,index:false},
+        {label: 'ส่งข้อมูลแล้ว',height:310 ,content: <Complete backClick={() => window.location.href = "./"}/>}
     ])
 
+    const [Height,setHeight] = useState(0)
+
     useEffect(() => {
-        console.log('subpages changed',Subpages,Tabindex)
+        setHeight(214 + Subpages[Tabindex].height)
+        console.log(Subpages)
     },[Subpages,Tabindex])
 
 
@@ -81,7 +98,7 @@ return (
         {/* หน้าสร้าง Account */}
         <div className="flex justify-center">
             {/* Container */}
-            <div className="flex flex-col justify-center items-center w-[1280px] h-[988px] mt-[64px] mb-[64px] gap-[32px]">
+            <div style={{ height: Height }} className="flex flex-col items-center w-[1280px] mt-[64px] mb-[64px] gap-[32px]">
                 {/* Content (header) */}
                 <div className="flex flex-col items-center gap-[32px] w-[1216px] h-[214px]">
                     {/* header */}
@@ -91,20 +108,30 @@ return (
                     </div>
 
                     <div className="relative">
-                        {/* Progess Step */}
-                        <div className="absolute flex gap-[16px] w-[992px] h-[72px] ">
-                            {Subpages.map((tab,index) => (
-                            <div key={index} className="flex flex-col items-center justify-center gap-[16px] w-[320px] h-[72px]">
-                                {tab.index ? <Circle className="justify-center fill-current text-orange w-[32px] h-[32px]" /> : <CircleDot className="justify-center w-[32px] h-[32px]" />}
-                                <p className="text-[#344054] font-[600]">{tab.label}</p>
-                            </div>
-                            ))}
-                        </div>
-
-                        {/* Progress Line */}
-                        <div className="relative flex top-[15px] justify-center w-[992px] h-[72px]">
+                         {/* Progress Line */}
+                        <div className="absolute flex top-[15px] justify-center w-[992px] h-[72px]">
                             <div id="pline1" className="w-[336px] h-[2px] bg-black"></div>
                             <div id="pline2" className="w-[336px] h-[2px] bg-black"></div>
+                        </div>
+
+                        {/* Progess Step */}
+                        <div className="relative flex gap-[16px] w-[992px] h-[72px] ">
+                            {Subpages.slice(0,3).map((tab,index) => (
+                            <div key={index} className="flex flex-col items-center justify-center gap-[16px] w-[320px] h-[72px]">
+                                {(() => {
+                                    if(tab.index == true){
+                                        if(index == Tabindex){
+                                            return <Circle className="justify-center fill-current text-orange w-[32px] h-[32px]" />
+                                        } 
+                                        else if(index < Tabindex){
+                                            return <CircleCheck className="justify-center w-[32px] h-[32px]" />
+                                        }
+                                    }
+                                    else if(tab.index == false){ return <CircleDot className="justify-center w-[32px] h-[32px]" /> } 
+                                })()} 
+                                {Tabindex === index ? <p className="text-[#FF8A00] font-[600]">{tab.label}</p> : <p className="text-[#344054] font-[600]">{tab.label}</p>} 
+                            </div>
+                            ))}
                         </div>
                     </div>
                 </div>

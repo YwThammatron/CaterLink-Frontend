@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 
 import { Button } from "../../components/ui/button";
 import { HandPlatter,Inbox,UtensilsCrossed } from "lucide-react";
@@ -32,10 +32,22 @@ function RestType({ onClick,backClick }) {
   const [Eventlist,setEventlist] = useState([])
   const [Foodlist,setFoodlist] = useState([])
 
+  useEffect(() => {
+        const btn = document.getElementById('nextbtn')
+            if(Mainlist.length != 0 && Eventlist.length != 0 && Foodlist.length != 0){
+                btn.disabled = false
+                btn.style.backgroundColor = "#FF8A00"
+            }
+            else{
+                btn.disabled = true
+                btn.style.backgroundColor = "#D0D5DD"
+            }
+  },[Mainlist,Eventlist,Foodlist])
+
 return (
     <>
      {/* Content (Restaurant Type) */}
-    <div className="grid justify-center w-[1056px] h-[270px]">
+    <div className="grid justify-center w-[400px] h-[526px]">
 
         {/* header */}
         <div className="flex flex-col items-center">
@@ -66,9 +78,9 @@ return (
                         ${Mainlist.includes(index) ? 'border-[#FF8A00]' : 'text-black'}
                         hover:cursor-pointer `}
                       >
-                        {content.icon}<p className="text-[12px] font-[500]">{content.label}</p>
+                        {content.icon}<p className="text-[14px] font-[500]">{content.label}</p>
                       </div>
-                      <p className="text-[12px]">{content.detail}</p>
+                      <p className="text-[14px] text-[#667085]">{content.detail}</p>
                     </div>
                   ))}
               </div>
@@ -76,7 +88,7 @@ return (
 
           <div className="grid gap-[6px]">
             <label className="flex"><p className="flex h-[21px] font-[500] text-[16px]">ประเภทงานอีเวนต์</p><p className="text-[#D92D20]">*</p></label>
-            <div className="flex flex-wrap gap-[6px] text-[12px] font-[500]">
+            <div className="flex flex-wrap gap-[6px] text-[14px] font-[500]">
               {eventtypes.map((content, index) => (
                 <div
                   key={index}
@@ -100,7 +112,7 @@ return (
 
           <div className="grid gap-[6px]">
             <label className="flex"><p className="flex h-[21px] font-[500] text-[16px]">ประเภทอาหาร</p><p className="text-[#D92D20]">*</p></label>
-            <div className="flex flex-wrap gap-[6px] text-[12px] font-[500]">
+            <div className="flex flex-wrap gap-[6px] text-[14px] font-[500]">
               {foodtypes.map((content, index) => (
               <div
                 key={index}
@@ -125,7 +137,7 @@ return (
         </form>
 
         {/* action */}
-        <Button onClick={onClick} className="w-[100%] h-[44px] text-[16px] bg-[#FF8A00] rounded-[8px] hover:cursor-pointer">ต่อไป</Button>
+        <Button id="nextbtn" onClick={onClick} className="w-[100%] h-[44px] text-[16px] rounded-[8px] hover:ฺbg-black cursor-pointer transition">ต่อไป</Button>
         <Button onClick={backClick}>กลับ</Button>
       </div>
     </>
