@@ -1,6 +1,8 @@
 import axios from "axios";
 import { useState } from "react";
 
+import { Button } from "../../components/ui/button";
+
 function RestInfo({ onClick }) {
 
   const [Payload,setPayload] = useState({
@@ -12,10 +14,10 @@ function RestInfo({ onClick }) {
   })
 
   const handleChange = (e) => {
-    const { id,name } = e.target
-    setPayload((data) => (
-      ...data,[id]:name
-    ))
+    const { id,value } = e.target
+    setPayload((data) => ({
+      ...data,[id]:value
+    }))
   }
 
 return (
@@ -35,8 +37,8 @@ return (
                 <div className="grid h-fit gap-[6px]">
                   <label className="flex"><p>อีเมล</p><p className="text-[#D92D20]">*</p></label>
                   <input 
-                    type="email"
-                    id="email"
+                    type="text"
+                    id="name"
                     value={Payload.name}
                     onChange={handleChange}
                     placeholder="เพิ่มอีเมล"
@@ -47,8 +49,8 @@ return (
                 <div className="grid h-fit gap-[6px]">
                   <label className="flex"><p>รหัสผ่าน</p><p className="text-[#D92D20]">*</p></label>
                   <input 
-                    type="password"
-                    id="passwd"
+                    type="text"
+                    id="detail"
                     value={Payload.detail}
                     placeholder="เพิ่มรหัสผ่าน"
                     onChange={handleChange}
