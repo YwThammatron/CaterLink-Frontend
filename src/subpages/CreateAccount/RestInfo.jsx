@@ -23,7 +23,7 @@ function RestInfo({ onClick }) {
 return (
     <>
           {/* Container */}
-          <div className="flex justify-center items-center w-[720px] h-[864px] mb-[96px]">
+          <div className="flex justify-center items-center w-[400px] h-[598px] mb-[96px]">
             {/* Content (outer) */}
             <div className="w-[400px] h-[598px]">
 

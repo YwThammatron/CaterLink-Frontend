@@ -17,7 +17,8 @@ function CreateAccount() {
             item.label === 'บัญชีธนาคาร' || item.label === 'ประเภทร้านค้า' ? {...item,index:true} : item
         )
         setSubpages(updated)
-        console.log(Subpages,Tabindex)
+        const pline2 = document.getElementById('pline2')
+        pline2.style.backgroundColor = 'orange'
     }
 
     const handleClickBackBank = (e) => {
@@ -33,6 +34,9 @@ function CreateAccount() {
         })
         setTabindex(Tabindex => Tabindex - 1)
         setSubpages(updated)
+
+        const pline2 = document.getElementById('pline2')
+        pline2.style.backgroundColor = 'black'
     }
 
     const handleClickBackType = (e) => {
@@ -45,6 +49,9 @@ function CreateAccount() {
         })
         setTabindex(Tabindex => Tabindex - 1)
         setSubpages(updated)
+
+        const pline1 = document.getElementById('pline1')
+        pline1.style.backgroundColor = 'black'
     }
 
     const handleClickType = (e) => {
@@ -54,6 +61,8 @@ function CreateAccount() {
             item.label === 'ประเภทร้านค้า' && item.index == false ? {...item,index:true} : item
         )
         setSubpages(updated)
+        const pline1 = document.getElementById('pline1')
+        pline1.style.backgroundColor = 'orange'
     }
 
     const [Subpages,setSubpages] = useState([
@@ -94,8 +103,8 @@ return (
 
                         {/* Progress Line */}
                         <div className="relative flex top-[15px] justify-center w-[992px] h-[72px]">
-                            <div className="w-[336px] h-[2px] bg-black"></div>
-                            <div className="w-[336px] h-[2px] bg-black"></div>
+                            <div id="pline1" className="w-[336px] h-[2px] bg-black"></div>
+                            <div id="pline2" className="w-[336px] h-[2px] bg-black"></div>
                         </div>
                     </div>
                 </div>
