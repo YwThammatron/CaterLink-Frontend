@@ -1,12 +1,32 @@
 import axios from "axios";
 import { useState,useEffect } from "react";
 import Logo from "../components/ui/Logo";
-import { Circle,CircleDot } from "lucide-react";
+import { HandPlatter,Inbox,UtensilsCrossed,Circle,CircleDot } from "lucide-react";
 
 import RestInfo from "../subpages/CreateAccount/RestInfo"
 import RestType from "../subpages/CreateAccount/RestType"
 import RestBank from "../subpages/CreateAccount/RestBank"
 
+const mainctgs = [
+    {label: 'จัดเลี้ยง',icon:<HandPlatter className="w-[12px] h-[12px] text-[#F78E1E]"/>,value: "TEST1",detail:"Buffet, ซุ้มอาหาร, Cocktail, Coffee Break"},
+    {label: 'snackbox',icon:<Inbox className="w-[12px] h-[12px] text-[#F78E1E]"/>,value: "TEST2",detail:"Mealbox, Bakery SnackBox, Variety SnackBox"},
+    {label: 'ซุ้มอาหาร',icon:<UtensilsCrossed className="w-[12px] h-[12px] text-[#F78E1E]"/>,value: "TEST3",detail:"ตั้งโต๊ะ, รถเข็น, ซุ้มอาหาร, Food Truck"}
+]
+
+const eventtypes = [
+    {label: "งานเลี้ยงองค์กร", value:"TEST1"},
+    {label: "งานประชุม/สัมมนา", value:"TEST2"},
+    {label: "งานปาร์ตี้", value:"TEST3"}
+]
+
+const foodtypes = [
+    {label: "อาหารคาว", value:"TEST1"},
+    {label: "ขนมและของหวาน", value:"TEST2"},
+    {label: "เครื่องดื่ม", value:"TEST3"},
+    {label: "อาหารไทย", value:"TEST4"},
+    {label: "อาหารจีน", value:"TEST5"},
+    {label: "อาหารญี่ปุ่น", value:"TEST6"}
+]
 
 function CreateAccount() {
     const [Tabindex,setTabindex] = useState(0)
