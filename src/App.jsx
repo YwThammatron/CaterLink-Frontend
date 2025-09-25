@@ -10,6 +10,8 @@ import Payment from "./pages/Payment";
 import ViewAllBlog from "./pages/ViewAllBlog";
 import PlanningPage from "./pages/PlanningPage";
 
+import Order from "./pages/Order";
+
 function App() {
   return (
     <Router>
@@ -23,6 +25,7 @@ function App() {
         <Route path="/payment" element={<Payment />} />
         <Route path="/allblog" element={<ViewAllBlog />} />
         <Route path="/planning" element={<PlanningPage />} />
+        <Route path="/order" element={<Order />} />
         <Route
           path="/welcome"
           element={
