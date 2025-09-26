@@ -20,8 +20,8 @@ function CreatePackage() {
     })
 
     const [Index,setIndex] = useState(2)
-    const [Tableheight, setTableheight] = useState(474)
-    const [Contentheight, setContentheight] = useState(184)
+    const [Tableheight, setTableheight] = useState(497)
+    const [Contentheight, setContentheight] = useState(207)
 
     const handleChange = (e) => {
         const {id,value} = e.target
@@ -47,9 +47,27 @@ function CreatePackage() {
             detail:""
         })
 
+        console.log(Payload.sets)
+
         setIndex(Index+1)
-        setTableheight(474 + (216*(Index-1)))
-        setContentheight(184 + (216*(Index-1)))
+        setTableheight(497 + (250*(Index-1)))
+        setContentheight(207 + (250*(Index-1)))
+    }
+
+    const handleClickDelete = () => {
+        setIndex(2)
+        Payload.sets.length = 0
+        Payload.sets.push({
+            id:1,
+            name:"",
+            price:"",
+            detail:""
+        })
+
+        console.log(Payload.sets)
+
+        setTableheight(497)
+        setContentheight(207)
     }
 
     const handleChangeCancel = () => {
@@ -115,18 +133,19 @@ function CreatePackage() {
                             <p className="text-[14px]">ต้องมีอย่างน้อย 1 ชุดอาหาร</p>
                         </div>
                         {/* Input Field */}
-                        <form className="grid gap-[20px] w-[512px]">
+                        <form className="grid gap-[32px] w-[512px]">
                             {Payload.sets.map((content, index) => (
-                            <div key={index} className="grid gap-[16px]">
+                            <div key={index} className="grid h-[215px] gap-[16px]">
                                 <p className="text-[14px] font-[500] text-black">ชุดอาหารที่ {content.id}</p>
                                 
                                 <div className="flex gap-[16px]">
                                     <div className="grid w-[248px] h-fit gap-[6px]">
-                                        <label><p className="h-[20px] text-[14px] font-[500] text-[#6D6E71]">ชื่อชุดอาหาร</p></label>
+                                        <label className="flex"><p className="h-[20px] text-[14px] font-[500] text-[#6D6E71]">ชื่อชุดอาหาร</p><p className="text-[#D50A0A] pl-[3px]">*</p></label>
                                         <input 
                                         type="text"
                                         name="name"
                                         id={"name"+content.id}
+                                        value={Payload.sets[index].name}
                                         onChange={(event) => handleChangeSet(event,content.id)}
                                         placeholder="เพิ่มชื่อชุดอาหาร"
                                         className="h-[36px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] text-[14px] border-[1px] border-[#D0D5DD] rounded-md"
@@ -134,11 +153,12 @@ function CreatePackage() {
                                     </div>
 
                                     <div className="grid w-[248px] h-fit gap-[6px]">
-                                        <label><p className="h-[20px] text-[14px] font-[500] text-[#6D6E71]">ราคา</p></label>
+                                        <label className="flex"><p className="h-[20px] text-[14px] font-[500] text-[#6D6E71]">ราคาต่อหน่วย</p><p className="text-[#D50A0A] pl-[3px]">*</p></label>
                                         <input 
                                         type="number"
                                         name="price"
                                         id={"price"+content.id}
+                                        value={Payload.sets[index].price}
                                         onChange={(event) => handleChangeSet(event,content.id)}
                                         placeholder="เพิ่มตัวเลข"
                                         className="h-[36px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] text-[14px] border-[1px] border-[#D0D5DD] rounded-md"
@@ -151,9 +171,10 @@ function CreatePackage() {
                                     <textarea 
                                     name="detail"
                                     id={"detail"+content.id}
+                                    value={Payload.sets[index].detail}
                                     onChange={(event) => handleChangeSet(event,content.id)}
                                     placeholder="เพิ่มคำอธิบาย"
-                                    className="resize-none w-[512px] h-[44px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] text-[14px] border-[1px] border-[#D0D5DD] rounded-md"
+                                    className="resize-none w-[512px] h-[67px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] text-[14px] border-[1px] border-[#D0D5DD] rounded-md"
                                     />
                                 </div>
                             </div>
@@ -161,12 +182,20 @@ function CreatePackage() {
                         </form>
 
                         {/* Package Set Add Button */}
-                        <Button 
-                        className="w-[150px] h-[48px] ml-[32px] rounded-[10000px] text-[#F78E1E] text-[16px] bg-transparent border-[1px] border-[#F78E1E] hover:bg-transparent cursor-pointer transition"
-                        onClick={handleClickAdd}
-                        >
-                            เพิ่มชุดอาหาร
-                        </Button>
+                        <div className="flex pl-[39px] gap-[8px] w-[193px] h-[44px]">
+                            <Button 
+                            className="w-[68px] h-[44px] rounded-[8px] text-[#475467] text-[16px] bg-transparent hover:bg-transparent cursor-pointer transition"
+                            onClick={handleClickDelete}
+                            >
+                                ลบทั้งหมด
+                            </Button>
+                            <Button 
+                            className="w-[117px] h-[44px] rounded-[8px] text-[#F78E1E] text-[16px] bg-transparent border-[1px] border-[#F78E1E] hover:bg-transparent cursor-pointer transition"
+                            onClick={handleClickAdd}
+                            >
+                                เพิ่มชุดอาหาร
+                            </Button>
+                        </div>
                     </div>
 
                     {/* Divider */}
@@ -176,19 +205,19 @@ function CreatePackage() {
                 {/* Action */}
                 <div className="flex items-center gap-[642px] w-[1104px] h-[48px]">
                     {/* Right */}
-                    <div className="flex gap-[12px] ml-[792px]">
+                    <div className="flex gap-[12px] ml-[885px]">
                         <Button
-                        className="w-[150px] h-[48px] rounded-[10000px] text-[#F78E1E] text-[16px] bg-transparent border-[1px] border-[#F78E1E] hover:bg-transparent cursor-pointer transition"
+                        className="w-[80px] h-[44px] rounded-[8px] text-[#344054] text-[16px] bg-white border-[1px] border-[#D0D5DD] hover:bg-transparent cursor-pointer transition"
                         onClick={handleChangeCancel}
                         >
                             ยกเลิก
                         </Button>
                         
                         <Button 
-                        className="w-[150px] h-[48px] rounded-[10000px] text-[16px] bg-[#F78E1E] hover:cursor-pointer transition"
+                        className="w-[127px] h-[44px] rounded-[8px] text-[16px] bg-[#F78E1E] hover:cursor-pointer transition"
                         onClick={handleChangeSave}
                         >
-                            บันทึกข้อมูล
+                            สร้างแพคเกจ
                         </Button>
                     </div>
                 </div>
