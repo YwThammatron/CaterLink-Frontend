@@ -110,6 +110,7 @@ function CreatePackage() {
                                     value={Payload.category}
                                     onChange={handleChange}
                                     >
+                                        <option value="default" selected hidden>เลือกหมวดหมู่แพคเกจ</option>
                                         <option value="volvo">Volvo</option>
                                         <option value="saab">Saab</option>
                                         <option value="fiat">Fiat</option>
@@ -147,7 +148,7 @@ function CreatePackage() {
                                         id={"name"+content.id}
                                         value={Payload.sets[index].name}
                                         onChange={(event) => handleChangeSet(event,content.id)}
-                                        placeholder="เพิ่มชื่อชุดอาหาร"
+                                        placeholder="เพิ่มชุดข้อมูลอาหาร"
                                         className="h-[36px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] text-[14px] border-[1px] border-[#D0D5DD] rounded-md"
                                         />
                                     </div>
