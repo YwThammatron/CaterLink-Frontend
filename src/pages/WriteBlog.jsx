@@ -38,16 +38,16 @@ function WriteBlog() {
             </div>
 
             {/* Content */}
-            <div className="flex flex-col gap-[24px] w-auto h-[1006px] items-center mb-[32px]">
+            <div className="flex flex-col gap-[24px] w-auto h-[820px] items-center mb-[32px]">
                 {/* Table */}
-                <div className="grid justify-center items-center border-[1px] border-[#F2F4F7] rounded-[24px] w-[1104px] h-[934px] bg-white">
+                <div className="grid justify-center items-center border-[1px] border-[#F2F4F7] rounded-[24px] w-[1104px] h-[752px] bg-white">
                     {/* Content (Blog Infomation) */}
                     <div className="flex w-[1056px] h-[222px]">
                         <p className="text-[14px] font-[600] w-[312px]">ข้อมูลบทความ</p>
                         {/* Input Field */}
                         <form className="grid w-[512px] gap-[16px]">
                             <div className="grid h-fit gap-[6px]">
-                                <label><p className="flex h-[21px] font-[500] text-[#6D6E71] text-[14px]">หัวข้อบทความ <p className="text-[#F78E1E] pl-[3px]">*</p></p></label>
+                                <label><p className="flex h-[21px] font-[500] text-[#6D6E71] text-[14px]">หัวข้อบทความ <p className="text-[#D50A0A] pl-[3px]">*</p></p></label>
                                 <input 
                                 type="text"
                                 id="title"
@@ -59,7 +59,7 @@ function WriteBlog() {
                             </div>
 
                             <div className="grid h-fit gap-[6px]">
-                                <label><p className="flex h-[21px] font-[500] text-[#6D6E71] text-[14px]">รูปปกบทความ <p className="text-[#F78E1E] pl-[3px]">*</p></p></label>
+                                <label><p className="flex h-[21px] font-[500] text-[#6D6E71] text-[14px]">รูปปกบทความ <p className="text-[#D50A0A] pl-[3px]">*</p></p></label>
                                 <div className="relative">
                                      <input 
                                         type="file"
@@ -91,13 +91,10 @@ function WriteBlog() {
 
                     {/* Content (Blog Category) */}
                     <div className="flex w-[1056px] h-[166px]">
-                        <div className="grid text-[14px] w-[312px] h-fit">
-                            <p className="font-[600]">หมวดหมู่</p>
-                            <p>เลือกได้มากกว่า 1 ข้อ</p>
-                        </div>
+                        <p className="text-[14px] w-[312px] font-[600]">หมวดหมู่</p>
                         {/* Input Field */}
                         <form className="grid w-[512px] gap-[6px]">
-                            <label><p className="flex h-[21px] font-[500] text-[#6D6E71] text-[14px]">หมวดหมู่หลัก<p className="text-[#F78E1E] pl-[4px]">*</p></p></label>
+                            <label><p className="flex h-[21px] font-[500] text-[#6D6E71] text-[14px]">ประเภทการจัดเลี้ยง<p className="text-[#D50A0A] pl-[4px]">*</p></p></label>
                             <div className="relative">
                                 <select id="category" className="appearance-none w-[512px] h-[48px] pl-[14px] pr-[42px] pt-[12px] pb-[12px] border-[1px] border-[#D0D5DD] rounded-md">
                                     <option value="volvo">Volvo</option>
@@ -110,7 +107,7 @@ function WriteBlog() {
                                 </div>
                             </div>
 
-                            <label><p className="flex h-[21px] font-[500] text-[#6D6E71] text-[14px]">ประเภทงานอีเวนต์ <p className="text-[#F78E1E] pl-[4px]">*</p></p></label>
+                            <label><p className="flex h-[21px] font-[500] text-[#6D6E71] text-[14px]">ประเภทงานอีเวนต์<p className="text-[#D50A0A] pl-[4px]">*</p></p></label>
                             <div className="relative">
                                 <select id="type" className="appearance-none w-[512px] h-[48px] pl-[14px] pr-[42px] pt-[12px] pb-[12px] border-[1px] border-[#D0D5DD] rounded-md">
                                     <option value="volvo">Volvo</option>
@@ -135,7 +132,7 @@ function WriteBlog() {
                         {/* Input Field */}
                         <form className="grid w-[512px]">
                             <div className="grid h-fit gap-[6px]">
-                                <label><p className="flex h-[21px] font-[500] text-[#6D6E71] text-[14px]">เนื้อหา <p className="text-[#F78E1E] pl-[4px]">*</p></p></label>
+                                <label><p className="flex h-[21px] font-[500] text-[#6D6E71] text-[14px]">เนื้อหา <p className="text-[#D50A0A] pl-[4px]">*</p></p></label>
                                 <textarea
                                 id="detail"
                                 value={Payload.detail}
@@ -153,13 +150,19 @@ function WriteBlog() {
 
                 {/* Action */}
                 <div className="flex items-center gap-[642px] w-[1104px] h-[48px]">
-                    {/* Left */}
-                    <Button className="w-[150px] h-[48px] bg-transparent font-[500] text-[#BA1100] text-[16px] shadow-none hover:bg-transparent"><span className="hover:bg-transparent cursor-pointer transition">ยกเลิก</span></Button>
-
                     {/* Right */}
-                    <div className="flex gap-[12px]">
-                        <Button className="w-[150px] h-[48px] rounded-[10000px] text-[#F78E1E] text-[16px] bg-transparent border-[1px] border-[#F78E1E] hover:bg-transparent cursor-pointer transition">บันทึกร่าง</Button>
-                        <Button className="w-[150px] h-[48px] rounded-[10000px] text-[16px] bg-[#F78E1E] hover:cursor-pointer transition">บันทึก</Button>
+                    <div className="flex gap-[12px] ml-[885px]">
+                        <Button
+                        className="w-[80px] h-[44px] rounded-[8px] text-[#344054] text-[16px] bg-white border-[1px] border-[#D0D5DD] hover:bg-transparent cursor-pointer transition"
+                        >
+                            ยกเลิก
+                        </Button>
+                        
+                        <Button 
+                        className="w-[127px] h-[44px] rounded-[8px] text-[16px] bg-[#F78E1E] hover:cursor-pointer transition"
+                        >
+                            โพสต์บทความ
+                        </Button>
                     </div>
                 </div>
             </div>
