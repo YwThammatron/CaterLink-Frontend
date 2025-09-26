@@ -18,16 +18,16 @@ const eventtypes = [
 const foodtypes = [
     {label: "อาหารคาว", value:"TEST1"},
     {label: "ขนมและของหวาน", value:"TEST2"},
-    {label: "เครื่องดื่ม", value:"TEST3"},
-    {label: "อาหารไทย", value:"TEST4"},
-    {label: "อาหารจีน", value:"TEST5"},
-    {label: "อาหารญี่ปุ่น", value:"TEST6"}
+    {label: "อาหารไทย", value:"TEST3"},
+    {label: "อาหารจีน", value:"TEST4"},
+    {label: "อาหารญี่ปุ่น", value:"TEST5"},
+    {label: "อาหารนานาชาติ", value:"TEST6"}
 ]
 
 function UserAccount() {
-    const [Mainindex,setMainindex] = useState(null)
-    const [Eventindex,setEventindex] = useState(null)
-    const [Foodindex,setFoodindex] = useState(null)
+    const [Mainlist,setMainlist] = useState([])
+    const [Eventlist,setEventlist] = useState([])
+    const [Foodlist,setFoodlist] = useState([])
 
     const [Visible,setVisible] = useState(0)
 
@@ -130,67 +130,83 @@ function UserAccount() {
                             <p className="font-[600] text-[14px]">ประเภทร้านค้า</p>
                             <p className="text-[14px]">เลือกได้มากกว่า 1 ข้อ</p>
                         </div>
-                        {/* Input Field */}
-                        <form className="grid w-[512px] gap-[24px]">
-                            <div className="grid gap-[6px]">
-                                <label><p className="flex h-[21px] font-[500] text-[#6D6E71] text-[14px]">หมวดหมู่หลัก</p></label>
-                                <div className="grid gap-[8px]">
-                                    {mainctgs.map((content, index) => (
-                                <div className="flex items-center gap-[10px]">
-                                    <div
-                                        key={index}
-                                        onClick={() => setMainindex(index)}
-                                        className={`flex w-fit h-[25px] gap-[6px] items-center pl-[8px] pr-[8px] border-[1px] border-[#F2F4F7] rounded-[8px] ${
-                                        Mainindex === index
-                                            ? 'border-black border-[2px]'
-                                            : 'text-black'
-                                        } hover:cursor-pointer `}
-                                        >
-                                            {content.icon}<p className="text-[12px] font-[500]">{content.label}</p>
-                                        </div>
-                                        <p className="text-[12px]">{content.detail}</p>
-                                    </div>
-                                    ))}
-                                </div>
-                            </div>
 
-                            <div className="grid gap-[6px]">
-                                <label><p className="flex h-[21px] font-[500] text-[#6D6E71] text-[14px]">ประเภทงานอีเวนต์</p></label>
-                                <div className="flex gap-[6px] text-[12px] font-[500]">
-                                    {eventtypes.map((content, index) => (
+                    {/* Input Field */}
+                    <form className="grid w-[512px] h-[270px] mb-[64px] gap-[24px]">
+                    <div className="grid gap-[6px]">
+                        <label><p className="flex h-[21px] font-[500] text-[14px] text-[#6D6E71]">ประเภทการจัดเลี้ยง</p></label>
+                        <div className="grid h-[91px] gap-[8px]">
+                            {mainctgs.map((content, index) => (
+                                <div key={index} className="flex items-center gap-[10px]">
                                     <div
                                         key={index}
-                                        onClick={() => setEventindex(index)}
-                                        className={`h-[25px] pt-[3.3px] pl-[8px] pr-[8px] border-[1px] border-[#F2F4F7] rounded-[8px] ${
-                                        Eventindex === index
-                                            ? 'border-black border-[2px]'
-                                            : 'text-black'
-                                        } hover:cursor-pointer `}
+                                        onClick={() => {
+                                        if (!Mainlist.includes(index)) {
+                                            setMainlist(prev => [...prev, index])
+                                        }
+                                        else {
+                                            setMainlist(prev => prev.filter(i => i !== index))
+                                        }
+                                        }}
+                                        className={`flex w-fit h-[25px] gap-[6px] items-center pl-[8px] pr-[8px] border-[1px] border-[#F2F4F7] rounded-[8px] 
+                                        ${Mainlist.includes(index) ? 'border-[#FF8A00]' : 'text-black'}
+                                        hover:cursor-pointer `}
                                     >
-                                        {content.label}
-                                    </div>
-                                    ))}
+                                    {content.icon}<p className="text-[12px] font-[500]">{content.label}</p>
                                 </div>
+                                <p className="text-[12px] text-[#667085]">{content.detail}</p>
+                                </div>
+                            ))}
                             </div>
+                        </div>
 
-                            <div className="grid gap-[6px]">
-                                <label><p className="flex h-[21px] font-[500] text-[#6D6E71] text-[14px]">ประเภทอาหาร</p></label>
-                                <div className="flex gap-[6px] text-[12px] font-[500]">
-                                    {foodtypes.map((content, index) => (
-                                    <div
-                                        key={index}
-                                        onClick={() => setFoodindex(index)}
-                                        className={`h-[25px] pt-[3.3px] pl-[8px] pr-[8px] border-[1px] border-[#F2F4F7] rounded-[8px] ${
-                                        Foodindex === index
-                                            ? 'border-black border-[2px]'
-                                            : 'text-black'
-                                        } hover:cursor-pointer `}
-                                    >
-                                        {content.label}
-                                    </div>
-                                    ))}
+                        <div className="grid gap-[6px]">
+                            <label><p className="flex h-[21px] font-[500] text-[14px] text-[#6D6E71]">ประเภทงานอีเวนต์</p></label>
+                            <div className="flex flex-wrap gap-[6px] text-[12px] font-[500]">
+                            {eventtypes.map((content, index) => (
+                                <div
+                                key={index}
+                                onClick={() => {
+                                    if (!Eventlist.includes(index)) {
+                                    setEventlist(prev => [...prev, index])
+                                    }
+                                    else {
+                                    setEventlist(prev => prev.filter(i => i !== index))
+                                    }    
+                                }}
+                                className={`h-[25px] pt-[3.3px] pl-[8px] pr-[8px] border-[1px] border-[#F2F4F7] rounded-[8px] 
+                                    ${Eventlist.includes(index) ? 'border-[#FF8A00]' : 'text-black'}
+                                    hover:cursor-pointer `}
+                                >
+                                {content.label}
                                 </div>
+                            ))}
                             </div>
+                        </div>
+
+                        <div className="grid gap-[6px]">
+                            <label><p className="flex h-[21px] font-[500] text-[14px] text-[#6D6E71]">ประเภทอาหาร</p></label>
+                            <div className="flex flex-wrap gap-[6px] text-[12px] font-[500]">
+                            {foodtypes.map((content, index) => (
+                            <div
+                                key={index}
+                                onClick={() => {
+                                if (!Foodlist.includes(index)) {
+                                    setFoodlist(prev => [...prev, index])
+                                }
+                                else {
+                                    setFoodlist(prev => prev.filter(i => i !== index))
+                                }
+                                }}
+                                className={`h-[25px] pt-[3.3px] pl-[8px] pr-[8px] border-[1px] border-[#F2F4F7] rounded-[8px] 
+                                ${Foodlist.includes(index) ? 'border-[#FF8A00]' : 'text-black'}
+                                hover:cursor-pointer `}
+                            >
+                                {content.label}
+                            </div>
+                            ))}
+                            </div>
+                        </div>
 
                         </form>
                     </div>
