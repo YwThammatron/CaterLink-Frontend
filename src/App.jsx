@@ -12,6 +12,8 @@ import PlanningPage from "./pages/PlanningPage";
 
 import Order from "./pages/Order";
 
+import CreateAccount from "./pages/CreateAccount";
+
 function App() {
   return (
     <Router>
@@ -24,6 +26,7 @@ function App() {
         <Route path="/compare" element={<ComparePage />} />
         <Route path="/payment" element={<Payment />} />
         <Route path="/allblog" element={<ViewAllBlog />} />
+        <Route path="/createaccount" element={<CreateAccount />} />
         <Route path="/planning" element={<PlanningPage />} />
         <Route path="/order" element={<Order />} />
         <Route
