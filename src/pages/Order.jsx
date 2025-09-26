@@ -44,7 +44,7 @@ function Order() {
             </div>
 
             {/* Content */}
-            <div className="flex flex-col gap-[24px] w-auto h-[738px] mb-[50px] ml-[64px]">
+            <div className="flex flex-col gap-[24px] w-auto h-[1195px] mb-[50px] ml-[64px]">
                 {subpages[Tabindex].Content}
             </div>
           </div>
