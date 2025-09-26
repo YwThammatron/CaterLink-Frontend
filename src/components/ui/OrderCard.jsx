@@ -9,7 +9,7 @@ function OrderCard(props) {
         <div className="absolute flex flex-col w-[1072px] h-[377px] bg-white rounded-[8px]">
             {/* Content Upside */}
             <div className="flex h-[49px] items-center">
-                <p className="pl-[16px] pr-[16px] text-[14px] font-[700]">{props.name}</p>
+                <p className="pl-[16px] pr-[16px] text-[14px] text-[#344054] font-[500]">{props.name}</p>
                 {(() => {
                     if(props.status == "รอร้านตอบรับ"){return <Badge className="w-auto h-[28px] pl-[12px] pr-[12px] text-[14px] text-[#363F72] font-[500] border-[1px] border-[#D5D9EB] bg-[#F8F9FC] rounded-[1000px]">{props.status}</Badge>}
                     else if(props.status == "กำลังจัดเตรียม"){return <Badge className="w-auto h-[28px] pl-[12px] pr-[12px] text-[14px] text-[#026AA2] font-[500] border-[1px] border-[#B9E6FE] bg-[#F0F9FF] rounded-[1000px]">{props.status}</Badge>}
@@ -57,19 +57,19 @@ function OrderCard(props) {
             }
             else{
                 if(props.status == "รอร้านตอบรับ"){
-                    return <div className="relative flex top-[317px] left-[803px] gap-[11px]">
+                    return <div className="relative w-[253px] flex top-[317px] left-[803px] gap-[11px]">
                         <Button id={"cancelbtn" + props.key} onClick={() => props.cancelClick(props.orderid)} className="w-[117px] h-[44px] text-[14px] shadow-none text-[#344054] bg-transparent rounded-[8px] hover:bg-transparent cursor-pointer">ปฎิเสธคำขอ</Button>
                         <Button id={"acceptbtn" + props.key} onClick={() => props.acceptClick(props.orderid)} className="w-[120px] h-[44px] text-[14px] text-[#FF8A00] bg-transparent border-[1px] border-[#FF8A00] rounded-[8px] hover:bg-transparent cursor-pointer">ตอบรับคำขอ</Button>
                     </div>
                 }
                 else if(props.status == "กำลังจัดเตรียม"){
-                    return <div className="relative flex top-[317px] left-[930px] gap-[11px]">
-                        <Button id={"acceptbtn" + props.key} onClick={() => props.acceptClick(props.orderid)} className="w-[120px] h-[44px] text-[14px] text-[#FF8A00] bg-transparent border-[1px] border-[#FF8A00] rounded-[8px] hover:bg-transparent cursor-pointer">จัดเตรียมสำเร็จ</Button>
+                    return <div className="relative w-[126px] flex top-[317px] left-[930px] gap-[11px]">
+                        <Button id={"acceptbtn" + props.key} className="w-[120px] h-[44px] text-[14px] text-[#FF8A00] bg-transparent border-[1px] border-[#FF8A00] rounded-[8px] hover:bg-transparent">จัดเตรียมสำเร็จ</Button>
                     </div>
                 }
                 else if(props.status == "จัดเตรียมสำเร็จ"){
-                    return <div className="relative flex top-[317px] left-[930px] gap-[11px]">
-                        <Button id={"cancelbtn" + props.key} onClick={() => props.cancelClick(props.orderid)} className="w-[117px] h-[44px] text-[14px] bg-[#FF8A00] border-[1px] border-[#FF8A00] rounded-[8px] hover:bg-transparent cursor-pointer">บริการสำเร็จ</Button>
+                    return <div className="relative w-[126px] flex top-[317px] left-[930px] gap-[11px]">
+                        <Button id={"cancelbtn" + props.key} className="w-[117px] h-[44px] text-[14px] bg-[#FF8A00] border-[1px] border-[#FF8A00] rounded-[8px] hover:bg-[#FF8A00]">บริการสำเร็จ</Button>
                     </div>
                 }
             }
