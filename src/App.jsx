@@ -9,9 +9,9 @@ import ComparePage from "./pages/ComparePage";
 import Payment from "./pages/Payment";
 import ViewAllBlog from "./pages/ViewAllBlog";
 import PlanningPage from "./pages/PlanningPage";
+import BlogDetail from "./pages/BlogDetail";
 
 import Order from "./pages/Order";
-
 import CreateAccount from "./pages/CreateAccount";
 
 function App() {
@@ -29,6 +29,7 @@ function App() {
         <Route path="/createaccount" element={<CreateAccount />} />
         <Route path="/planning" element={<PlanningPage />} />
         <Route path="/order" element={<Order />} />
+        <Route path="/blog" element={<BlogDetail />} />
         <Route
           path="/welcome"
           element={
