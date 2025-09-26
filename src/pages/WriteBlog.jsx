@@ -53,7 +53,7 @@ function WriteBlog() {
                                 id="title"
                                 value={Payload.title}
                                 onChange={handleChange}
-                                placeholder="กรุณาระบุ"
+                                placeholder="กรุณาระบุหัวข้อ"
                                 className="h-[48px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md"
                                 />
                             </div>
