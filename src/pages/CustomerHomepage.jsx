@@ -31,6 +31,10 @@ function CustomerHomepage() {
     navigate("/customerreservation");
   };
 
+  const goToPlanning = () => {
+    navigate("/planning");
+  };
+
   return (
     <>
       <NavbarCustom />
@@ -101,7 +105,10 @@ function CustomerHomepage() {
                   เพื่อสร้างประสบการณ์ที่ราบรื่นทั้งสำหรับ ผู้จัดและผู้ร่วมงาน
                 </p>
               </div>
-              <Button className="bg-gradient px-8 py-3 text-lg font-bold w-fit h-fit">
+              <Button
+                className="bg-gradient px-8 py-3 text-lg font-bold w-fit h-fit cursor-pointer"
+                onClick={goToPlanning}
+              >
                 วางแพลนเลย
               </Button>
             </div>
