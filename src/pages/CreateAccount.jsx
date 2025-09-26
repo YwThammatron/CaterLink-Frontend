@@ -58,7 +58,6 @@ function CreateAccount() {
 
     useEffect(() => {
         setHeight(214 + Subpages[Tabindex].height)
-        console.log(Subpages)
     },[Subpages,Tabindex])
 
 
