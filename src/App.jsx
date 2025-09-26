@@ -1,12 +1,19 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Toaster } from "./components/ui/sonner";
 import ScrollToTop from "./components/ui/scrolltotop";
 import CustomerHomepage from "./pages/CustomerHomepage";
 import CustomerRestaurant from "./pages/CustomerRestaurant";
 import Setting from "./pages/Setting";
-import Cardpage from "./pages/CartPage";
+import Cartpage from "./pages/CartPage";
 import CustomerReservation from "./pages/CustomerReservation";
-import { Toaster } from "./components/ui/sonner";
 import ComparePage from "./pages/ComparePage";
+import Payment from "./pages/Payment";
+import ViewAllBlog from "./pages/ViewAllBlog";
+import PlanningPage from "./pages/PlanningPage";
+
+import Order from "./pages/Order";
+
+import CreateAccount from "./pages/CreateAccount";
 
 function App() {
   return (
@@ -16,10 +23,14 @@ function App() {
         <Route path="/" element={<CustomerHomepage />} />
         <Route path="/customerrestaurant" element={<CustomerRestaurant />} />
         <Route path="/setting" element={<Setting />}/>
-        <Route path="/cart" element={<Cardpage />} />
+        <Route path="/cart" element={<Cartpage />} />
         <Route path="/customerreservation" element={<CustomerReservation />} />
         <Route path="/compare" element={<ComparePage />} />
-
+        <Route path="/payment" element={<Payment />} />
+        <Route path="/allblog" element={<ViewAllBlog />} />
+        <Route path="/createaccount" element={<CreateAccount />} />
+        <Route path="/planning" element={<PlanningPage />} />
+        <Route path="/order" element={<Order />} />
         <Route
           path="/welcome"
           element={
