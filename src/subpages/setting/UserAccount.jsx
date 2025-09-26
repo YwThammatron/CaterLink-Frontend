@@ -215,12 +215,21 @@ function UserAccount() {
                     <div className="w-[1056px] h-[1px] bg-[#EAECF0]"></div>
                 </div>
 
-                {/* Action */}
+               {/* Action */}
                 <div className="flex items-center gap-[642px] w-[1104px] h-[48px]">
                     {/* Right */}
-                    <div className="flex gap-[12px] ml-[792px]">
-                        <Button className="w-[150px] h-[48px] rounded-[10000px] text-[#F78E1E] text-[16px] bg-transparent border-[1px] border-[#F78E1E] hover:bg-transparent cursor-pointer transition">ยกเลิก</Button>
-                        <Button className="w-[150px] h-[48px] rounded-[10000px] text-[16px] bg-[#F78E1E] hover:cursor-pointer transition">บันทึกข้อมูล</Button>
+                    <div className="flex gap-[12px] ml-[885px]">
+                        <Button
+                        className="w-[80px] h-[44px] rounded-[8px] text-[#344054] text-[16px] bg-white border-[1px] border-[#D0D5DD] hover:bg-transparent cursor-pointer transition"
+                        >
+                            ยกเลิก
+                        </Button>
+                        
+                        <Button 
+                        className="w-[127px] h-[44px] rounded-[8px] text-[16px] bg-[#F78E1E] hover:cursor-pointer transition"
+                        >
+                            สร้างแพคเกจ
+                        </Button>
                     </div>
                 </div>
         </>
