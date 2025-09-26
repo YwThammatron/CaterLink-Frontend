@@ -1,7 +1,10 @@
 import axios from "axios";
 import { useState,useEffect } from "react";
 import Logo from "../components/ui/Logo";
-import { Circle,CircleDot,CircleCheck } from "lucide-react";
+
+import CurrentStep from "../components/ui/CurrentStep";
+import IncomingStep from "../components/ui/IncomingStep";
+import PassStep from "../components/ui/PassStep";
 
 import RestInfo from "../subpages/CreateAccount/RestInfo"
 import RestType from "../subpages/CreateAccount/RestType"
@@ -37,40 +40,6 @@ function CreateAccount() {
         window.scrollTo({ top: 0, behavior: 'smooth' })
     }
 
-    const handleClickBackBank = (e) => {
-        e.preventDefault()
-        const updated = Subpages.map(item => {
-            if(item.label === 'บัญชีธนาคาร' && item.index == true){
-                return {...item,index:false}
-            }
-            else if(item.label === 'ประเภทร้านค้า' && item.index == false){
-                return {...item,index:true}
-            }
-            else{return item}
-        })
-        setTabindex(Tabindex => Tabindex - 1)
-        setSubpages(updated)
-
-        const pline2 = document.getElementById('pline2')
-        pline2.style.backgroundColor = 'black'
-    }
-
-    const handleClickBackType = (e) => {
-        e.preventDefault()
-        const updated = Subpages.map(item => {
-            if(item.label === 'ประเภทร้านค้า' && item.index == true){
-                return {...item,index:false}
-            }
-            else{return item}
-        })
-        setTabindex(Tabindex => Tabindex - 1)
-        setSubpages(updated)
-
-        const pline1 = document.getElementById('pline1')
-        pline1.style.backgroundColor = 'black'
-
-    }
-
     const handleSend = (e) => {
         e.preventDefault()
         setTabindex(Tabindex => Tabindex + 1)
@@ -80,9 +49,9 @@ function CreateAccount() {
 
     const [Subpages,setSubpages] = useState([
         {label: 'ข้อมูลร้านค้า' ,height:754 ,content: <RestInfo onClick={handleClickType}/>,index:true},
-        {label: 'ประเภทร้านค้า',height:574  ,content: <RestType onClick={handleClickBank} backClick={handleClickBackType} />,index:false},
-        {label: 'บัญชีธนาคาร',height:488 ,content: <RestBank onClick={handleSend} backClick={handleClickBackBank} />,index:false},
-        {label: 'ส่งข้อมูลแล้ว',height:310 ,content: <Complete backClick={() => window.location.href = "./"}/>}
+        {label: 'ประเภทร้านค้า',height:574  ,content: <RestType onClick={handleClickBank} />,index:false},
+        {label: 'บัญชีธนาคาร',height:488 ,content: <RestBank onClick={handleSend} />,index:false},
+        {label: 'ส่งข้อมูลแล้ว',height:618 ,content: <Complete/>}
     ])
 
     const [Height,setHeight] = useState(0)
@@ -110,8 +79,8 @@ return (
                     <div className="relative">
                          {/* Progress Line */}
                         <div className="absolute flex top-[15px] justify-center w-[992px] h-[72px]">
-                            <div id="pline1" className="w-[336px] h-[2px] bg-black"></div>
-                            <div id="pline2" className="w-[336px] h-[2px] bg-black"></div>
+                            <div id="pline1" className="w-[336px] h-[2px] bg-[#EAECF0]"></div>
+                            <div id="pline2" className="w-[336px] h-[2px] bg-[#EAECF0]"></div>
                         </div>
 
                         {/* Progess Step */}
@@ -121,13 +90,13 @@ return (
                                 {(() => {
                                     if(tab.index == true){
                                         if(index == Tabindex){
-                                            return <Circle className="justify-center fill-current text-orange w-[32px] h-[32px]" />
+                                            return <CurrentStep className="justify-center w-[32px] h-[32px]" />
                                         } 
                                         else if(index < Tabindex){
-                                            return <CircleCheck className="justify-center w-[32px] h-[32px]" />
+                                            return <PassStep className="justify-center w-[32px] h-[32px]" />
                                         }
                                     }
-                                    else if(tab.index == false){ return <CircleDot className="justify-center w-[32px] h-[32px]" /> } 
+                                    else if(tab.index == false){ return <IncomingStep className="justify-center w-[32px] h-[32px]" /> } 
                                 })()} 
                                 {Tabindex === index ? <p className="text-[#FF8A00] font-[600]">{tab.label}</p> : <p className="text-[#344054] font-[600]">{tab.label}</p>} 
                             </div>

@@ -14,7 +14,7 @@ const banks = [
     {label: "ธนาคารกรุงศรีอยุธยา" , value: "Bank6"}
 ]
 
-function RestBank({ onClick,backClick }) {
+function RestBank({ onClick }) {
 
     const [Payload,setPayload] = useState({
         bank:"",
@@ -106,7 +106,6 @@ function RestBank({ onClick,backClick }) {
 
                     {/* action */}
                     <Button id="sendbtn" onClick={onClick} className="w-[100%] h-[44px] text-[16px] rounded-[8px] hover:ฺbg-black cursor-pointer transition">ส่งคำขอพิจารณาร้าน</Button>
-                    <Button onClick={backClick}>กลับ</Button>
                 </div>
             </div>
         </>

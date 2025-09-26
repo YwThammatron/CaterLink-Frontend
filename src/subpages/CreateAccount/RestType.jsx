@@ -26,7 +26,7 @@ const foodtypes = [
 ]
 
 
-function RestType({ onClick,backClick }) {
+function RestType({ onClick}) {
 
   const [Mainlist,setMainlist] = useState([])
   const [Eventlist,setEventlist] = useState([])
@@ -138,7 +138,6 @@ return (
 
         {/* action */}
         <Button id="nextbtn" onClick={onClick} className="w-[100%] h-[44px] text-[16px] rounded-[8px] hover:ฺbg-black cursor-pointer transition">ต่อไป</Button>
-        <Button onClick={backClick}>กลับ</Button>
       </div>
     </>
   );
