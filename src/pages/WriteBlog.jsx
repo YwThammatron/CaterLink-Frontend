@@ -97,6 +97,7 @@ function WriteBlog() {
                             <label><p className="flex h-[21px] font-[500] text-[#6D6E71] text-[14px]">ประเภทการจัดเลี้ยง<p className="text-[#D50A0A] pl-[4px]">*</p></p></label>
                             <div className="relative">
                                 <select id="category" className="appearance-none w-[512px] h-[48px] pl-[14px] pr-[42px] pt-[12px] pb-[12px] border-[1px] border-[#D0D5DD] rounded-md">
+                                    <option value="default" selected hidden>เลือกข้อมูล</option>
                                     <option value="volvo">Volvo</option>
                                     <option value="saab">Saab</option>
                                     <option value="fiat">Fiat</option>
@@ -110,6 +111,7 @@ function WriteBlog() {
                             <label><p className="flex h-[21px] font-[500] text-[#6D6E71] text-[14px]">ประเภทงานอีเวนต์<p className="text-[#D50A0A] pl-[4px]">*</p></p></label>
                             <div className="relative">
                                 <select id="type" className="appearance-none w-[512px] h-[48px] pl-[14px] pr-[42px] pt-[12px] pb-[12px] border-[1px] border-[#D0D5DD] rounded-md">
+                                    <option value="default" selected hidden>เลือกข้อมูล</option>
                                     <option value="volvo">Volvo</option>
                                     <option value="saab">Saab</option>
                                     <option value="fiat">Fiat</option>
