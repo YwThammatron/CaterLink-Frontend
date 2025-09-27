@@ -81,7 +81,7 @@ function ViewCategory({ sendClick }) {
                                 {packagectg.map((content,index) => {
                                     return (
                                         <AccordionItem key={index} value={content.name}>
-                                            <AccordionTrigger className="h-[56px] pl-[14px] flex items-center text-[16px] text-[#101828] font-[500] hover:cursor-pointer">{content.name}</AccordionTrigger>
+                                            <AccordionTrigger className="no-underline h-[56px] pl-[14px] flex items-center text-[16px] text-[#101828] font-[500] hover:no-underline cursor-pointer">{content.name}</AccordionTrigger>
                                             <AccordionContent className="pl-[32px] pb-[16px] flex flex-col gap-[12px]">
                                                 {content.package.map((data,i) => {
                                                     return (

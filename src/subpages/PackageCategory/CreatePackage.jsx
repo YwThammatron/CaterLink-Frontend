@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown,CloudUpload } from "lucide-react";
 import { data } from "react-router-dom";
 
 
@@ -9,6 +9,7 @@ function CreatePackage() {
     const [Payload,setPayload] = useState({
         name:"",
         category:"",
+        imgurl:"",
         sets:[
             {
                 id:1,
@@ -20,7 +21,7 @@ function CreatePackage() {
     })
 
     const [Index,setIndex] = useState(2)
-    const [Tableheight, setTableheight] = useState(497)
+    const [Tableheight, setTableheight] = useState(644)
     const [Contentheight, setContentheight] = useState(207)
 
     const handleChange = (e) => {
@@ -50,7 +51,7 @@ function CreatePackage() {
         console.log(Payload.sets)
 
         setIndex(Index+1)
-        setTableheight(497 + (250*(Index-1)))
+        setTableheight(644 + (250*(Index-1)))
         setContentheight(207 + (250*(Index-1)))
     }
 
@@ -66,7 +67,7 @@ function CreatePackage() {
 
         console.log(Payload.sets)
 
-        setTableheight(497)
+        setTableheight(644)
         setContentheight(207)
     }
 
@@ -85,7 +86,7 @@ function CreatePackage() {
                 {/* Table */}
                 <div style={{ height: Tableheight }} className="grid justify-center items-center border-[1px] border-[#F2F4F7] rounded-[24px] w-[1104px] bg-white">
                     {/* Content (Package Infomation) */}
-                    <div className="flex w-[1056px] h-[144px]">
+                    <div className="flex w-[1056px] h-[291px]">
                         <p className="text-[14px] font-[600] w-[312px]">ข้อมูลแพคเกจ</p>
                         {/* Input Field */}
                         <form className="grid w-[512px] gap-[16px]">
@@ -120,7 +121,33 @@ function CreatePackage() {
                                         <ChevronDown className="w-[20px] h-[20px] text-[#86878A]" />
                                     </div>
                                 </div>
-                            </div>          
+                            </div> 
+
+                            <div className="grid h-fit gap-[6px]">
+                                <label><p className="flex h-[21px] font-[500] text-[#6D6E71] text-[14px]">รูปปกแพคเกจ <p className="text-[#D50A0A] pl-[3px]">*</p></p></label>
+                                <div className="relative">
+                                     <input 
+                                        type="file"
+                                        accept=".jpg,.jpeg,.png"
+                                        id="img"
+                                        value={Payload.imgurl}
+                                        onChange={handleChange}
+                                        className="hidden w-[512px] h-[104px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md"
+                                    />
+                                    <label
+                                    htmlFor="img"
+                                    class="flex flex-col items-center gap-[12px] w-[512px] h-[104px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md"
+                                    >
+                                    <div className="flex w-[40px] h-[40px] justify-center items-center shadow-sm border-[1px] border-[#EAECF0] rounded-[8px]">
+                                        <CloudUpload className="h-fit w-[20px] h-[20px]"/>
+                                    </div>
+                                    <div className="flex gap-[4px] text-[14px]">
+                                        <p className="cursor-pointer text-[#F78E1E] font-[600]">คลิกเพื่ออัพโหลด</p>
+                                        <p>หรือลากและวางไฟล์</p>
+                                    </div>
+                                </label>
+                                </div>
+                            </div>         
                         </form>
                     </div>
                                     
@@ -204,7 +231,7 @@ function CreatePackage() {
                 </div>
                 
                 {/* Action */}
-                <div className="flex items-center gap-[642px] w-[1104px] h-[48px]">
+                <div className="flex items-center gap-[642px] mb-[147px] w-[1104px] h-[48px]">
                     {/* Right */}
                     <div className="flex gap-[12px] ml-[885px]">
                         <Button
