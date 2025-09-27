@@ -29,7 +29,7 @@ const foodtypes = [
 ]
 
 
-function RestType({ onClick}) {
+function RestType({ onClick,backClick }) {
 
   const [Mainlist,setMainlist] = useState([])
   const [Eventlist,setEventlist] = useState([])
@@ -140,7 +140,10 @@ return (
         </form>
 
         {/* action */}
-        <Button id="nextbtn" onClick={onClick} className="w-[100%] h-[44px] text-[16px] rounded-[8px] hover:ฺbg-black cursor-pointer transition">ต่อไป</Button>
+        <div className="flex gap-[16px]">
+            <Button id="backbtn" onClick={backClick} enable className="w-[192px] h-[44px] text-[16px] text-black bg-transparent border-[1px] border-[#D0D5DD] rounded-[8px] hover:ฺbg-transparent cursor-pointer transition">ย้อนกลับ</Button>
+            <Button id="nextbtn" onClick={onClick} className="w-[192px] h-[44px] text-[16px] rounded-[8px] hover:ฺbg-black cursor-pointer transition">ต่อไป</Button>
+        </div>
       </div>
     </>
   );
