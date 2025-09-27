@@ -2,12 +2,15 @@ import axios from "axios";
 import { useState,useEffect } from "react";
 
 import { Button } from "../../components/ui/button";
-import { HandPlatter,Inbox,UtensilsCrossed } from "lucide-react";
+
+import FoodStall from "../../components/ui/FoodStall";
+import Snackbox from "../../components/ui/SnackBox";
+import Catering from "../../components/ui/Catering";
 
 const mainctgs = [
-    {label: 'จัดเลี้ยง',icon:<HandPlatter className="w-[12px] h-[12px] text-[#F78E1E]"/>,value: "TEST1",detail:"Buffet, ซุ้มอาหาร, Cocktail, Coffee Break"},
-    {label: 'snackbox',icon:<Inbox className="w-[12px] h-[12px] text-[#F78E1E]"/>,value: "TEST2",detail:"Mealbox, Bakery SnackBox, Variety SnackBox"},
-    {label: 'ซุ้มอาหาร',icon:<UtensilsCrossed className="w-[12px] h-[12px] text-[#F78E1E]"/>,value: "TEST3",detail:"ตั้งโต๊ะ, รถเข็น, ซุ้มอาหาร, Food Truck"}
+    {label: 'จัดเลี้ยง',icon:<Catering className="w-[12px] h-[12px] text-[#F78E1E]"/>,value: "TEST1",detail:"Buffet, ซุ้มอาหาร, Cocktail, Coffee Break"},
+    {label: 'snackbox',icon:<Snackbox className="w-[12px] h-[12px] text-[#F78E1E]"/>,value: "TEST2",detail:"Mealbox, Bakery SnackBox, Variety SnackBox"},
+    {label: 'ซุ้มอาหาร',icon:<FoodStall className="w-[12px] h-[12px] text-[#F78E1E]"/>,value: "TEST3",detail:"ตั้งโต๊ะ, รถเข็น, ซุ้มอาหาร, Food Truck"}
 ]
 
 const eventtypes = [
