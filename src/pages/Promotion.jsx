@@ -27,7 +27,7 @@ function Promotion() {
 
   return (
     <>
-      {/*หน้าเขียน Blog*/}
+      {/*หน้าสร้าง Promotion*/}
       <div className="flex flex-row">
           <SidebarCustom />
           {/* Container */}
