@@ -4,15 +4,18 @@ import { useState } from "react";
 import SidebarCustom from "../components/ui/Sidebar-custom";
 
 import CreatePackage from "../subpages/PackageCategory/CreatePackage"
-import ViewPackage from "../subpages/PackageCategory/ViewPackage"
+import ViewCategory from "../subpages/PackageCategory/ViewCategory"
+import CreateCategory from "../subpages/PackageCategory/CreateCategory";
 
-const subpages = [
-    {label: 'แพคเกจ',content: <ViewPackage/>},
-    {label: 'สร้างแพคเกจ',content: <CreatePackage/>}
-]
 
 function PackageCategory() {
-    const [Tabindex,setTabindex] = useState(0);
+    const [Tabindex,setTabindex] = useState(0)
+    const [Iscreatectg,setIscreatectg] = useState(false)
+
+    const subpages = [
+        {label: 'หมวดหมู่แพคเกจ',content: <ViewCategory sendClick={() => {setIscreatectg(true)}}/>},
+        {label: 'สร้างแพคเกจ',content: <CreatePackage/>}
+    ]
 
 return (
     <>
@@ -26,24 +29,30 @@ return (
                 <p className="text-[24px] font-[600]">จัดการแพคเกจ</p>
             </div>
 
-            {/* Tab */}
-            <div className="flex gap-[10px] ml-[calc(50%-520px)] mr-[calc(50%-520px)] mb-[24px] border-b">
-                    {subpages.map((tab, index) => (
-                    <button
-                        key={index}
-                        onClick={() => setTabindex(index)}
-                        className={`pt-[8.5px] pb-[8.5px] ${
-                        Tabindex === index
-                            ? 'border-b-[2px] border-black font-semibold'
-                            : 'text-black'
-                        } hover:cursor-pointer `}
-                    >
-                        {tab.label}
-                    </button>
-                    ))}
-            </div>
+            {Iscreatectg ? 
+                <CreateCategory cancelClick={() => setIscreatectg(false)} /> :
+                <div>
+                    {/* Tab */}
+                    <div className="flex gap-[10px] ml-[calc(50%-520px)] mr-[calc(50%-520px)] mb-[24px] border-b">
+                            {subpages.map((tab, index) => (
+                            <button
+                                key={index}
+                                onClick={() => setTabindex(index)}
+                                className={`pt-[8.5px] pb-[8.5px] ${
+                                Tabindex === index
+                                    ? 'border-b-[2px] border-black font-semibold'
+                                    : 'text-black'
+                                } hover:cursor-pointer `}
+                            >
+                                {tab.label}
+                            </button>
+                            ))}
+                    </div>
 
-            {subpages[Tabindex].content}
+                    {subpages[Tabindex].content} 
+                </div>
+            }
+            
           </div>
       </div>
     </>
