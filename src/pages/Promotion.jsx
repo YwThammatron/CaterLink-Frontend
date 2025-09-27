@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ChevronDown,CloudUpload } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 
 import SidebarCustom from "../components/ui/Sidebar-custom";
 
@@ -13,7 +13,8 @@ function Promotion() {
     enddate:"",
     starttime:"",
     endtime:"",
-    
+    name:"",
+    category:""
   })
 
   const handleChange = (e) => {
@@ -37,50 +38,24 @@ function Promotion() {
             </div>
 
             {/* Content */}
-            <div className="flex flex-col gap-[24px] w-auto h-[820px] items-center mb-[32px]">
+            <div className="flex flex-col gap-[24px] w-auto h-[1024px] items-center mb-[32px]">
                 {/* Table */}
-                <div className="grid justify-center items-center border-[1px] border-[#F2F4F7] rounded-[24px] w-[1104px] h-[752px] bg-white">
-                    {/* Content (Blog Infomation) */}
-                    <div className="flex w-[1056px] h-[222px]">
-                        <p className="text-[14px] font-[600] w-[312px]">ข้อมูลบทความ</p>
+                <div className="grid justify-center items-center border-[1px] border-[#F2F4F7] rounded-[24px] w-[1104px] h-[540px] bg-white">
+                    {/* Content (Promotion Set) */}
+                    <div className="flex w-[1056px] h-[62px]">
+                        <p className="text-[14px] font-[600] w-[312px]">การตั้งโปรโมชัน</p>
                         {/* Input Field */}
                         <form className="grid w-[512px] gap-[16px]">
                             <div className="grid h-fit gap-[6px]">
-                                <label><p className="flex h-[21px] font-[500] text-[#6D6E71] text-[14px]">หัวข้อบทความ <p className="text-[#D50A0A] pl-[3px]">*</p></p></label>
+                                <label><p className="flex h-[21px] font-[500] text-[#6D6E71] text-[14px]">จำนวนลด &#40;เปอร์เซ็นต์&#41;<p className="text-[#D50A0A] pl-[3px]">*</p></p></label>
                                 <input 
-                                type="text"
-                                id="title"
-                                value={Payload.title}
+                                type="number"
+                                id="percent"
+                                value={Payload.percent}
                                 onChange={handleChange}
-                                placeholder="กรุณาระบุหัวข้อ"
-                                className="h-[48px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md"
+                                placeholder="เพิ่มตัวเลข"
+                                className="h-[36px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md"
                                 />
-                            </div>
-
-                            <div className="grid h-fit gap-[6px]">
-                                <label><p className="flex h-[21px] font-[500] text-[#6D6E71] text-[14px]">รูปปกบทความ <p className="text-[#D50A0A] pl-[3px]">*</p></p></label>
-                                <div className="relative">
-                                     <input 
-                                        type="file"
-                                        accept=".jpg,.jpeg,.png"
-                                        id="img"
-                                        value={Payload.imgurl}
-                                        onChange={handleChange}
-                                        className="hidden w-[512px] h-[104px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md"
-                                    />
-                                    <label
-                                    htmlFor="img"
-                                    class="flex flex-col items-center gap-[12px] w-[512px] h-[104px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md"
-                                    >
-                                    <div className="flex w-[40px] h-[40px] justify-center items-center shadow-sm border-[1px] border-[#EAECF0] rounded-[8px]">
-                                        <CloudUpload className="h-fit w-[20px] h-[20px]"/>
-                                    </div>
-                                    <div className="flex gap-[4px] text-[14px]">
-                                        <p className="cursor-pointer text-[#F78E1E] font-[600]">คลิกเพื่ออัพโหลด</p>
-                                        <p>หรือลากและวางไฟล์</p>
-                                    </div>
-                                </label>
-                                </div>
                             </div>
                         </form>
                     </div>
@@ -88,65 +63,100 @@ function Promotion() {
                     {/* Divider */}
                     <div className="w-[1056px] h-[0.5px] bg-[#EAECF0]"></div>
 
-                    {/* Content (Blog Category) */}
-                    <div className="flex w-[1056px] h-[166px]">
-                        <p className="text-[14px] w-[312px] font-[600]">หมวดหมู่</p>
+                    {/* Content (Promotion Period) */}
+                    <div className="flex w-[1056px] h-[152px]">
+                        <p className="text-[14px] w-[312px] font-[600]">ช่วงเวลาโปรโมชัน</p>
                         {/* Input Field */}
                         <form className="grid w-[512px] gap-[6px]">
-                            <label><p className="flex h-[21px] font-[500] text-[#6D6E71] text-[14px]">ประเภทการจัดเลี้ยง<p className="text-[#D50A0A] pl-[4px]">*</p></p></label>
-                            <div className="relative">
-                                <select id="category" className="appearance-none w-[512px] h-[48px] pl-[14px] pr-[42px] pt-[12px] pb-[12px] border-[1px] border-[#D0D5DD] rounded-md">
-                                    <option value="default" selected hidden>เลือกข้อมูล</option>
-                                    <option value="volvo">Volvo</option>
-                                    <option value="saab">Saab</option>
-                                    <option value="fiat">Fiat</option>
-                                    <option value="audi">Audi</option>
-                                </select>
-                                <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
-                                    <ChevronDown className="w-[20px] h-[20px] text-[#86878A]" />
+                            <div className="flex gap-[16px]">
+                                <div className="grid gap-[8px]">
+                                    <label><p className="flex h-[21px] font-[500] text-[#6D6E71] text-[14px]">วันที่เริ่ม<p className="text-[#D50A0A] pl-[4px]">*</p></p></label>
+                                    <input 
+                                    type="date"
+                                    id="startdate"
+                                    value={Payload.startdate}
+                                    onChange={handleChange}
+                                    placeholder="เลือกวัน"
+                                    className="w-[247px] h-[40px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md"
+                                    />
+                                </div>
+
+                                <div className="grid gap-[8px]">
+                                    <label><p className="flex h-[21px] font-[500] text-[#6D6E71] text-[14px]">วันที่จบ<p className="text-[#D50A0A] pl-[4px]">*</p></p></label>
+                                    <input 
+                                    type="date"
+                                    id="enddate"
+                                    value={Payload.enddate}
+                                    onChange={handleChange}
+                                    placeholder="เลือกวัน"
+                                    className="w-[247px] h-[40px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md"
+                                    />
                                 </div>
                             </div>
 
-                            <label><p className="flex h-[21px] font-[500] text-[#6D6E71] text-[14px]">ประเภทงานอีเวนต์<p className="text-[#D50A0A] pl-[4px]">*</p></p></label>
-                            <div className="relative">
-                                <select id="type" className="appearance-none w-[512px] h-[48px] pl-[14px] pr-[42px] pt-[12px] pb-[12px] border-[1px] border-[#D0D5DD] rounded-md">
-                                    <option value="default" selected hidden>เลือกข้อมูล</option>
-                                    <option value="volvo">Volvo</option>
-                                    <option value="saab">Saab</option>
-                                    <option value="fiat">Fiat</option>
-                                    <option value="audi">Audi</option>
-                                </select>
-                                <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
-                                    <ChevronDown className="w-[20px] h-[20px] text-[#86878A]" />
+                            <div className="flex gap-[16px]">
+                                <div className="grid gap-[8px]">
+                                    <label><p className="flex h-[21px] font-[500] text-[#6D6E71] text-[14px]">เวลาเริ่ม<p className="text-[#D50A0A] pl-[4px]">*</p></p></label>
+                                    <input 
+                                    type="time"
+                                    id="starttime"
+                                    value={Payload.starttime}
+                                    onChange={handleChange}
+                                    className="w-[247px] h-[40px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md"
+                                    />
+                                </div>
+
+                                <div className="grid gap-[8px]">
+                                    <label><p className="flex h-[21px] font-[500] text-[#6D6E71] text-[14px]">เวลาจบ<p className="text-[#D50A0A] pl-[4px]">*</p></p></label>
+                                    <input 
+                                    type="time"
+                                    id="endtime"
+                                    value={Payload.endtime}
+                                    onChange={handleChange}
+                                    className="w-[247px] h-[40px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md"
+                                    />
                                 </div>
                             </div>
-
                         </form>
                     </div>
 
                     {/* Divider */}
                     <div className="w-[1056px] h-[1px] bg-[#EAECF0]"></div>
 
-                    {/* Content (Blog Detail) */}
-                    <div className="flex w-[1056px] h-[153px]">
-                        <p className="text-[14px] w-[312px] font-[600]">เนื้อหาบทความ</p>
+                    {/* Content (Package Infomation) */}
+                    <div className="flex w-[1056px] h-[148px]">
+                        <p className="text-[14px] w-[312px] font-[600]">ข้อมูลแพคเกจ</p>
                         {/* Input Field */}
                         <form className="grid w-[512px]">
-                            <div className="grid h-fit gap-[6px]">
-                                <label><p className="flex h-[21px] font-[500] text-[#6D6E71] text-[14px]">เนื้อหา <p className="text-[#D50A0A] pl-[4px]">*</p></p></label>
-                                <textarea
-                                id="detail"
-                                value={Payload.detail}
-                                onChange={handleChange}
-                                placeholder="กรุณากรอกข้อมูล"
-                                className="resize-none h-[126px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md"
-                                />
+                            <label><p className="flex h-[21px] font-[500] text-[#6D6E71] text-[14px]">หมวดหมู่แพคเกจ<p className="text-[#D50A0A] pl-[4px]">*</p></p></label>
+                            <div className="relative">
+                                <select id="category" className="appearance-none w-[512px] h-[40px] text-[14px] pl-[12px] pr-[44px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md">
+                                    <option value="default" selected hidden>เลือกหมวดหมู่แพคเกจ</option>
+                                    <option value="volvo">Volvo</option>
+                                    <option value="saab">Saab</option>
+                                    <option value="fiat">Fiat</option>
+                                    <option value="audi">Audi</option>
+                                </select>
+                                <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
+                                    <ChevronDown className="w-[20px] h-[20px] text-[#86878A]" />
+                                </div>
+                            </div>
+
+                            <label><p className="flex h-[21px] font-[500] text-[#6D6E71] text-[14px]">แพคเกจ<p className="text-[#D50A0A] pl-[4px]">*</p></p></label>
+                            <div className="relative">
+                                <select id="type" className="appearance-none w-[512px] h-[40px] text-[14px] pl-[12px] pr-[44px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md">
+                                    <option value="default" selected hidden>เลือกแพคเกจ</option>
+                                    <option value="volvo">Volvo</option>
+                                    <option value="saab">Saab</option>
+                                    <option value="fiat">Fiat</option>
+                                    <option value="audi">Audi</option>
+                                </select>
+                                <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
+                                    <ChevronDown className="w-[20px] h-[20px] text-[#86878A]" />
+                                </div>
                             </div>
                         </form>
                     </div>
-
-                    {/* Divider */}
-                    <div className="w-[1056px] h-[1px] bg-[#EAECF0]"></div>
                 </div>
 
                 {/* Action */}
@@ -162,7 +172,7 @@ function Promotion() {
                         <Button 
                         className="w-[127px] h-[44px] rounded-[8px] text-[16px] bg-[#F78E1E] hover:cursor-pointer transition"
                         >
-                            โพสต์บทความ
+                            สร้างโปรโมชัน
                         </Button>
                     </div>
                 </div>
