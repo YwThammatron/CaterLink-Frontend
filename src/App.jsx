@@ -2,18 +2,26 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Toaster } from "./components/ui/sonner";
 import ScrollToTop from "./components/ui/scrolltotop";
 import CustomerHomepage from "./pages/CustomerHomepage";
+import Signup from "./pages/Signup";
+import Login from "./pages/Login";
 import CustomerRestaurant from "./pages/CustomerRestaurant";
 import Setting from "./pages/Setting";
+import WriteBlog from "./pages/WriteBlog";
 import Cartpage from "./pages/CartPage";
 import CustomerReservation from "./pages/CustomerReservation";
 import ComparePage from "./pages/ComparePage";
+import PackageCategory from "./pages/PackageCategory";
 import Payment from "./pages/Payment";
 import ViewAllBlog from "./pages/ViewAllBlog";
 import PlanningPage from "./pages/PlanningPage";
 import BlogDetail from "./pages/BlogDetail";
+import ReviewPage from "./pages/ReviewPage";
+import CommentPage from "./pages/CommentPage";
 
 import Order from "./pages/Order";
 import CreateAccount from "./pages/CreateAccount";
+
+import Promotion from "./pages/Promotion";
 
 function App() {
   return (
@@ -21,17 +29,24 @@ function App() {
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<CustomerHomepage />} />
+        <Route path="/writeblog" element={<WriteBlog />}/>
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/customerrestaurant" element={<CustomerRestaurant />} />
         <Route path="/setting" element={<Setting />}/>
         <Route path="/cart" element={<Cartpage />} />
         <Route path="/customerreservation" element={<CustomerReservation />} />
         <Route path="/compare" element={<ComparePage />} />
+        <Route path="/packagectg" element={<PackageCategory/>}/>
         <Route path="/payment" element={<Payment />} />
         <Route path="/allblog" element={<ViewAllBlog />} />
         <Route path="/createaccount" element={<CreateAccount />} />
         <Route path="/planning" element={<PlanningPage />} />
         <Route path="/order" element={<Order />} />
+        <Route path="/promotion" element={<Promotion />} />
         <Route path="/blog" element={<BlogDetail />} />
+        <Route path="/review" element={<ReviewPage />} />
+        <Route path="/comment" element={<CommentPage />} />
         <Route
           path="/welcome"
           element={

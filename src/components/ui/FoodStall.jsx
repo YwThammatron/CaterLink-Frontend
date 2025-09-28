@@ -17,4 +17,9 @@ function FoodStall(){
     )
 }
 
+<<<<<<< HEAD
 export default FoodStall
+=======
+export default FoodStall
+
+>>>>>>> origin/dev
