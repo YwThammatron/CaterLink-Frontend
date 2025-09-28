@@ -10,6 +10,7 @@ import Payment from "./pages/Payment";
 import ViewAllBlog from "./pages/ViewAllBlog";
 import PlanningPage from "./pages/PlanningPage";
 import BlogDetail from "./pages/BlogDetail";
+import ReviewPage from "./pages/ReviewPage";
 
 import Order from "./pages/Order";
 import CreateAccount from "./pages/CreateAccount";
@@ -30,6 +31,7 @@ function App() {
         <Route path="/planning" element={<PlanningPage />} />
         <Route path="/order" element={<Order />} />
         <Route path="/blog" element={<BlogDetail />} />
+        <Route path="/review" element={<ReviewPage />} />
         <Route
           path="/welcome"
           element={
