@@ -6,7 +6,10 @@ function SidebarCustom(){
         <div className="w-[240px] h-auto bg-[#F9FAFB] shadow-[inset_-24px_0_60px_rgba(0,0,0,0.03)]">
             {/* Logo wrap */}
             <div className="flex justify-center items-center pt-[19px] pb-[19px]">
-                <Logo className="w-[32px] h-[32px]"/>
+                <div className="w-[32px] h-[32px]">
+                    <Logo/>
+                </div>
+                
                 <h1 className="logo font-[700] pl-[16px] tracking-tight">CaterLink</h1>
             </div>
 
