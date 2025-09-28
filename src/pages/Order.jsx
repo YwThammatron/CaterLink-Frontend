@@ -27,7 +27,7 @@ function Order() {
             </div>
 
             {/* Tab */}
-            <div className="flex gap-[10px] ml-[calc(50%-536px)] mr-[calc(50%-536px)] mb-[39px] border-b">
+            <div className="flex gap-[16px] ml-[calc(50%-536px)] mr-[calc(50%-536px)] mb-[39px] border-b">
                     {subpages.map((tab, index) => (
                     <button
                         key={index}
