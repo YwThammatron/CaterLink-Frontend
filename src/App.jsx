@@ -5,6 +5,7 @@ import CustomerHomepage from "./pages/CustomerHomepage";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import CustomerRestaurant from "./pages/CustomerRestaurant";
+import WriteBlog from "./pages/WriteBlog";
 import Cartpage from "./pages/CartPage";
 import CustomerReservation from "./pages/CustomerReservation";
 import ComparePage from "./pages/ComparePage";
@@ -27,6 +28,7 @@ function App() {
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<CustomerHomepage />} />
+        <Route path="/writeblog" element={<WriteBlog />}/>
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/customerrestaurant" element={<CustomerRestaurant />} />
