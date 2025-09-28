@@ -85,7 +85,7 @@ function Signup() {
               </form>
 
               {/* action */}
-              <Button onClick={handleReg} className="w-[100%] bg-[#FF8A00] rounded-full">สร้างบัญชี</Button>
+              <Button onClick={handleReg} className="w-[100%] bg-[#FF8A00] rounded-full hover:cursor-pointer">สร้างบัญชี</Button>
 
               {/* row */}
               <div className="flex justify-center gap-[5px] mt-[32px]">

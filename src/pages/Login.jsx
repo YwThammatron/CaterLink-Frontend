@@ -65,7 +65,7 @@ function Login() {
               </form>
 
               {/* action */}
-              <Button onClick={handleLogin} className="w-[100%] bg-[#FF8A00] rounded-full">เข้าสู่ระบบ</Button>
+              <Button onClick={handleLogin} className="w-[100%] bg-[#FF8A00] rounded-full hover:cursor-pointer">เข้าสู่ระบบ</Button>
 
               {/* row */}
               <div className="flex justify-center gap-[5px] mt-[32px]">
