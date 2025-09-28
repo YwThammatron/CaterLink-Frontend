@@ -8,6 +8,7 @@ import CustomerRestaurant from "./pages/CustomerRestaurant";
 import Cartpage from "./pages/CartPage";
 import CustomerReservation from "./pages/CustomerReservation";
 import ComparePage from "./pages/ComparePage";
+import PackageCategory from "./pages/PackageCategory";
 import Payment from "./pages/Payment";
 import ViewAllBlog from "./pages/ViewAllBlog";
 import PlanningPage from "./pages/PlanningPage";
@@ -32,6 +33,7 @@ function App() {
         <Route path="/cart" element={<Cartpage />} />
         <Route path="/customerreservation" element={<CustomerReservation />} />
         <Route path="/compare" element={<ComparePage />} />
+        <Route path="/packagectg" element={<PackageCategory/>}/>
         <Route path="/payment" element={<Payment />} />
         <Route path="/allblog" element={<ViewAllBlog />} />
         <Route path="/createaccount" element={<CreateAccount />} />
