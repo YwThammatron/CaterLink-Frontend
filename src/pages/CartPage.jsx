@@ -12,11 +12,14 @@ function CartPage() {
           <h1>คำสั่งซื้อของฉัน</h1>
           <div className="flex flex-col gap-3 w-full">
             <Cartbar />
-            <CartCard />
-            <CartCard />
-            <CartCard />
-            <CartCard />
-            <CartCard />
+
+            {/* Show all different status badges */}
+            <CartCard status="รอร้านตอบรับ" />
+            <CartCard status="ที่ต้องชำระ" />
+            <CartCard status="จัดเตรียมสำเร็จ" />
+            <CartCard status="กำลังจัดเตรียม" />
+            <CartCard status="สำเร็จแล้ว" />
+            <CartCard status="ยกเลิก" />
           </div>
         </div>
       </div>

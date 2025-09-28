@@ -56,6 +56,14 @@ function NavbarCustom() {
     navigate("/planning");
   };
 
+  const goToSignup = () => {
+    navigate("/signup");
+  };
+
+  const goToLogin = () => {
+    navigate("/login");
+  };
+
   return (
     <nav className="w-full h-fit flex flex-col py-5 gap-4 bg-white shadow-[0_2px_8px_0px_#0000001A]">
       {/* Top */}
@@ -128,10 +136,20 @@ function NavbarCustom() {
                 className="py-[10px] px-4"
                 onClick={() => setIsLoggedIn(true)} // Test login - replace with actual login logic
               >
-                <p className="text-[#475467] font-semibold">ลงชื่อเข้าใช้</p>
+                <p
+                  className="text-[#475467] font-semibold cursor-pointer"
+                  onClick={goToSignup}
+                >
+                  ลงชื่อเข้าใช้
+                </p>
               </button>
               <button className="p-3 border-none rounded-md bg-gradient">
-                <p className="text-white font-semibold">เข้าสู่ระบบ</p>
+                <p
+                  className="text-white font-semibold cursor-pointer"
+                  onClick={goToLogin}
+                >
+                  เข้าสู่ระบบ
+                </p>
               </button>
             </>
           )}
