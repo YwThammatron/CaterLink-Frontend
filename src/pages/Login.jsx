@@ -33,7 +33,9 @@ function Login() {
 
               {/* header */}
               <div className="flex flex-col items-center">
-                <Logo className="w-[48px] h-[48px]" />
+                <div className="w-[48px] h-[48px]">
+                  <Logo/>
+                </div>
                 <h2 className="mt-[24px]">เข้าสู่ระบบร้านค้า</h2>
               </div>
 
