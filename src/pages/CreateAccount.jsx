@@ -40,6 +40,33 @@ function CreateAccount() {
         window.scrollTo({ top: 0, behavior: 'smooth' })
     }
 
+    const handleBackBank = (e) => {
+        e.preventDefault()
+        setTabindex(Tabindex => Tabindex - 1)
+        const updated = Subpages.map(item => 
+            item.label === 'ประเภทร้านค้า' ? {...item,index:true} : item
+        )
+        console.log(Subpages)
+        setSubpages(updated)
+        const pline2 = document.getElementById('pline2')
+        pline2.style.backgroundColor = '#EAECF0'
+
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+
+    const handleBackType = (e) => {
+        e.preventDefault()
+        setTabindex(Tabindex => Tabindex - 1)
+        const updated = Subpages.map(item => 
+            item.label === 'ประเภทร้านค้า' && item.index == false ? {...item,index:false} : item
+        )
+        setSubpages(updated)
+        const pline1 = document.getElementById('pline1')
+        pline1.style.backgroundColor = '#EAECF0'
+
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+
     const handleSend = (e) => {
         e.preventDefault()
         setTabindex(Tabindex => Tabindex + 1)
@@ -49,8 +76,8 @@ function CreateAccount() {
 
     const [Subpages,setSubpages] = useState([
         {label: 'ข้อมูลร้านค้า' ,height:754 ,content: <RestInfo onClick={handleClickType}/>,index:true},
-        {label: 'ประเภทร้านค้า',height:574  ,content: <RestType onClick={handleClickBank} />,index:false},
-        {label: 'บัญชีธนาคาร',height:488 ,content: <RestBank onClick={handleSend} />,index:false},
+        {label: 'ประเภทร้านค้า',height:574  ,content: <RestType onClick={handleClickBank} backClick={handleBackType} />,index:false},
+        {label: 'บัญชีธนาคาร',height:488 ,content: <RestBank onClick={handleSend} backClick={handleBackBank} />,index:false},
         {label: 'ส่งข้อมูลแล้ว',height:618 ,content: <Complete/>}
     ])
 
@@ -71,7 +98,9 @@ return (
                 <div className="flex flex-col items-center gap-[32px] w-[1216px] h-[214px]">
                     {/* header */}
                     <div className="flex flex-col items-center">
-                        <Logo className="w-[48px] h-[48px]" />
+                        <div className="w-[48px] h-[48px]">
+                            <Logo />
+                        </div>
                         <h2 className="mt-[24px]">เพิ่มข้อมูลร้านค้า</h2>
                     </div>
 
