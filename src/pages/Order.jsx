@@ -27,7 +27,7 @@ function Order() {
             </div>
 
             {/* Tab */}
-            <div className="flex gap-[10px] ml-[calc(50%-536px)] mr-[calc(50%-536px)] mb-[39px] border-b">
+            <div className="flex gap-[16px] ml-[calc(50%-536px)] mr-[calc(50%-536px)] mb-[39px] border-b">
                     {subpages.map((tab, index) => (
                     <button
                         key={index}
@@ -44,7 +44,7 @@ function Order() {
             </div>
 
             {/* Content */}
-            <div className="flex flex-col gap-[24px] w-auto h-[738px] mb-[50px] ml-[64px]">
+            <div className="flex flex-col gap-[24px] w-auto h-[1195px] mb-[50px] ml-[64px]">
                 {subpages[Tabindex].Content}
             </div>
           </div>

@@ -38,7 +38,7 @@ function WriteBlog() {
             </div>
 
             {/* Content */}
-            <div className="flex flex-col gap-[24px] w-auto h-[820px] items-center mb-[32px]">
+            <div className="flex flex-col gap-[24px] w-auto h-[897px] items-center mb-[32px]">
                 {/* Table */}
                 <div className="grid justify-center items-center border-[1px] border-[#F2F4F7] rounded-[24px] w-[1104px] h-[752px] bg-white">
                     {/* Content (Blog Infomation) */}

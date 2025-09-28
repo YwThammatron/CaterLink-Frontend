@@ -6,52 +6,55 @@ import OrderCard from "../../components/ui/OrderCard";
 const orders = [
     {
         name:"มิ่งบุญ ร้อยเรียง",
-        orderid:"080-000-0000",
-        food:"ซุ้มอาหารอีสาน",
+        status:"รอร้านตอบรับ",
+        food:"บุฟฟเฟต์ไทยสแตนดาร์ต / Buffet Thai Stand",
         number:100,
-        detail:"ลาบ น้ำตก และส้มตำ",
-        date:"4/09/2025",
-        start:"17.00",
-        end:"21.00",
-        address:"เลขที่ 1 ECC Building ลาดกระบัง กรุงเทพมหานคร 10520",
-        price:95
-    },
-
-    {
-        name:"เต่าบิน สุดอร่อย",
-        orderid:"080-000-0500",
-        food:"ซุ้มอาหารญี่ปุ่น",
-        number:50,
-        detail:"ข้าวหมูทงคัตสี กิมจิ และซุปมิโสะ",
+        detail:"รายการอาหาร 6 อย่าง ฟรีน้ำดื่ม, ข้าวหอมมะลิ, ของหวาน/ผลไม้รวม, จำนวนอาหารรวมทั้งหมด 8-10 รายการ",
+        price:26100,
+        deposit:13500,
         date:"6/09/2025",
-        start:"15.00",
-        end:"19.00",
-        address:"เลขที่ 1 ECC Building ลาดกระบัง กรุงเทพมหานคร 10520",
-        price:200
+        start:"05:00",
+        end:"10:00",
+        address:"อาคารปฏิบัติการรวมวิศวกรรมศาสตร์ 2 (ECC) เลขที่ 1 ซอยฉลองกรุง 1 แขวงลาดกระบัง เขตลาดกระบัง",
     },
 
     {
-        name:"ยิ่งยอด บุญช่วย",
-        orderid:"080-000-1000",
-        food:"ซุ้มอาหารไทย",
-        number:350,
-        detail:"ข้าวขาหมู และแกงจืดหมูสับ",
-        date:"7/09/2025",
-        start:"8.00",
-        end:"12.00",
-        address:"เลขที่ 1 ECC Building ลาดกระบัง กรุงเทพมหานคร 10520",
-        price:140
-    }
+        name:"มิ่งบุญ ร้อยเรียง",
+        status:"กำลังจัดเตรียม",
+        food:"บุฟฟเฟต์ไทยสแตนดาร์ต / Buffet Thai Stand",
+        number:100,
+        detail:"รายการอาหาร 6 อย่าง ฟรีน้ำดื่ม, ข้าวหอมมะลิ, ของหวาน/ผลไม้รวม, จำนวนอาหารรวมทั้งหมด 8-10 รายการ",
+        price:26100,
+        deposit:13500,
+        date:"6/09/2025",
+        start:"05:00",
+        end:"10:00",
+        address:"อาคารปฏิบัติการรวมวิศวกรรมศาสตร์ 2 (ECC) เลขที่ 1 ซอยฉลองกรุง 1 แขวงลาดกระบัง เขตลาดกระบัง",
+    },
+
+    {
+        name:"มิ่งบุญ ร้อยเรียง",
+        status:"จัดเตรียมสำเร็จ",
+        food:"บุฟฟเฟต์ไทยสแตนดาร์ต / Buffet Thai Stand",
+        number:100,
+        detail:"รายการอาหาร 6 อย่าง ฟรีน้ำดื่ม, ข้าวหอมมะลิ, ของหวาน/ผลไม้รวม, จำนวนอาหารรวมทั้งหมด 8-10 รายการ",
+        price:26100,
+        deposit:13500,
+        date:"6/09/2025",
+        start:"05.00",
+        end:"10.00",
+        address:"อาคารปฏิบัติการรวมวิศวกรรมศาสตร์ 2 (ECC) เลขที่ 1 ซอยฉลองกรุง 1 แขวงลาดกระบัง เขตลาดกระบัง",
+    },
 ]
 
 function Purchase() {
 
-    const handleCancel = (orderid) => {
-        window.alert(`Order ${orderid} canceled`)
+    const handleCancel = (food) => {
+        window.alert(`Order ${food} canceled`)
     }
 
-    const handleAccept = (orderid) => {
-        window.alert(`Order ${orderid} go to booking`)
+    const handleAccept = (food) => {
+        window.alert(`Order ${food} go to booking`)
     }
 
   return (
@@ -63,17 +66,18 @@ function Purchase() {
                 <OrderCard
                 key={index}
                 name={content.name}
-                orderid={content.orderid}
+                status={content.status}
                 food={content.food}
                 number={content.number}
                 detail={content.detail}
+                price={content.price}
+                deposit={content.deposit}
                 date={content.date}
                 start={content.start}
                 end={content.end}
                 address={content.address}
-                price={content.price}
-                cancelClick={() => handleCancel(content.orderid)}
-                acceptClick={() => handleAccept(content.orderid)}
+                cancelClick={() => handleCancel(content.food)}
+                acceptClick={() => handleAccept(content.food)}
                 isHistory={false}
                 />
             </div>
