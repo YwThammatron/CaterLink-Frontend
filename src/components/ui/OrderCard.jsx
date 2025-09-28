@@ -6,10 +6,10 @@ import PropTypes from "prop-types";
 function OrderCard(props) {
   return (
     <div className="relative w-[1072px] h-[377px]">
-        <div className="absolute flex flex-col w-[1072px] h-[377px] bg-white rounded-[8px]">
+        <div className="absolute flex flex-col w-[1072px] h-[377px] border-[1px] border-[#D0D5DD] bg-white rounded-[8px]">
             {/* Content Upside */}
             <div className="flex h-[49px] items-center">
-                <p className="pl-[16px] pr-[16px] text-[14px] text-[#344054] font-[500]">{props.name}</p>
+                <p className="pl-[32px] pr-[16px] text-[14px] text-[#344054] font-[500]">{props.name}</p>
                 {(() => {
                     if(props.status == "รอร้านตอบรับ"){return <Badge className="w-auto h-[28px] pl-[12px] pr-[12px] text-[14px] text-[#363F72] font-[500] border-[1px] border-[#D5D9EB] bg-[#F8F9FC] rounded-[1000px]">{props.status}</Badge>}
                     else if(props.status == "กำลังจัดเตรียม"){return <Badge className="w-auto h-[28px] pl-[12px] pr-[12px] text-[14px] text-[#026AA2] font-[500] border-[1px] border-[#B9E6FE] bg-[#F0F9FF] rounded-[1000px]">{props.status}</Badge>}
@@ -25,7 +25,7 @@ function OrderCard(props) {
             {/* Content Downside */}
             <div className="flex w-full h-[165px]">
                 {/* Content */}
-                <div className="flex flex-col w-[668px] h-[104px] gap-[12px] pt-[14px] mb-[16px] pl-[16px] pr-[205px]">
+                <div className="flex flex-col w-[668px] h-[104px] gap-[12px] pt-[14px] mb-[16px] pl-[32px] pr-[205px]">
                     <p className="text-[16px] font-[700]">{props.food}</p>
                     <div className="grid gap-[16px] w-full text-[16px] text-[#475467] ">
                         <div className="grid">
