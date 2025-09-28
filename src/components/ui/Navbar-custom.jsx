@@ -61,7 +61,9 @@ function NavbarCustom() {
       {/* Top */}
       <div className="flex justify-between items-center px-32">
         <div className="flex items-center pr-2 gap-4" onClick={goToHome}>
-          <Logo />
+          <div className="w-[32px] h-[32px]">
+            <Logo />
+          </div>
           <h1 className="logo cursor-pointer">CaterLink</h1>
         </div>
 
