@@ -98,7 +98,9 @@ return (
                 <div className="flex flex-col items-center gap-[32px] w-[1216px] h-[214px]">
                     {/* header */}
                     <div className="flex flex-col items-center">
-                        <Logo className="w-[48px] h-[48px]" />
+                        <div className="w-[48px] h-[48px]">
+                            <Logo />
+                        </div>
                         <h2 className="mt-[24px]">เพิ่มข้อมูลร้านค้า</h2>
                     </div>
 
