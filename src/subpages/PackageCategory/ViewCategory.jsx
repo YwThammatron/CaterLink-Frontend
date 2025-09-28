@@ -81,17 +81,21 @@ function ViewCategory({ sendClick }) {
                                 {packagectg.map((content,index) => {
                                     return (
                                         <AccordionItem key={index} value={content.name}>
-                                            <AccordionTrigger className="no-underline h-[56px] pl-[14px] flex items-center text-[16px] text-[#101828] font-[500] hover:no-underline cursor-pointer">{content.name}</AccordionTrigger>
-                                            <AccordionContent className="pl-[32px] pb-[16px] flex flex-col gap-[12px]">
-                                                {content.package.map((data,i) => {
-                                                    return (
-                                                        <div key={i} className="relative flex text-[#475467]">
-                                                            <p className="absolute left-0 text-[16px] font-[500]">{data.name}</p>
-                                                            <p className="relative ml-auto text-[14px] font-[400]">{data.price} บาท/ที่</p>
-                                                        </div>
-                                                    )
-                                                })}
-                                            </AccordionContent>
+                                                <AccordionTrigger className="no-underline h-[56px] pl-[14px] flex items-center text-[16px] text-[#101828] font-[500] hover:no-underline cursor-pointer">
+                                                    <span>{content.name}</span>
+                                                    <span className="ml-auto text-[14px] text-[#475467]">{content.package.length} แพคเกจ</span>
+                                                </AccordionTrigger>
+                                                    
+                                                <AccordionContent className="pl-[32px] pb-[16px] flex flex-col gap-[12px]">
+                                                    {content.package.map((data,i) => {
+                                                        return (
+                                                            <div key={i} className="relative flex text-[#475467]">
+                                                                <p className="absolute left-0 text-[16px] font-[500]">{data.name}</p>
+                                                                <p className="relative ml-auto text-[14px] font-[400]">{data.price} บาท/ที่</p>
+                                                            </div>
+                                                        )
+                                                    })}
+                                                </AccordionContent>
                                         </AccordionItem>
                                     )
                                 })}
