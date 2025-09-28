@@ -8,7 +8,7 @@ import SidebarCustom from "../components/ui/Sidebar-custom";
 function Promotion() {
 
   const [Payload,setPayload] = useState({
-    percent:0,
+    percent:null,
     startdate:"",
     enddate:"",
     starttime:"",
@@ -77,7 +77,7 @@ function Promotion() {
                                     value={Payload.startdate}
                                     onChange={handleChange}
                                     placeholder="เลือกวัน"
-                                    className="w-[247px] h-[40px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md"
+                                    className="w-[247px] h-[40px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md outline-none"
                                     />
                                 </div>
 
