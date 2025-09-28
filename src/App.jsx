@@ -20,6 +20,8 @@ import CommentPage from "./pages/CommentPage";
 import Order from "./pages/Order";
 import CreateAccount from "./pages/CreateAccount";
 
+import Promotion from "./pages/Promotion";
+
 function App() {
   return (
     <Router>
@@ -39,6 +41,7 @@ function App() {
         <Route path="/createaccount" element={<CreateAccount />} />
         <Route path="/planning" element={<PlanningPage />} />
         <Route path="/order" element={<Order />} />
+        <Route path="/promotion" element={<Promotion />} />
         <Route path="/blog" element={<BlogDetail />} />
         <Route path="/review" element={<ReviewPage />} />
         <Route path="/comment" element={<CommentPage />} />
