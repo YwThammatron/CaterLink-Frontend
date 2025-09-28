@@ -1,15 +1,12 @@
 import { Button } from "@headlessui/react";
+import Logo from "./Logo";
 
 function Footer() {
   return (
     <div className="w-full h-fit py-8 flex flex-col gap-10 border border-[#EAECF0]">
       <div className="flex flex-col px-8 gap-8 justify-center items-center">
         <div className="flex gap-4 justify-center items-center">
-          <img
-            src="https://github.com/shadcn.png"
-            alt=""
-            className="max-w-8 "
-          />
+          <Logo />
           <h1 className="logo">CaterLink</h1>
         </div>
 

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Star, BadgeCheck, HandPlatter, Heart } from "lucide-react";
 import { Badge } from "./badge";
+import FoodTag from "./FoodTag";
 
 function RestaurantCard({ onClick }) {
   const [isLiked, setIsLiked] = useState(false);
@@ -50,20 +51,11 @@ function RestaurantCard({ onClick }) {
           </div>
 
           <div className="flex gap-[6px]">
-            <Badge
-              variant="secondary"
-              className="border py-[3px] px-2 border-[#EAECF0] bg-white text-xs font-medium flex gap-2"
-            >
-              <HandPlatter size={12} />
-              จัดเลี้ยง
-            </Badge>
-            <Badge
-              variant="secondary"
-              className="border py-[3px] px-2 border-[#EAECF0] bg-white text-xs font-medium flex gap-2"
-            >
-              <HandPlatter size={12} />
-              ซุ้มอาหาร
-            </Badge>
+            <FoodTag
+              showFoodStall={true}
+              showSnackBox={false}
+              showCatering={true}
+            />
           </div>
         </div>
       </div>

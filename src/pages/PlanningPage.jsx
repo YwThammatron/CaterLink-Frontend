@@ -2,8 +2,26 @@ import NavbarCustom from "../components/ui/Navbar-custom";
 import PlanningCard from "../components/ui/PlanningCard";
 import { Button } from "../components/ui/button";
 import MiniFooter from "../components/ui/miniFooter";
+import { useState } from "react";
 
 function PlanningPage() {
+  const [planningCards, setPlanningCards] = useState([1]);
+
+  const addPlanningCard = () => {
+    const newId = planningCards.length > 0 ? Math.max(...planningCards) + 1 : 1;
+    setPlanningCards([...planningCards, newId]);
+  };
+
+  const clearAllCards = () => {
+    setPlanningCards([1]); // minimum 1 card
+  };
+
+  const removePlanningCard = (cardId) => {
+    if (planningCards.length > 1) {
+      setPlanningCards(planningCards.filter((id) => id !== cardId));
+    }
+  };
+
   return (
     <>
       <NavbarCustom />
@@ -20,20 +38,23 @@ function PlanningPage() {
             <div className="flex justify-end">
               <Button
                 variant="outline"
-                className="text-gradient border border-[#FF8A00] rounded-md font-semibold"
+                className="text-gradient border border-[#FF8A00] rounded-md font-semibold cursor-pointer"
+                onClick={addPlanningCard}
               >
                 เพิ่มรายการจัดเลี้ยง
               </Button>
             </div>
 
             <div className="flex gap-4 flex-wrap">
-              <PlanningCard />
-              <PlanningCard />
-              <PlanningCard />
+              {planningCards.map((id) => (
+                <PlanningCard key={id} id={id} onRemove={removePlanningCard} />
+              ))}
             </div>
 
             <div className="flex gap-4 justify-end pt-6">
-              <Button variant="outline">เคลียร์ทั้งหมด</Button>
+              <Button variant="outline" onClick={clearAllCards}>
+                เคลียร์ทั้งหมด
+              </Button>
               <Button className="bg-gradient text-white font-semibold">
                 ค้นหาร้านค้าตามแผน
               </Button>
