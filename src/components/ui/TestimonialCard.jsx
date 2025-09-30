@@ -1,9 +1,19 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Star } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 function TestimonialCard() {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate("/review");
+  };
+
   return (
-    <div className="max-w-[384px] p-4 border rounded-lg shadow-sm bg-white">
+    <div
+      className="max-w-[384px] p-4 border rounded-lg shadow-sm bg-white"
+      // onClick={handleClick}
+    >
       <div className="flex gap-3">
         <Avatar className="max-w-[32px] ">
           <AvatarImage src="https://github.com/shadcn.png" />

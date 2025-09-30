@@ -1,6 +1,17 @@
+import { useNavigate } from "react-router-dom";
+
 function BlogpostCard() {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate("/blog");
+  };
+
   return (
-    <div className="flex flex-col gap-1 max-w-[224px]">
+    <div
+      className="flex flex-col gap-1 max-w-[224px] cursor-pointer"
+      onClick={handleClick}
+    >
       <div className="flex flex-col gap-3">
         <img
           src="https://github.com/shadcn.png"

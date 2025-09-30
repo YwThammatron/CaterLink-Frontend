@@ -6,11 +6,13 @@ import { Calendar } from "./calendar";
 import { Label } from "./label";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 import { Badge } from "./badge";
+import FoodTag from "./FoodTag";
 
-function PlanningCard() {
+function PlanningCard({ id, onRemove }) {
   const [selectedEventType, setSelectedEventType] = useState("รูปแบบงาน");
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState();
+  const [guestCount, setGuestCount] = useState(1);
 
   const [isLiked, setIsLiked] = useState(false);
 
@@ -19,25 +21,37 @@ function PlanningCard() {
     setIsLiked(!isLiked);
   };
 
+  const handleRemove = () => {
+    if (onRemove && id) {
+      onRemove(id);
+    }
+  };
+
+  const handleGuestCountChange = (e) => {
+    const value = parseInt(e.target.value) || 1;
+    setGuestCount(Math.max(1, value)); // Ensure minimum value is 1
+  };
+
   return (
     <div className="w-[584px] pb-8 rounded-xl border border-[#D3CFCF]">
       <div className="flex justify-center items-center p-6">
         <div className="flex justify-between items-center w-[536px]">
-          <p className="text-lg font-semibold">รายการจัดเลี้ยง 1</p>
+          <p className="text-lg font-semibold">รายการจัดเลี้ยง {id}</p>
           <svg
             width="24px"
             height="24px"
             viewBox="0 0 24 24"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            className=" text-[#98A2B3]"
+            className="text-[#98A2B3] cursor-pointer hover:text-red-500 transition-colors duration-200"
+            onClick={handleRemove}
           >
             <path
               d="M18 6L6 18M6 6L18 18"
               stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
           </svg>
         </div>
@@ -136,7 +150,14 @@ function PlanningCard() {
           <div className="flex flex-col gap-2 w-[260px]">
             <p className="text-sm font-medium">จำนวนคน*</p>
 
-            <Input type="number" placeholder="เพิ่มตัวเลข" className="w-full" />
+            <Input
+              type="number"
+              placeholder="เพิ่มตัวเลข"
+              className="w-full"
+              value={guestCount}
+              onChange={handleGuestCountChange}
+              min="1"
+            />
           </div>
 
           <div className="flex flex-col gap-2 w-[260px]">
@@ -254,20 +275,11 @@ function PlanningCard() {
               </div>
 
               <div className="flex gap-[6px]">
-                <Badge
-                  variant="secondary"
-                  className="border py-[3px] px-2 border-[#EAECF0] bg-white text-xs font-medium flex gap-2"
-                >
-                  <HandPlatter size={12} />
-                  จัดเลี้ยง
-                </Badge>
-                <Badge
-                  variant="secondary"
-                  className="border py-[3px] px-2 border-[#EAECF0] bg-white text-xs font-medium flex gap-2"
-                >
-                  <HandPlatter size={12} />
-                  ซุ้มอาหาร
-                </Badge>
+                <FoodTag
+                  showFoodStall={true}
+                  showSnackBox={true}
+                  showCatering={false}
+                />
               </div>
             </div>
           </div>
