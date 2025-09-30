@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Search } from "lucide-react";
 import { ShoppingCart } from "lucide-react";
 import { ChevronDown } from "lucide-react";
@@ -8,8 +8,24 @@ import { useNavigate, useLocation } from "react-router-dom";
 
 function NavbarCustom() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   // Mock user data - replace with actual user data from your auth system
   const user = {
@@ -169,12 +185,55 @@ function NavbarCustom() {
         >
           <p className={getNavItemClasses("/customerrestaurant")}>ร้านค้า</p>
         </button>
-        <button className="flex items-center gap-1 cursor-pointer hover:scale-105 transition-transform duration-200 group">
-          <p className="text-[#475467] font-semibold group-hover:bg-gradient-to-r group-hover:from-[#FF8A00] group-hover:to-[#E9580A] group-hover:bg-clip-text group-hover:text-transparent transition-all duration-200">
-            หมวดหมู่ร้านค้า
-          </p>
-          <ChevronDown className="text-[#475467] group-hover:text-[#FF8A00] transition-colors duration-200" />
-        </button>
+        <div className="relative" ref={dropdownRef}>
+          <button
+            className="flex items-center gap-1 cursor-pointer hover:scale-105 transition-transform duration-200 group"
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+          >
+            <p className="text-[#475467] font-semibold group-hover:bg-gradient-to-r group-hover:from-[#FF8A00] group-hover:to-[#E9580A] group-hover:bg-clip-text group-hover:text-transparent transition-all duration-200">
+              หมวดหมู่ร้านค้า
+            </p>
+            <ChevronDown
+              className={`text-[#475467] group-hover:text-[#FF8A00] transition-all duration-200 ${
+                isDropdownOpen ? "rotate-180" : ""
+              }`}
+            />
+          </button>
+
+          {isDropdownOpen && (
+            <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+              <div className="py-2">
+                <button
+                  className="w-full px-4 py-2 text-left text-[#475467] hover:bg-[#FF8A00]/10 hover:text-[#FF8A00] transition-colors duration-200 font-medium"
+                  onClick={() => {
+                    setIsDropdownOpen(false);
+                    // Add navigation logic for จัดเลี้ยง
+                  }}
+                >
+                  จัดเลี้ยง
+                </button>
+                <button
+                  className="w-full px-4 py-2 text-left text-[#475467] hover:bg-[#FF8A00]/10 hover:text-[#FF8A00] transition-colors duration-200 font-medium"
+                  onClick={() => {
+                    setIsDropdownOpen(false);
+                    // Add navigation logic for ซุ้มอาหาร
+                  }}
+                >
+                  ซุ้มอาหาร
+                </button>
+                <button
+                  className="w-full px-4 py-2 text-left text-[#475467] hover:bg-[#FF8A00]/10 hover:text-[#FF8A00] transition-colors duration-200 font-medium"
+                  onClick={() => {
+                    setIsDropdownOpen(false);
+                    // Add navigation logic for Snack box
+                  }}
+                >
+                  Snack box
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
         <button
           onClick={goToCompare}
           className="cursor-pointer hover:scale-105 transition-transform duration-200"

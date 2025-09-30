@@ -47,37 +47,19 @@ function CustomerHomepage() {
           <h3>หมวดหมู่ร้านจัดเลี้ยง</h3>
           <div className="flex gap-4">
             <img
-              src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=184&h=140&fit=crop"
+              src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=384&h=140&fit=crop"
               alt="Thai Restaurant"
               className="rounded-md"
               onClick={goToRestaurant}
             />
             <img
-              src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=184&h=140&fit=crop"
+              src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=384&h=140&fit=crop"
               alt="Chinese Restaurant"
               className="rounded-md"
               onClick={goToRestaurant}
             />
             <img
-              src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=184&h=140&fit=crop"
-              alt="Italian Restaurant"
-              className="rounded-md"
-              onClick={goToRestaurant}
-            />
-            <img
-              src="https://images.unsplash.com/photo-1571997478779-2adcbbe9ab2f?w=184&h=140&fit=crop"
-              alt="Seafood Restaurant"
-              className="rounded-md"
-              onClick={goToRestaurant}
-            />
-            <img
-              src="https://images.unsplash.com/photo-1600891964092-4316c288032e?w=184&h=140&fit=crop"
-              alt="BBQ Restaurant"
-              className="rounded-md"
-              onClick={goToRestaurant}
-            />
-            <img
-              src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=184&h=140&fit=crop"
+              src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=384&h=140&fit=crop"
               alt="Italian Restaurant"
               className="rounded-md"
               onClick={goToRestaurant}
@@ -239,13 +221,13 @@ function CustomerHomepage() {
         <div className="flex flex-col gap-4 px-32 py-10">
           <div className="flex justify-between items-center">
             <h3>แพคเกจแนะนำจาก CaterLink </h3>
-            <div
+            {/* <div
               className="flex gap-2 items-center cursor-pointer"
               onClick={goToPackage}
             >
               <p className="font-bold text-gradient">ดูทั้งหมด</p>
               <ArrowRight className="text-[#EB5B0A]" />
-            </div>
+            </div> */}
           </div>
 
           <div className="flex gap-4">

@@ -1,13 +1,16 @@
 import { Calendar, Clock, MapPin, CheckCircle, X } from "lucide-react";
 import { Button } from "./button";
+import { Input } from "./input";
 import { useState, useEffect, useRef } from "react";
 import { Calendar as CalendarComponent } from "./calendar";
 import { toast } from "sonner";
 
-function ReservationDetails({ onClose, onBack }) {
+function ReservationDetails({ onClose, onBack, selectedPackage }) {
   const [date, setDate] = useState();
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
+  const [meetingLocation, setMeetingLocation] = useState("");
+  const [messageToRestaurant, setMessageToRestaurant] = useState("");
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const calendarRef = useRef(null);
 
@@ -62,12 +65,14 @@ function ReservationDetails({ onClose, onBack }) {
   const handleReservationSuccess = () => {
     console.log("จองเลย button clicked!"); // Debug log
 
-    // Mock reservation data
+    // Reservation data using selectedPackage for package name only
     const reservationData = {
       date: date ? formatDate(date) : "ไม่ได้เลือก",
       startTime: startTime || "ไม่ได้เลือก",
       endTime: endTime || "ไม่ได้เลือก",
-      packageName: "บุฟฟเฟต์ไทยสแตนดาร์ด",
+      packageName: selectedPackage
+        ? `จำนวนแขก ${selectedPackage.guests} ท่าน - ${selectedPackage.price} บาท/ท่าน`
+        : "ยังไม่ได้เลือกแพคเก็จ",
       guestCount: "50 ท่าน",
       totalPrice: "14,500 บาท",
     };
@@ -145,23 +150,51 @@ function ReservationDetails({ onClose, onBack }) {
 
         <div className="flex flex-col gap-3">
           <div className="flex items-start justify-between">
-            <p className="text-sm font-medium text-[#344054]">แพคเกจที่เลือก</p>
-            <div className="p-4 border border-[#D0D5DD] rounded-xl bg-[#F9FAFB] w-[464px] h-[116px]"></div>
+            <p className="text-sm font-medium text-[#344054]">
+              แพคเก็จที่เลือก
+            </p>
+            <div className="p-4 border border-[#D0D5DD] rounded-xl bg-[#F9FAFB] w-[464px] min-h-[116px]">
+              {selectedPackage ? (
+                <div className="flex flex-col gap-3">
+                  <div className="flex justify-between items-center">
+                    <p className="font-medium text-[#344054]">
+                      จำนวนแขก {selectedPackage.guests} ท่าน
+                    </p>
+                    <p className="font-bold text-gradient text-lg">
+                      {selectedPackage.price} บาท/ท่าน
+                    </p>
+                  </div>
+                  <p className="text-[#475467] text-sm leading-relaxed">
+                    {selectedPackage.description}
+                  </p>
+                </div>
+              ) : (
+                <div className="flex items-center justify-center h-full text-[#98A2B3] text-sm">
+                  ยังไม่ได้เลือกแพคเก็จ
+                </div>
+              )}
+            </div>
           </div>
 
           <div className="flex items-start justify-between">
             <p className="text-sm font-medium text-[#344054]">จำนวนท่าน/ที่</p>
-            <div className="p-4 border border-[#D0D5DD] rounded-xl bg-[#F9FAFB] w-[464px]"></div>
+            <div className="p-4 border border-[#D0D5DD] rounded-xl bg-[#F9FAFB] w-[464px] flex items-center">
+              <span className="text-[#344054]">50 ท่าน</span>
+            </div>
           </div>
 
           <div className="flex items-start justify-between">
             <p className="text-sm font-medium text-[#344054]">ยอดชำระมัดจำ</p>
-            <div className="p-4 border border-[#D0D5DD] rounded-xl bg-[#F9FAFB] w-[464px]"></div>
+            <div className="p-4 border border-[#D0D5DD] rounded-xl bg-[#F9FAFB] w-[464px] flex items-center">
+              <span className="text-[#344054]">3,500 บาท</span>
+            </div>
           </div>
 
           <div className="flex items-start justify-between">
             <p className="text-sm font-medium text-[#344054]">ยอดชำระทั้งหมด</p>
-            <div className="p-4 border border-[#D0D5DD] rounded-xl bg-[#F9FAFB] w-[464px]"></div>
+            <div className="p-4 border border-[#D0D5DD] rounded-xl bg-[#F9FAFB] w-[464px] flex items-center">
+              <span className="font-semibold text-[#FF8A00]">14,500 บาท</span>
+            </div>
           </div>
         </div>
       </div>
@@ -263,12 +296,29 @@ function ReservationDetails({ onClose, onBack }) {
             <p className="text-sm font-medium text-[#344054]">
               สถานที่นัดกับร้าน
             </p>
-            <div className="p-4 border border-[#D0D5DD] rounded-xl bg-[#F9FAFB] w-[464px]"></div>
+            <Input
+              value={meetingLocation}
+              onChange={(e) => setMeetingLocation(e.target.value)}
+              placeholder="ระบุสถานที่ที่ต้องการนัดกับร้าน"
+              className="w-[464px] p-3 border border-[#D0D5DD] rounded-lg bg-white text-sm focus:border-[#FF8A00] focus:ring-1 focus:ring-[#FF8A00] outline-none"
+            />
           </div>
 
           <div className="flex items-start justify-between">
             <p className="text-sm font-medium text-[#344054]">ข้อความถึงร้าน</p>
-            <div className="p-4 border border-[#D0D5DD] rounded-xl bg-[#F9FAFB] w-[464px]"></div>
+            <textarea
+              value={messageToRestaurant}
+              onChange={(e) => setMessageToRestaurant(e.target.value)}
+              placeholder="ข้อความหรือข้อกำหนดเพิ่มเติมถึงร้าน"
+              rows={3}
+              className="w-[464px] p-3 border border-[#D0D5DD] rounded-lg bg-white text-sm focus:border-[#FF8A00] focus:ring-1 focus:ring-[#FF8A00] outline-none resize-none"
+            />
+          </div>
+
+          <div className="flex items-start pt-2">
+            <p className="text-sm text-[#667085]">
+              หมายเหตุ : หากจองสำเร็จจะไม่สามารถเปลี่ยนแปลงข้อมูลได้
+            </p>
           </div>
         </div>
       </div>

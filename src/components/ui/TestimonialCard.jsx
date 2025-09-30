@@ -11,8 +11,8 @@ function TestimonialCard() {
 
   return (
     <div
-      className="max-w-[384px] p-4 border rounded-lg shadow-sm bg-white cursor-pointer"
-      onClick={handleClick}
+      className="max-w-[384px] p-4 border rounded-lg shadow-sm bg-white"
+      // onClick={handleClick}
     >
       <div className="flex gap-3">
         <Avatar className="max-w-[32px] ">
