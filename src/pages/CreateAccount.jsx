@@ -85,9 +85,9 @@ function CreateAccount() {
 return (
     <>
         {/* หน้าสร้าง Account */}
-        <div className="flex justify-center items-center h-[155vh]">
+        <div className="flex justify-center h-[155vh]">
             {/* Container */}
-            <div className="flex flex-col items-center w-[1280px] h-[968px] gap-[32px]">
+            <div className="flex flex-col items-center w-[1280px] h-[968px] pt-[64px] gap-[32px]">
                 {/* Content (header) */}
                 <div className="flex flex-col items-center gap-[32px] w-[1216px] h-[214px]">
                     {/* header */}
