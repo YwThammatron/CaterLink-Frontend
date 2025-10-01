@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import NavbarCustom from "../components/ui/Navbar-custom";
 import PackageCard from "../components/ui/PackageCard";
 import PackageCard2 from "../components/ui/PackageCard2";
@@ -10,6 +11,7 @@ import ReservationDetails from "../components/ui/ReservationDetails";
 import { Star, BadgeCheck, HandPlatter, Heart } from "lucide-react";
 import { Badge } from "../components/ui/badge";
 import { Button } from "../components/ui/button";
+import FoodTag from "../components/ui/FoodTag";
 
 import {
   Breadcrumb,
@@ -24,8 +26,10 @@ function CustomerReservation() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalStep, setModalStep] = useState("package"); // 'package' or 'reservation'
   const [selectedPackageData, setSelectedPackageData] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
-  const openModal = () => {
+  const openModal = (category = "Buffet") => {
+    setSelectedCategory(category);
     setModalStep("package");
     setIsModalOpen(true);
   };
@@ -34,6 +38,7 @@ function CustomerReservation() {
     setIsModalOpen(false);
     setModalStep("package");
     setSelectedPackageData(null);
+    setSelectedCategory(null);
   };
 
   const showReservationDetails = (packageData) => {
@@ -43,6 +48,11 @@ function CustomerReservation() {
 
   const backToPackageSelection = () => {
     setModalStep("package");
+  };
+
+  const navigate = useNavigate();
+  const goToReviewPage = () => {
+    navigate("/review");
   };
   return (
     <>
@@ -115,6 +125,7 @@ function CustomerReservation() {
                     viewBox="0 0 24 24"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
+                    className="text-[#FF8A00]"
                   >
                     <path
                       d="M12 13C13.6569 13 15 11.6569 15 10C15 8.34315 13.6569 7 12 7C10.3431 7 9 8.34315 9 10C9 11.6569 10.3431 13 12 13Z"
@@ -144,6 +155,7 @@ function CustomerReservation() {
                     viewBox="0 0 24 24"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
+                    className="text-[#FF8A00]"
                   >
                     <path
                       d="M8.38028 8.85335C9.07627 10.303 10.0251 11.6616 11.2266 12.8632C12.4282 14.0648 13.7869 15.0136 15.2365 15.7096C15.3612 15.7694 15.4235 15.7994 15.5024 15.8224C15.7828 15.9041 16.127 15.8454 16.3644 15.6754C16.4313 15.6275 16.4884 15.5704 16.6027 15.4561C16.9523 15.1064 17.1271 14.9316 17.3029 14.8174C17.9658 14.3864 18.8204 14.3864 19.4833 14.8174C19.6591 14.9316 19.8339 15.1064 20.1835 15.4561L20.3783 15.6509C20.9098 16.1824 21.1755 16.4481 21.3198 16.7335C21.6069 17.301 21.6069 17.9713 21.3198 18.5389C21.1755 18.8242 20.9098 19.09 20.3783 19.6214L20.2207 19.779C19.6911 20.3087 19.4263 20.5735 19.0662 20.7757C18.6667 21.0001 18.0462 21.1615 17.588 21.1601C17.1751 21.1589 16.8928 21.0788 16.3284 20.9186C13.295 20.0576 10.4326 18.4332 8.04466 16.0452C5.65668 13.6572 4.03221 10.7948 3.17124 7.76144C3.01103 7.19699 2.93092 6.91477 2.9297 6.50182C2.92833 6.0436 3.08969 5.42311 3.31411 5.0236C3.51636 4.66357 3.78117 4.39876 4.3108 3.86913L4.46843 3.7115C4.99987 3.18006 5.2656 2.91433 5.55098 2.76999C6.11854 2.48292 6.7888 2.48292 7.35636 2.76999C7.64174 2.91433 7.90747 3.18006 8.43891 3.7115L8.63378 3.90637C8.98338 4.25597 9.15819 4.43078 9.27247 4.60655C9.70347 5.26945 9.70347 6.12403 9.27247 6.78692C9.15819 6.96269 8.98338 7.1375 8.63378 7.4871C8.51947 7.60142 8.46231 7.65857 8.41447 7.72538C8.24446 7.96281 8.18576 8.30707 8.26748 8.58743C8.29048 8.66632 8.32041 8.72866 8.38028 8.85335Z"
@@ -156,7 +168,10 @@ function CustomerReservation() {
                   <p className="text-[#344054]">02-026-3587 081-554-5662 </p>
                 </div>
 
-                <div className="flex gap-5">
+                <div
+                  className="flex gap-5 cursor-pointer"
+                  onClick={goToReviewPage}
+                >
                   <div className="flex gap-1 justify-center items-center">
                     <Star
                       size={20}
@@ -168,20 +183,11 @@ function CustomerReservation() {
                 </div>
 
                 <div className="flex gap-[6px]">
-                  <Badge
-                    variant="secondary"
-                    className="border py-[3px] px-2 border-[#EAECF0] bg-white text-xs font-medium flex gap-2"
-                  >
-                    <HandPlatter size={12} />
-                    จัดเลี้ยง
-                  </Badge>
-                  <Badge
-                    variant="secondary"
-                    className="border py-[3px] px-2 border-[#EAECF0] bg-white text-xs font-medium flex gap-2"
-                  >
-                    <HandPlatter size={12} />
-                    ซุ้มอาหาร
-                  </Badge>
+                  <FoodTag
+                    showFoodStall={true}
+                    showSnackBox={false}
+                    showCatering={true}
+                  />
                 </div>
               </div>
             </div>
@@ -247,11 +253,11 @@ function CustomerReservation() {
           </div>
 
           <div className="flex flex-wrap gap-4">
-            <PackageCard2 onClick={openModal} />
-            <PackageCard2 onClick={openModal} />
-            <PackageCard2 onClick={openModal} />
-            <PackageCard2 onClick={openModal} />
-            <PackageCard2 onClick={openModal} />
+            <PackageCard2 onClick={() => openModal("Buffet")} />
+            <PackageCard2 onClick={() => openModal("Buffet")} />
+            <PackageCard2 onClick={() => openModal("Buffet")} />
+            <PackageCard2 onClick={() => openModal("Buffet")} />
+            <PackageCard2 onClick={() => openModal("Buffet")} />
           </div>
         </div>
 
@@ -261,11 +267,11 @@ function CustomerReservation() {
           </div>
 
           <div className="flex flex-wrap gap-4">
-            <PackageCard2 onClick={openModal} />
-            <PackageCard2 onClick={openModal} />
-            <PackageCard2 onClick={openModal} />
-            <PackageCard2 onClick={openModal} />
-            <PackageCard2 onClick={openModal} />
+            <PackageCard2 onClick={() => openModal("ซุ้มอาหาร")} />
+            <PackageCard2 onClick={() => openModal("ซุ้มอาหาร")} />
+            <PackageCard2 onClick={() => openModal("ซุ้มอาหาร")} />
+            <PackageCard2 onClick={() => openModal("ซุ้มอาหาร")} />
+            <PackageCard2 onClick={() => openModal("ซุ้มอาหาร")} />
           </div>
         </div>
 
@@ -275,11 +281,11 @@ function CustomerReservation() {
           </div>
 
           <div className="flex flex-wrap gap-4">
-            <PackageCard2 onClick={openModal} />
-            <PackageCard2 onClick={openModal} />
-            <PackageCard2 onClick={openModal} />
-            <PackageCard2 onClick={openModal} />
-            <PackageCard2 onClick={openModal} />
+            <PackageCard2 onClick={() => openModal("Snack Box")} />
+            <PackageCard2 onClick={() => openModal("Snack Box")} />
+            <PackageCard2 onClick={() => openModal("Snack Box")} />
+            <PackageCard2 onClick={() => openModal("Snack Box")} />
+            <PackageCard2 onClick={() => openModal("Snack Box")} />
           </div>
         </div>
 
@@ -289,7 +295,7 @@ function CustomerReservation() {
           </div>
 
           <div className="flex flex-wrap gap-4">
-            <PackageCard2 onClick={openModal} />
+            <PackageCard2 onClick={() => openModal("อาหารเซต")} />
             <PackageCard2 onClick={openModal} />
             <PackageCard2 onClick={openModal} />
             <PackageCard2 onClick={openModal} />
@@ -306,6 +312,7 @@ function CustomerReservation() {
           <PackageDetails
             onClose={closeModal}
             onShowReservation={showReservationDetails}
+            category={selectedCategory}
           />
         ) : (
           <ReservationDetails

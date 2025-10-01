@@ -2,11 +2,18 @@ import { Search } from "lucide-react";
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./button";
+import { useNavigate } from "react-router-dom";
 
 function BlogBar() {
   const [selectedEventType, setSelectedEventType] = useState("ผู้เขียน");
   const [selectedCateringType, setSelectedCateringType] =
     useState("การจัดเลี้ยง");
+
+  const navigate = useNavigate();
+
+  const goToWriteBlog = () => {
+    navigate("/writeblog");
+  };
 
   return (
     <div className="flex gap-4 items-center max-w-[1184px]">
@@ -54,7 +61,10 @@ function BlogBar() {
         <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#7D7B7B] font-medium pointer-events-none" />
       </div>
 
-      <Button className="bg-gradient text-white py-4 px-auto rounded-lg font-semibold h-fit">
+      <Button
+        className="bg-gradient text-white py-4 px-auto rounded-lg font-semibold h-fit cursor-pointer"
+        onClick={goToWriteBlog}
+      >
         เพิ่มบทความของฉัน
       </Button>
     </div>

@@ -109,6 +109,7 @@ function ViewCategory({ sendClick }) {
                             <div className="flex gap-[12px] ml-[915px]">
                                 <Button 
                                 className="w-[185px] h-[44px] rounded-[8px] text-[16px] bg-linear-to-r from-[#F78E1E] to-[#E9580A] hover:cursor-pointer transition"
+
                                 onClick={sendClick}
                                 >
                                     สร้างหมวดหมู่แพคเกจ

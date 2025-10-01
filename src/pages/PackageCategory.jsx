@@ -24,6 +24,7 @@ return (
           <SidebarCustom />
           {/* Container */}
           <div className="w-[84%] h-auto bg-[#F9FAFB]">
+
             {/* Header Navigation */}
             <div className="flex flex-col w-auto h-[63px] pl-[calc(50%-552px)] justify-center border-b-[1px] border-[#EDEEF0] mb-[32px]">
                 <p className="text-[24px] font-[600]">จัดการแพคเกจ</p>

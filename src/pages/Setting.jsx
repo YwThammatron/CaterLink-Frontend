@@ -1,33 +1,31 @@
 import axios from "axios";
 import { useState } from "react";
 
+import UserAccount from "../subpages/setting/UserAccount";
+
 import SidebarCustom from "../components/ui/Sidebar-custom";
-import Purchase from "../subpages/Order/Purchase";
-import History from "../subpages/Order/History";
 
 const subpages = [
-    {label: 'รายการสั่งซื้อ',Content: <Purchase />},
-    {label: 'ประวัติ',Content: <History /> }
+    {label: 'ข้อมูลบัญชีผู้ใช้',Content: <UserAccount />}
 ]
 
-function Order() {
+function Setting() {
+    const [Tabindex,setTabindex] = useState(0);
 
-    const [Tabindex,setTabindex] = useState(0)
-
-  return (
+return (
     <>
-      {/*หน้าคำสั่งซื้อ*/}
-      <div className="flex flex-row w-[100%]">
+      {/*หน้าการตั้งค่า*/}
+      <div className="flex flex-row">
           <SidebarCustom />
           {/* Container */}
-          <div className="w-[84%] bg-[#F9FAFB]">
+          <div className="w-[1200px] h-auto bg-[#F9FAFB]">
             {/* Header Navigation */}
-            <div className="flex flex-col w-auto h-[63px] pl-[calc(50%-536px-32px)] border-b-[1px] border-[#EDEEF0] justify-center mb-[32px]">
-                <p className="text-[24px] font-[600]">คำสั่งซื้อ</p>
+            <div className="flex flex-col w-auto h-[63px] pl-[calc(50%-552px)] border-b-[1px] border-[#EDEEF0] justify-center mb-[32px]">
+                <p className="text-[24px] font-[600]">จัดการร้านค้า</p>
             </div>
 
             {/* Tab */}
-            <div className="flex justify-self-center w-[1072px] gap-[16px] mb-[39px] border-b">
+            <div className="flex gap-[10px] ml-[calc(50%-520px)] mr-[calc(50%-520px)] mb-[24px] border-b">
                     {subpages.map((tab, index) => (
                     <button
                         key={index}
@@ -44,7 +42,7 @@ function Order() {
             </div>
 
             {/* Content */}
-            <div className="flex flex-col items-center gap-[24px] w-auto h-[1195px] mb-[64px]">
+            <div className="flex flex-col gap-[24px] w-auto h-[1033px] items-center mb-[32px]">
                 {subpages[Tabindex].Content}
             </div>
           </div>
@@ -53,4 +51,4 @@ function Order() {
   );
 }
 
-export default Order;
+export default Setting;

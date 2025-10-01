@@ -1,15 +1,20 @@
 import { Button } from "@headlessui/react";
+import Logo from "./Logo";
+import { useNavigate } from "react-router-dom";
 
 function Footer() {
+  const navigate = useNavigate();
+
+  const handleButtonClick = () => {
+    navigate("/signup");
+  };
   return (
     <div className="w-full h-fit py-8 flex flex-col gap-10 border border-[#EAECF0]">
       <div className="flex flex-col px-8 gap-8 justify-center items-center">
         <div className="flex gap-4 justify-center items-center">
-          <img
-            src="https://github.com/shadcn.png"
-            alt=""
-            className="max-w-8 "
-          />
+          <div className="w-[32px] h-[32px]">
+            <Logo />
+          </div>
           <h1 className="logo">CaterLink</h1>
         </div>
 
@@ -22,7 +27,10 @@ function Footer() {
           </p>
         </div>
 
-        <Button className="bg-gradient rounded-lg py-3 px-8 text-white w-fit text-xl font-bold">
+        <Button
+          className="bg-gradient rounded-lg py-3 px-8 text-white w-fit text-xl font-bold cursor-pointer"
+          onClick={handleButtonClick}
+        >
           สนใจโปรโมทร้านค้า
         </Button>
       </div>
