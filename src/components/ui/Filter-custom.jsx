@@ -1,11 +1,75 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Search, ChevronDown } from "lucide-react";
+import axios from "axios";
 
 function FilterCustom() {
-  const [selectedEventType, setSelectedEventType] = useState("รูปแบบงาน");
+  const [selectedEventType, setSelectedEventType] = useState("ประเภทจัดเลี้ยง");
   const [selectedCateringType, setSelectedCateringType] =
-    useState("การจัดเลี้ยง");
+    useState("ประเภทงานอีเวนต์");
   const [selectedCuisine, setSelectedCuisine] = useState("ประเภทอาหาร");
+
+  // New state for API data
+  const [categories, setCategories] = useState([]);
+  const [eventCategories, setEventCategories] = useState([]);
+  const [foodCategories, setFoodCategories] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  //Integrate with API
+  const baseUrl = import.meta.env.VITE_BASE_URL;
+
+  // Categories
+  useEffect(() => {
+    const loadData = async () => {
+      setIsLoading(true);
+      try {
+        const response = await axios.get(`${baseUrl}/api/categories`);
+        setCategories(response.data);
+        console.log("Categories loaded:", response.data);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadData();
+  }, [baseUrl]);
+
+  // Event categories
+  useEffect(() => {
+    const loadData = async () => {
+      setIsLoading(true);
+      try {
+        const response = await axios.get(`${baseUrl}/api/event-categories`);
+        setEventCategories(response.data);
+        console.log("Event categories loaded:", response.data);
+      } catch (error) {
+        console.error("Error fetching event categories:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadData();
+  }, [baseUrl]);
+
+  // Food categories
+  useEffect(() => {
+    const loadData = async () => {
+      setIsLoading(true);
+      try {
+        const response = await axios.get(`${baseUrl}/api/food-categories`);
+        setFoodCategories(response.data);
+        console.log("Food categories loaded:", response.data);
+      } catch (error) {
+        console.error("Error fetching food categories:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadData();
+  }, [baseUrl]);
 
   return (
     <div className="flex flex-col gap-6 justify-center items-center py-8">
@@ -24,56 +88,76 @@ function FilterCustom() {
         </div>
 
         <div className="flex gap-4 justify-center flex-wrap">
-          {/* Event Type Filter - รูปแบบงาน */}
+          {/* Loading indicator */}
+          {isLoading && (
+            <div className="flex items-center gap-2 text-[#7D7B7B]">
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#FF8A00]"></div>
+              <span>กำลังโหลดข้อมูล...</span>
+            </div>
+          )}
+
+          {/* ประเภทการจัดเลี้ยง */}
           <div className="relative">
             <select
               value={selectedEventType}
               onChange={(e) => setSelectedEventType(e.target.value)}
               className="appearance-none bg-white border-2 border-gray-200 rounded-lg px-4 py-3 pr-10 text-[#7D7B7B] font-medium hover:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500 min-w-[150px]"
+              disabled={isLoading}
             >
-              <option disabled>รูปแบบงาน</option>
-              <option value="งานแต่งงาน">งานแต่งงาน</option>
-              <option value="งานเลี้ยงรับรอง">งานเลี้ยงรับรอง</option>
-              <option value="งานเลี้ยงสังสรรค์">งานเลี้ยงสังสรรค์</option>
-              <option value="งานเลี้ยงปีใหม่">งานเลี้ยงปีใหม่</option>
-              <option value="งานสัมมนา">งานสัมมนา</option>
-              <option value="งานประชุม">งานประชุม</option>
+              <option disabled>ประเภทจัดเลี้ยง</option>
+              {isLoading ? (
+                <option disabled>กำลังโหลด...</option>
+              ) : (
+                categories.map((category) => (
+                  <option key={category.id} value={category.name}>
+                    {category.name}
+                  </option>
+                ))
+              )}
             </select>
             <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#7D7B7B] font-medium pointer-events-none" />
           </div>
 
-          {/* Catering Type Filter - การจัดเลี้ยง */}
+          {/* ประเภทงานอีเวนต์ */}
           <div className="relative">
             <select
               value={selectedCateringType}
               onChange={(e) => setSelectedCateringType(e.target.value)}
               className="appearance-none bg-white border-2 border-gray-200 rounded-lg px-4 py-3 pr-10 text-[#7D7B7B] font-medium hover:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500 min-w-[150px]"
+              disabled={isLoading}
             >
-              <option disabled>การจัดเลี้ยง</option>
-              <option value="จัดเลี้ยงนอกสถานที่">จัดเลี้ยงนอกสถานที่</option>
-              <option value="จัดเลี้ยงในร้าน">จัดเลี้ยงในร้าน</option>
-              <option value="บุฟเฟ่ต์">บุฟเฟ่ต์</option>
-              <option value="เซ็ตเมนู">เซ็ตเมนู</option>
-              <option value="อาหารกล่อง">อาหารกล่อง</option>
+              <option disabled>ประเภทงานอีเวนต์</option>
+              {isLoading ? (
+                <option disabled>กำลังโหลด...</option>
+              ) : (
+                eventCategories.map((category) => (
+                  <option key={category.id} value={category.name}>
+                    {category.name}
+                  </option>
+                ))
+              )}
             </select>
             <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#7D7B7B] font-medium pointer-events-none" />
           </div>
 
-          {/* Cuisine Type Filter - ประเภทอาหาร */}
+          {/* ประเภทอาหาร */}
           <div className="relative">
             <select
               value={selectedCuisine}
               onChange={(e) => setSelectedCuisine(e.target.value)}
               className="appearance-none bg-white border-2 border-gray-200 rounded-lg px-4 py-3 pr-10 text-[#7D7B7B] font-medium hover:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500 min-w-[150px]"
+              disabled={isLoading}
             >
               <option disabled>ประเภทอาหาร</option>
-              <option value="อาหารไทย">อาหารไทย</option>
-              <option value="อาหารจีน">อาหารจีน</option>
-              <option value="อาหารญี่ปุ่น">อาหารญี่ปุ่น</option>
-              <option value="อาหารเกาหลี">อาหารเกาหลี</option>
-              <option value="อาหารยุโรป">อาหารยุโรป</option>
-              <option value="อาหารทะเล">อาหารทะเล</option>
-              <option value="อาหารเจ">อาหารเจ</option>
+              {isLoading ? (
+                <option disabled>กำลังโหลด...</option>
+              ) : (
+                foodCategories.map((category) => (
+                  <option key={category.id} value={category.name}>
+                    {category.name}
+                  </option>
+                ))
+              )}
             </select>
             <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#7D7B7B] font-medium pointer-events-none" />
           </div>
