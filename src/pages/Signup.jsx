@@ -37,9 +37,9 @@ function Signup() {
       {/*หน้าลงทะเบียน*/}
       <div className="flex justify-center">
           {/* Container */}
-          <div className="flex justify-center items-center w-[720px] h-[864px] mb-[96px]">
+          <div className="flex justify-center items-center w-[50%] h-[100vh]">
             {/* Content (outer) */}
-            <div className="w-[360px] h-[602px]">
+            <div className="w-[360px] h-[524px]">
 
               {/* header */}
               <div className="flex flex-col items-center">
@@ -87,7 +87,7 @@ function Signup() {
               </form>
 
               {/* action */}
-              <Button onClick={handleReg} className="w-[100%] bg-[#FF8A00] rounded-full hover:cursor-pointer">สร้างบัญชี</Button>
+              <Button onClick={handleReg} className="w-[100%] h-[44px] bg-linear-to-r from-[#FF8A00] to-[#E9580A] rounded-[8px] hover:cursor-pointer">สร้างบัญชี</Button>
 
               {/* row */}
               <div className="flex justify-center gap-[5px] mt-[32px]">
@@ -98,11 +98,11 @@ function Signup() {
           </div>
 
           {/* Section (Image) */}
-          <div className="w-[720px] h-[960px]">
+          <div className="w-[50%] h-[100vh]">
             <img 
               src="https://images.unsplash.com/photo-1592868859049-dfdcd6c07c29?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
               alt="signup-img"
-              className="object-cover w-[720px] h-[960px]"
+              className="object-cover w-[100%] h-[100%]"
             />
           </div>
       </div>

@@ -69,7 +69,7 @@ function OrderCard(props) {
                 }
                 else if(props.status == "จัดเตรียมสำเร็จ"){
                     return <div className="relative w-[126px] flex top-[317px] left-[930px] gap-[11px]">
-                        <Button id={"cancelbtn" + props.key} className="w-[117px] h-[44px] text-[14px] bg-[#FF8A00] border-[1px] border-[#FF8A00] rounded-[8px] hover:bg-[#FF8A00]">บริการสำเร็จ</Button>
+                        <Button id={"cancelbtn" + props.key} className="w-[117px] h-[44px] text-[14px] bg-linear-to-r from-[#FF8A00] to-[#E9580A] border-[1px] border-[#FF8A00] rounded-[8px] hover:bg-[#FF8A00]">บริการสำเร็จ</Button>
                     </div>
                 }
             }
