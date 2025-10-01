@@ -24,7 +24,7 @@ function RestInfo({ onClick }) {
       const btn = document.getElementById('nextbtn')
           if(Payload.name != "" && Payload.detail != "" && Payload.vatid != "" && Payload.location != "" && Payload.address != ""){
               btn.disabled = false
-              btn.style.backgroundColor = "#FF8A00"
+              btn.style.background =  'linear-gradient(to right, #FF8A00, #E9580A)'
           }
           else{
               btn.disabled = true
@@ -106,7 +106,7 @@ return (
               </form>
 
               {/* action */}
-              <Button id="nextbtn" onClick={onClick} className="w-[100%] h-[44px] text-[16px] rounded-[8px] hover:ฺbg-black cursor-pointer transition">ต่อไป</Button>
+              <Button id="nextbtn" onClick={onClick} className="w-[100%] h-[44px]  text-[16px] rounded-[8px] hover:ฺbg-black cursor-pointer transition">ต่อไป</Button>
             </div>
           </div>
     </>
