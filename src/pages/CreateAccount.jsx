@@ -75,25 +75,19 @@ function CreateAccount() {
     }
 
     const [Subpages,setSubpages] = useState([
-        {label: 'ข้อมูลร้านค้า' ,height:754 ,content: <RestInfo onClick={handleClickType}/>,index:true},
-        {label: 'ประเภทร้านค้า',height:574  ,content: <RestType onClick={handleClickBank} backClick={handleBackType} />,index:false},
-        {label: 'บัญชีธนาคาร',height:488 ,content: <RestBank onClick={handleSend} backClick={handleBackBank} />,index:false},
-        {label: 'ส่งข้อมูลแล้ว',height:618 ,content: <Complete/>}
+        {label: 'ข้อมูลร้านค้า',content: <RestInfo onClick={handleClickType}/>,index:true},
+        {label: 'ประเภทร้านค้า',content: <RestType onClick={handleClickBank} backClick={handleBackType} />,index:false},
+        {label: 'บัญชีธนาคาร',content: <RestBank onClick={handleSend} backClick={handleBackBank} />,index:false},
+        {label: 'ส่งข้อมูลแล้ว',content: <Complete/>}
     ])
-
-    const [Height,setHeight] = useState(0)
-
-    useEffect(() => {
-        setHeight(214 + Subpages[Tabindex].height)
-    },[Subpages,Tabindex])
 
 
 return (
     <>
         {/* หน้าสร้าง Account */}
-        <div className="flex justify-center">
+        <div className="flex justify-center items-center h-[155vh]">
             {/* Container */}
-            <div style={{ height: Height }} className="flex flex-col items-center w-[1280px] mt-[64px] mb-[64px] gap-[32px]">
+            <div className="flex flex-col items-center w-[1280px] h-[968px] gap-[32px]">
                 {/* Content (header) */}
                 <div className="flex flex-col items-center gap-[32px] w-[1216px] h-[214px]">
                     {/* header */}
