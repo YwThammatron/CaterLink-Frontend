@@ -3,7 +3,7 @@ import { ChevronDown } from "lucide-react";
 
 function SidebarCustom(){
     return (
-        <div className="w-[240px] h-auto bg-[#F9FAFB] shadow-[inset_-24px_0_60px_rgba(0,0,0,0.03)]">
+        <div className="w-[16%] h-auto bg-[#F9FAFB] shadow-[inset_-24px_0_60px_rgba(0,0,0,0.03)]">
             {/* Logo wrap */}
             <div className="flex justify-center items-center pt-[19px] pb-[19px]">
                 <div className="w-[32px] h-[32px]">

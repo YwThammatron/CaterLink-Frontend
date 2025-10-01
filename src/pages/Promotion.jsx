@@ -31,7 +31,7 @@ function Promotion() {
       <div className="flex flex-row">
           <SidebarCustom />
           {/* Container */}
-          <div className="w-[1200px] h-auto bg-[#F9FAFB]">
+          <div className="w-[84%] h-auto bg-[#F9FAFB]">
             {/* Header Navigation */}
             <div className="flex flex-col w-auto h-[63px] pl-[calc(50%-552px)] justify-center border-b-[1px] border-[#EDEEF0] mb-[32px]">
                 <p className="text-[24px] font-[600]">สร้างโปรโมชัน</p>
@@ -170,7 +170,7 @@ function Promotion() {
                         </Button>
                         
                         <Button 
-                        className="w-[127px] h-[44px] rounded-[8px] text-[16px] bg-[#F78E1E] hover:cursor-pointer transition"
+                        className="w-[127px] h-[44px] rounded-[8px] text-[16px] bg-linear-to-r from-[#F78E1E] to-[#E9580A] hover:cursor-pointer transition"
                         >
                             สร้างโปรโมชัน
                         </Button>
