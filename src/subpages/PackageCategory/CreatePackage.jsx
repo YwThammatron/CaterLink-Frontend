@@ -242,7 +242,7 @@ function CreatePackage() {
                         </Button>
                         
                         <Button 
-                        className="w-[127px] h-[44px] rounded-[8px] text-[16px] bg-[#F78E1E] hover:cursor-pointer transition"
+                        className="w-[127px] h-[44px] rounded-[8px] text-[16px] bg-linear-to-r from-[#F78E1E] to-[#E9580A] hover:cursor-pointer transition"
                         onClick={handleChangeSave}
                         >
                             สร้างแพคเกจ

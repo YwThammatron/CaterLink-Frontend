@@ -32,7 +32,7 @@ function CreateCategory({ cancelClick }) {
             {/* Content */}
             <div className="flex flex-col gap-[32px] w-auto h-auto mb-[32px]">
                 {/* Breadcrumbs */}
-                <Breadcrumb className="pl-[48px]">
+                <Breadcrumb className="pl-[calc(50%-552px)]">
                     <BreadcrumbList className="text-[14px]">
                         <BreadcrumbItem>
                             <BreadcrumbLink href="./packagectg">จัดการแพคเกจ</BreadcrumbLink>
@@ -81,7 +81,7 @@ function CreateCategory({ cancelClick }) {
                         </Button>
                         
                         <Button 
-                        className="w-[127px] h-[44px] rounded-[8px] text-[16px] bg-[#F78E1E] hover:cursor-pointer transition"
+                        className="w-[127px] h-[44px] rounded-[8px] text-[16px] bg-linear-to-r from-[#F78E1E] to-[#E9580A] hover:cursor-pointer transition"
                         onClick={handleChangeSave}
                         >
                             สร้างหมวดหมู่
