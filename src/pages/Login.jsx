@@ -24,12 +24,12 @@ function Login() {
 
   return (
     <>
-      {/*หน้าลงทะเบียน*/}
+      {/*หน้าเข้าสู่ระบบ*/}
       <div className="flex justify-center">
           {/* Container */}
-          <div className="flex justify-center items-center w-[720px] h-[864px] mb-[96px]">
+          <div className="flex justify-center items-center w-[50%] h-[100vh]">
             {/* Content (outer) */}
-            <div className="w-[360px] h-[602px]">
+            <div className="w-[360px] h-[430px]">
 
               {/* header */}
               <div className="flex flex-col items-center">
@@ -67,7 +67,7 @@ function Login() {
               </form>
 
               {/* action */}
-              <Button onClick={handleLogin} className="w-[100%] bg-[#FF8A00] rounded-full hover:cursor-pointer">เข้าสู่ระบบ</Button>
+              <Button onClick={handleLogin} className="w-[100%] h-[44px] bg-linear-to-r from-[#FF8A00] to-[#E9580A] rounded-[8px] hover:cursor-pointer">เข้าสู่ระบบ</Button>
 
               {/* row */}
               <div className="flex justify-center gap-[5px] mt-[32px]">
@@ -78,11 +78,11 @@ function Login() {
           </div>
 
           {/* Section (Image) */}
-          <div className="w-[720px] h-[960px]">
+          <div className="w-[50%] h-[100vh]">
             <img 
               src="https://plus.unsplash.com/premium_photo-1683707120444-7318975c7ba6?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
               alt="login-img"
-              className="object-cover w-[720px] h-[960px]"
+              className="object-cover w-[100%] h-[100%]"
             />
           </div>
       </div>
