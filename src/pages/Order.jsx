@@ -17,17 +17,17 @@ function Order() {
   return (
     <>
       {/*หน้าคำสั่งซื้อ*/}
-      <div className="flex flex-row">
+      <div className="flex flex-row w-[100%]">
           <SidebarCustom />
           {/* Container */}
-          <div className="w-[1200px] h-auto bg-[#F9FAFB]">
+          <div className="w-[84%] bg-[#F9FAFB]">
             {/* Header Navigation */}
-            <div className="flex flex-col w-auto h-[63px] pl-[calc(50%-552px)] border-b-[1px] border-[#EDEEF0] justify-center mb-[32px]">
+            <div className="flex flex-col w-auto h-[63px] pl-[calc(50%-536px-32px)] border-b-[1px] border-[#EDEEF0] justify-center mb-[32px]">
                 <p className="text-[24px] font-[600]">คำสั่งซื้อ</p>
             </div>
 
             {/* Tab */}
-            <div className="flex gap-[16px] ml-[calc(50%-536px)] mr-[calc(50%-536px)] mb-[39px] border-b">
+            <div className="flex justify-self-center w-[1072px] gap-[16px] mb-[39px] border-b">
                     {subpages.map((tab, index) => (
                     <button
                         key={index}
@@ -44,7 +44,7 @@ function Order() {
             </div>
 
             {/* Content */}
-            <div className="flex flex-col gap-[24px] w-auto h-[1195px] mb-[50px] ml-[64px]">
+            <div className="flex flex-col items-center gap-[24px] w-auto h-[1195px] mb-[64px]">
                 {subpages[Tabindex].Content}
             </div>
           </div>
