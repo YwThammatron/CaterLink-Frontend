@@ -1,6 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Star } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function TestimonialCard() {
   const navigate = useNavigate();

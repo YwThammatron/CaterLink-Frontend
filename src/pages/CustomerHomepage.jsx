@@ -1,4 +1,6 @@
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 import NavbarCustom from "../components/ui/Navbar-custom";
 import CarouselCustom from "../components/ui/Carousel-custom";
@@ -14,6 +16,58 @@ import { ArrowRight } from "lucide-react";
 
 function CustomerHomepage() {
   const navigate = useNavigate();
+  const [blogs, setBlogs] = useState([]);
+  const [isLoadingBlogs, setIsLoadingBlogs] = useState(false);
+  const [restaurants, setRestaurants] = useState([]);
+  const [isLoadingRestaurants, setIsLoadingRestaurants] = useState(false);
+
+  // Get base URL from environment
+  const baseUrl = import.meta.env.VITE_BASE_URL;
+
+  // Load blogs and restaurants when component mounts
+  useEffect(() => {
+    const loadData = async () => {
+      // Load blogs
+      setIsLoadingBlogs(true);
+      try {
+        const blogsResponse = await axios.get(`${baseUrl}/api/blogs`, {
+          params: {
+            page: 1,
+            limit: 5,
+            sortBy: "timestamp",
+            sortOrder: "desc",
+          },
+        });
+        setBlogs(blogsResponse.data.data);
+        console.log("Blogs loaded:", blogsResponse.data.data);
+      } catch (error) {
+        console.error("Error fetching blogs:", error);
+      } finally {
+        setIsLoadingBlogs(false);
+      }
+
+      // Load top 5 restaurants
+      setIsLoadingRestaurants(true);
+      try {
+        const restaurantsResponse = await axios.get(
+          `${baseUrl}/api/restaurants/top`,
+          {
+            params: {
+              limit: 5,
+            },
+          }
+        );
+        setRestaurants(restaurantsResponse.data);
+        console.log("Restaurants loaded:", restaurantsResponse.data);
+      } catch (error) {
+        console.error("Error fetching restaurants:", error);
+      } finally {
+        setIsLoadingRestaurants(false);
+      }
+    };
+
+    loadData();
+  }, [baseUrl]);
 
   const goToRestaurant = () => {
     navigate("/customerrestaurant");
@@ -153,11 +207,44 @@ function CustomerHomepage() {
           </div>
 
           <div className="flex gap-4">
-            <RestaurantCard />
-            <RestaurantCard />
-            <RestaurantCard />
-            <RestaurantCard />
-            <RestaurantCard />
+            {isLoadingRestaurants ? (
+              // Loading state - show 5 skeleton cards
+              Array.from({ length: 5 }).map((_, index) => (
+                <div key={index} className="flex flex-col gap-2 max-w-[224px]">
+                  <div className="w-[224px] h-[220px] bg-gray-200 rounded-lg animate-pulse"></div>
+                  <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
+                  <div className="h-3 bg-gray-200 rounded w-3/4 animate-pulse"></div>
+                  <div className="h-3 bg-gray-200 rounded w-1/2 animate-pulse"></div>
+                </div>
+              ))
+            ) : restaurants.length > 0 ? (
+              // Render actual restaurant data
+              restaurants.map((restaurant) => (
+                <RestaurantCard
+                  key={restaurant.id}
+                  restaurantData={{
+                    id: restaurant.id,
+                    name: restaurant.name,
+                    image:
+                      restaurant.images && restaurant.images.length > 0
+                        ? restaurant.images[0].url
+                        : "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=500&h=300&fit=crop&crop=center",
+                    rating: restaurant.avgRating || 0,
+                    reviewCount: restaurant.totalReview || 0,
+                    pricePerPerson: 290, // Default price since not in API response
+                    description: restaurant.description,
+                    foodCategories: restaurant.food_categories,
+                    eventCategories: restaurant.event_categories,
+                    mainCategories: restaurant.main_categories,
+                  }}
+                />
+              ))
+            ) : (
+              // No restaurants found
+              <div className="flex items-center justify-center w-full h-[200px] text-gray-500">
+                <p>ไม่พบร้านค้าในขณะนี้</p>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -302,11 +389,26 @@ function CustomerHomepage() {
           </div>
 
           <div className="flex gap-4">
-            <BlogpostCard />
-            <BlogpostCard />
-            <BlogpostCard />
-            <BlogpostCard />
-            <BlogpostCard />
+            {isLoadingBlogs ? (
+              // Loading state - show 5 skeleton cards
+              Array.from({ length: 5 }).map((_, index) => (
+                <div key={index} className="flex flex-col gap-1 max-w-[224px]">
+                  <div className="flex flex-col gap-3">
+                    <div className="rounded-lg w-[224px] h-[140px] bg-gray-200 animate-pulse"></div>
+                    <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
+                    <div className="h-3 bg-gray-200 rounded w-3/4 animate-pulse"></div>
+                  </div>
+                </div>
+              ))
+            ) : blogs.length > 0 ? (
+              // Render actual blog data
+              blogs.map((blog) => <BlogpostCard key={blog.id} blog={blog} />)
+            ) : (
+              // No blogs found
+              <div className="flex items-center justify-center w-full h-[200px] text-gray-500">
+                <p>ไม่พบบทความในขณะนี้</p>
+              </div>
+            )}
           </div>
         </div>
       </div>

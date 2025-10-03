@@ -77,11 +77,7 @@ function RestaurantCard({
           </div>
 
           <div className="flex gap-[6px]">
-            <FoodTag
-              showFoodStall={true}
-              showSnackBox={false}
-              showCatering={true}
-            />
+            <FoodTag categories={restaurantData.mainCategories || []} />
           </div>
         </div>
       </div>
