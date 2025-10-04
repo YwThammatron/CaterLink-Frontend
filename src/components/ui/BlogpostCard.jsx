@@ -21,7 +21,8 @@ function BlogpostCard({ blog }) {
   // Get default image if no blog images
   const getImageSrc = () => {
     if (blog.blog_images && blog.blog_images.length > 0) {
-      return blog.blog_images[0].image_url;
+      // Use the url field from blog_images array
+      return blog.blog_images[0].url;
     }
     return "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=500&h=300&fit=crop&crop=center";
   };

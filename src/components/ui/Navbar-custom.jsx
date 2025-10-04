@@ -27,13 +27,6 @@ function NavbarCustom() {
     };
   }, []);
 
-  // Mock user data - replace with actual user data from your auth system
-  const user = {
-    name: "John Doe",
-    email: "john@example.com",
-    avatar: "https://github.com/shadcn.png",
-  };
-
   // Function to check if current path matches the route
   const isActive = (path) => {
     return location.pathname === path;
@@ -126,32 +119,19 @@ function NavbarCustom() {
 
         <div className="flex gap-2">
           {isLoggedIn ? (
-            // User Avatar Profile
+            // User Avatar Profile - user data should come from props or context
             <div className="flex items-center gap-2">
               <Avatar className="w-11 h-11 cursor-pointer hover:ring-2 hover:ring-[#FF8A00] hover:ring-offset-2 transition-all">
-                <AvatarImage src={user.avatar} alt={user.name} />
+                <AvatarImage src="" alt="User" />
                 <AvatarFallback className="bg-[#FF8A00] text-white font-semibold">
-                  {user.name
-                    .split(" ")
-                    .map((n) => n[0])
-                    .join("")}
+                  U
                 </AvatarFallback>
               </Avatar>
-              {/* Test button to logout - remove in production */}
-              <button
-                onClick={() => setIsLoggedIn(false)}
-                className="text-xs text-gray-500 hover:text-gray-700"
-              >
-                Logout
-              </button>
             </div>
           ) : (
             // Login Buttons
             <>
-              <button
-                className="py-[10px] px-4"
-                onClick={() => setIsLoggedIn(true)} // Test login - replace with actual login logic
-              >
+              <button className="py-[10px] px-4">
                 <p
                   className="text-[#475467] font-semibold cursor-pointer"
                   onClick={goToSignup}

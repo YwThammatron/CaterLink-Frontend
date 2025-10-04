@@ -10,6 +10,9 @@ function TestimonialCard({
     rating: 5,
     restaurantName: "ข้าวมันไก่ลุงหนวด24ชม. - ถนนอ่อนนุช",
     userId: "default-user",
+    userName: "ผู้ใช้",
+    userProfilePicture: "",
+    timestamp: new Date().toISOString(),
   },
 }) {
   const navigate = useNavigate();
@@ -56,15 +59,28 @@ function TestimonialCard({
     );
   };
 
-  // Mock username from userId (last 6 characters for privacy)
-  const getUserDisplayName = (userId) => {
-    if (!userId) return "ผู้ใช้";
-    return `ผู้ใช้ ${userId.slice(-6)}`;
+  // Function to format timestamp
+  const formatTimestamp = (timestamp) => {
+    if (!timestamp) return new Date().toLocaleDateString("th-TH");
+
+    try {
+      const date = new Date(timestamp);
+      return date.toLocaleDateString("th-TH", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+    } catch (error) {
+      return new Date().toLocaleDateString("th-TH");
+    }
   };
 
-  // Mock user image from userId (first character)
-  const getUserInitial = (userId) => {
-    return userId ? userId.charAt(0).toUpperCase() : "U";
+  // Generate user initial from userName or userId
+  const getUserInitial = () => {
+    if (reviewData.userName) {
+      return reviewData.userName.charAt(0).toUpperCase();
+    }
+    return reviewData.userId ? reviewData.userId.charAt(0).toUpperCase() : "U";
   };
 
   return (
@@ -74,17 +90,15 @@ function TestimonialCard({
     >
       <div className="flex gap-3">
         <Avatar className="w-[32px] h-[32px] flex-shrink-0">
-          <AvatarImage src="" /> {/* No image provided in API */}
-          <AvatarFallback>{getUserInitial(reviewData.userId)}</AvatarFallback>
+          <AvatarImage src={reviewData.userProfilePicture} />
+          <AvatarFallback>{getUserInitial()}</AvatarFallback>
         </Avatar>
         <div className="flex flex-col gap-3 flex-1 min-w-0">
           <div className="flex flex-col gap-1">
-            <p className="text-sm text-[#475467]">
-              {getUserDisplayName(reviewData.userId)}
-            </p>
+            <p className="text-sm text-[#475467]">{reviewData.userName}</p>
             {renderStars(reviewData.rating)}
             <p className="text-xs text-[#667085]">
-              {new Date().toLocaleDateString("th-TH")} {/*Mock date */}
+              {formatTimestamp(reviewData.timestamp)}
             </p>
             <p className="text-xs text-[#667085]">
               {reviewData.restaurantName}

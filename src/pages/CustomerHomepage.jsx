@@ -25,6 +25,9 @@ function CustomerHomepage() {
   const [allRestaurants, setAllRestaurants] = useState([]);
   const [packages, setPackages] = useState([]);
   const [isLoadingPackages, setIsLoadingPackages] = useState(false);
+  const [blogFilter, setBlogFilter] = useState("all"); // 'all', 'restaurant', 'customer', or category ID
+  const [mainCategories, setMainCategories] = useState([]);
+  const [filteredBlogs, setFilteredBlogs] = useState([]);
 
   // Get base URL from environment
   const baseUrl = import.meta.env.VITE_BASE_URL;
@@ -44,11 +47,23 @@ function CustomerHomepage() {
           },
         });
         setBlogs(blogsResponse.data.data);
+        setFilteredBlogs(blogsResponse.data.data); // Initialize filtered blogs
         console.log("Blogs loaded:", blogsResponse.data.data);
       } catch (error) {
         console.error("Error fetching blogs:", error);
       } finally {
         setIsLoadingBlogs(false);
+      }
+
+      // Load main categories for blog filtering
+      try {
+        const categoriesResponse = await axios.get(
+          `${baseUrl}/api/main-categories`
+        );
+        setMainCategories(categoriesResponse.data);
+        console.log("Main categories loaded:", categoriesResponse.data);
+      } catch (error) {
+        console.error("Error fetching main categories:", error);
       }
 
       // Load top 5 restaurants
@@ -99,8 +114,21 @@ function CustomerHomepage() {
       try {
         const packagesResponse = await axios.get(`${baseUrl}/api/packages`);
         // Take only first 4 packages
-        setPackages(packagesResponse.data.slice(0, 4));
-        console.log("Packages loaded:", packagesResponse.data.slice(0, 4));
+        const packagesData = packagesResponse.data.slice(0, 4);
+        setPackages(packagesData);
+        console.log("Packages loaded:", packagesData);
+
+        // Debug: Check package images
+        packagesData.forEach((pkg, index) => {
+          console.log(`Package ${index + 1} (${pkg.name}):`, {
+            hasImages: pkg.package_images && pkg.package_images.length > 0,
+            imageCount: pkg.package_images ? pkg.package_images.length : 0,
+            firstImageUrl:
+              pkg.package_images && pkg.package_images.length > 0
+                ? pkg.package_images[0].url
+                : "No image",
+          });
+        });
       } catch (error) {
         console.error("Error fetching packages:", error);
         // Set empty array on error to show "no packages" message
@@ -138,6 +166,47 @@ function CustomerHomepage() {
     const restaurant = allRestaurants.find((r) => r.id === restaurantId);
     return restaurant ? restaurant.name : "ร้านไม่ทราบชื่อ";
   };
+
+  // Handle blog filtering
+  const handleBlogFilter = (filterType, categoryId = null) => {
+    setBlogFilter(filterType);
+
+    let filtered = [...blogs];
+
+    switch (filterType) {
+      case "all":
+        filtered = blogs;
+        break;
+      case "restaurant":
+        filtered = blogs.filter((blog) => blog.user?.role === "restaurant");
+        break;
+      case "customer":
+        filtered = blogs.filter((blog) => blog.user?.role === "customer");
+        break;
+      default:
+        // Filter by main category ID
+        if (categoryId) {
+          filtered = blogs.filter(
+            (blog) => blog.restaurant_main_category === categoryId
+          );
+        }
+        break;
+    }
+
+    setFilteredBlogs(filtered);
+    console.log(`Filtering blogs by: ${filterType}`, {
+      totalBlogs: blogs.length,
+      filteredCount: filtered.length,
+    });
+  };
+
+  // Update filtered blogs when blogs change
+  useEffect(() => {
+    if (blogs.length > 0) {
+      handleBlogFilter(blogFilter);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [blogs]);
 
   return (
     <>
@@ -388,20 +457,33 @@ function CustomerHomepage() {
               ))
             ) : packages.length > 0 ? (
               // Render actual package data
-              packages.map((pkg) => (
-                <PackageCard
-                  key={pkg.id}
-                  packageData={{
-                    id: pkg.id,
-                    name: pkg.name,
-                    description: pkg.description,
-                    price: pkg.price,
-                    image:
-                      pkg.image ||
-                      "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=250&h=140&fit=crop",
-                  }}
-                />
-              ))
+              packages.map((pkg) => {
+                const imageUrl =
+                  pkg.package_images && pkg.package_images.length > 0
+                    ? pkg.package_images[0].url
+                    : "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=88&h=88&fit=crop";
+
+                console.log(
+                  `Rendering package: ${pkg.name}, Image URL: ${imageUrl}`
+                );
+
+                return (
+                  <PackageCard
+                    key={pkg.id}
+                    packageData={{
+                      id: pkg.id,
+                      name: pkg.name,
+                      description: pkg.description,
+                      restaurantName: getRestaurantName(pkg.restaurant_id),
+                      packageDetails: pkg.package_details || [],
+                      categoryName:
+                        pkg.package_categories?.name || "ไม่ระบุหมวดหมู่",
+                      discount: pkg.discount,
+                      image: imageUrl,
+                    }}
+                  />
+                );
+              })
             ) : (
               // No packages found
               <div className="flex items-center justify-center w-full h-[200px] text-gray-500">
@@ -456,6 +538,9 @@ function CustomerHomepage() {
                     rating: review.rating,
                     restaurantName: getRestaurantName(review.restaurant_id),
                     userId: review.user_id,
+                    userName: review.user?.name || "ผู้ใช้",
+                    userProfilePicture: review.user?.profile_picture || "",
+                    timestamp: review.timestamp,
                   }}
                 />
               ))
@@ -484,39 +569,49 @@ function CustomerHomepage() {
           </div>
 
           <div className="flex gap-3">
-            <Button className="bg-gradient py-1 px-4 rounded-sm text-white ">
+            <Button
+              className={`py-1 px-4 rounded-sm cursor-pointer transition-all duration-200 ${
+                blogFilter === "all"
+                  ? "bg-gradient text-white shadow-md"
+                  : "bg-white border border-[#EAECF0] text-[#344054] hover:bg-[#FF8A00]/10 hover:border-[#FF8A00] hover:text-[#FF8A00] hover:shadow-sm"
+              }`}
+              onClick={() => handleBlogFilter("all")}
+            >
               ทั้งหมด
             </Button>
             <Button
-              variant="outline"
-              className="py-1 px-4 rounded-sm border-[#EAECF0] text-[#344054]"
+              className={`py-1 px-4 rounded-sm cursor-pointer transition-all duration-200 ${
+                blogFilter === "restaurant"
+                  ? "bg-gradient text-white shadow-md"
+                  : "bg-white border border-[#EAECF0] text-[#344054] hover:bg-[#FF8A00]/10 hover:border-[#FF8A00] hover:text-[#FF8A00] hover:shadow-sm"
+              }`}
+              onClick={() => handleBlogFilter("restaurant")}
             >
               บทความจากร้าน
             </Button>
             <Button
-              variant="outline"
-              className="py-1 px-4 rounded-sm border-[#EAECF0] text-[#344054]"
+              className={`py-1 px-4 rounded-sm cursor-pointer transition-all duration-200 ${
+                blogFilter === "customer"
+                  ? "bg-gradient text-white shadow-md"
+                  : "bg-white border border-[#EAECF0] text-[#344054] hover:bg-[#FF8A00]/10 hover:border-[#FF8A00] hover:text-[#FF8A00] hover:shadow-sm"
+              }`}
+              onClick={() => handleBlogFilter("customer")}
             >
               บทความจากลูกค้า
             </Button>
-            <Button
-              variant="outline"
-              className="py-1 px-4 rounded-sm border-[#EAECF0] text-[#344054]"
-            >
-              ซุ้มอาหาร
-            </Button>
-            <Button
-              variant="outline"
-              className="py-1 px-4 rounded-sm border-[#EAECF0] text-[#344054]"
-            >
-              จัดเลี้ยง
-            </Button>
-            <Button
-              variant="outline"
-              className="py-1 px-4 rounded-sm border-[#EAECF0] text-[#344054]"
-            >
-              Snack Box
-            </Button>
+            {mainCategories.slice(0, 3).map((category) => (
+              <Button
+                key={category.id}
+                className={`py-1 px-4 rounded-sm cursor-pointer transition-all duration-200 ${
+                  blogFilter === category.id
+                    ? "bg-gradient text-white shadow-md"
+                    : "bg-white border border-[#EAECF0] text-[#344054] hover:bg-[#FF8A00]/10 hover:border-[#FF8A00] hover:text-[#FF8A00] hover:shadow-sm"
+                }`}
+                onClick={() => handleBlogFilter(category.id, category.id)}
+              >
+                {category.name}
+              </Button>
+            ))}
           </div>
 
           <div className="flex gap-4">
@@ -531,11 +626,18 @@ function CustomerHomepage() {
                   </div>
                 </div>
               ))
+            ) : filteredBlogs.length > 0 ? (
+              // Render filtered blog data
+              filteredBlogs.map((blog) => (
+                <BlogpostCard key={blog.id} blog={blog} />
+              ))
             ) : blogs.length > 0 ? (
-              // Render actual blog data
-              blogs.map((blog) => <BlogpostCard key={blog.id} blog={blog} />)
+              // No blogs match the current filter
+              <div className="flex items-center justify-center w-full h-[200px] text-gray-500">
+                <p>ไม่พบบทความที่ตรงกับตัวกรองที่เลือก</p>
+              </div>
             ) : (
-              // No blogs found
+              // No blogs found at all
               <div className="flex items-center justify-center w-full h-[200px] text-gray-500">
                 <p>ไม่พบบทความในขณะนี้</p>
               </div>
