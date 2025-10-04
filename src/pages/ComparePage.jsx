@@ -32,15 +32,17 @@ function ComparePage() {
           </p>
         </div>
 
-        <div className="flex justify-center gap-4 flex-wrap py-4">
-          {selectedRestaurants.map((restaurant) => (
-            <CompareCard
-              key={restaurant.id}
-              restaurantData={restaurant}
-              onRemove={() => handleRemoveCard(restaurant.id)}
-            />
-          ))}
-          <AddCompareCard currentSelectedRestaurants={selectedRestaurants} />
+        <div className="flex justify-center">
+          <div className="flex gap-4 flex-wrap py-4 max-w-[1184px] mx-auto">
+            {selectedRestaurants.map((restaurant) => (
+              <CompareCard
+                key={restaurant.id}
+                restaurantData={restaurant}
+                onRemove={() => handleRemoveCard(restaurant.id)}
+              />
+            ))}
+            <AddCompareCard currentSelectedRestaurants={selectedRestaurants} />
+          </div>
         </div>
       </div>
       <MiniFooter />
