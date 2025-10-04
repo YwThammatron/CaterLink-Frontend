@@ -20,11 +20,16 @@ function CustomerHomepage() {
   const [isLoadingBlogs, setIsLoadingBlogs] = useState(false);
   const [restaurants, setRestaurants] = useState([]);
   const [isLoadingRestaurants, setIsLoadingRestaurants] = useState(false);
+  const [reviews, setReviews] = useState([]);
+  const [isLoadingReviews, setIsLoadingReviews] = useState(false);
+  const [allRestaurants, setAllRestaurants] = useState([]);
+  const [packages, setPackages] = useState([]);
+  const [isLoadingPackages, setIsLoadingPackages] = useState(false);
 
   // Get base URL from environment
   const baseUrl = import.meta.env.VITE_BASE_URL;
 
-  // Load blogs and restaurants when component mounts
+  // Load blogs, restaurants, reviews, and packages when component mounts
   useEffect(() => {
     const loadData = async () => {
       // Load blogs
@@ -64,6 +69,45 @@ function CustomerHomepage() {
       } finally {
         setIsLoadingRestaurants(false);
       }
+
+      // Load all restaurants for mapping restaurant names
+      try {
+        const allRestaurantsResponse = await axios.get(
+          `${baseUrl}/api/restaurants`
+        );
+        setAllRestaurants(allRestaurantsResponse.data);
+        console.log("All restaurants loaded:", allRestaurantsResponse.data);
+      } catch (error) {
+        console.error("Error fetching all restaurants:", error);
+      }
+
+      // Load reviews (top 3)
+      setIsLoadingReviews(true);
+      try {
+        const reviewsResponse = await axios.get(`${baseUrl}/api/reviews`);
+        // Take only first 3 reviews
+        setReviews(reviewsResponse.data.slice(0, 3));
+        console.log("Reviews loaded:", reviewsResponse.data.slice(0, 3));
+      } catch (error) {
+        console.error("Error fetching reviews:", error);
+      } finally {
+        setIsLoadingReviews(false);
+      }
+
+      // Load packages (top 4)
+      setIsLoadingPackages(true);
+      try {
+        const packagesResponse = await axios.get(`${baseUrl}/api/packages`);
+        // Take only first 4 packages
+        setPackages(packagesResponse.data.slice(0, 4));
+        console.log("Packages loaded:", packagesResponse.data.slice(0, 4));
+      } catch (error) {
+        console.error("Error fetching packages:", error);
+        // Set empty array on error to show "no packages" message
+        setPackages([]);
+      } finally {
+        setIsLoadingPackages(false);
+      }
     };
 
     loadData();
@@ -87,6 +131,12 @@ function CustomerHomepage() {
 
   const goToPlanning = () => {
     navigate("/planning");
+  };
+
+  // Helper function to get restaurant name by ID
+  const getRestaurantName = (restaurantId) => {
+    const restaurant = allRestaurants.find((r) => r.id === restaurantId);
+    return restaurant ? restaurant.name : "ร้านไม่ทราบชื่อ";
   };
 
   return (
@@ -318,10 +368,46 @@ function CustomerHomepage() {
           </div>
 
           <div className="flex gap-4">
-            <PackageCard />
-            <PackageCard />
-            <PackageCard />
-            <PackageCard />
+            {isLoadingPackages ? (
+              // Loading state - show 4 skeleton cards
+              Array.from({ length: 4 }).map((_, index) => (
+                <div
+                  key={index}
+                  className="flex flex-col gap-3 max-w-[282px] p-4 border rounded-lg shadow-sm bg-white"
+                >
+                  <div className="w-[250px] h-[140px] bg-gray-200 rounded-lg animate-pulse"></div>
+                  <div className="flex flex-col gap-2">
+                    <div className="h-5 bg-gray-200 rounded animate-pulse"></div>
+                    <div className="h-4 bg-gray-200 rounded w-3/4 animate-pulse"></div>
+                    <div className="flex justify-between items-center">
+                      <div className="h-6 bg-gray-200 rounded w-20 animate-pulse"></div>
+                      <div className="h-8 bg-gray-200 rounded w-16 animate-pulse"></div>
+                    </div>
+                  </div>
+                </div>
+              ))
+            ) : packages.length > 0 ? (
+              // Render actual package data
+              packages.map((pkg) => (
+                <PackageCard
+                  key={pkg.id}
+                  packageData={{
+                    id: pkg.id,
+                    name: pkg.name,
+                    description: pkg.description,
+                    price: pkg.price,
+                    image:
+                      pkg.image ||
+                      "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=250&h=140&fit=crop",
+                  }}
+                />
+              ))
+            ) : (
+              // No packages found
+              <div className="flex items-center justify-center w-full h-[200px] text-gray-500">
+                <p>ไม่มีแพคเกจในขณะนี้</p>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -331,9 +417,54 @@ function CustomerHomepage() {
         <div className="flex flex-col gap-8 justify-center items-center">
           <h1>รีวิวจากผู้ใช้จริง</h1>
           <div className="flex gap-4">
-            <TestimonialCard />
-            <TestimonialCard />
-            <TestimonialCard />
+            {isLoadingReviews ? (
+              // Loading state - show 3 skeleton cards
+              Array.from({ length: 3 }).map((_, index) => (
+                <div
+                  key={index}
+                  className="max-w-[384px] p-4 border rounded-lg shadow-sm bg-white"
+                >
+                  <div className="flex gap-3">
+                    <div className="w-8 h-8 bg-gray-200 rounded-full animate-pulse"></div>
+                    <div className="flex flex-col gap-3 flex-1">
+                      <div className="flex flex-col gap-1">
+                        <div className="h-4 bg-gray-200 rounded w-20 animate-pulse"></div>
+                        <div className="flex gap-1">
+                          {Array.from({ length: 5 }).map((_, i) => (
+                            <div
+                              key={i}
+                              className="w-4 h-4 bg-gray-200 rounded animate-pulse"
+                            ></div>
+                          ))}
+                        </div>
+                        <div className="h-3 bg-gray-200 rounded w-16 animate-pulse"></div>
+                        <div className="h-3 bg-gray-200 rounded w-32 animate-pulse"></div>
+                      </div>
+                      <div className="h-16 bg-gray-200 rounded animate-pulse"></div>
+                    </div>
+                  </div>
+                </div>
+              ))
+            ) : reviews.length > 0 ? (
+              // Render actual review data
+              reviews.map((review) => (
+                <TestimonialCard
+                  key={review.id}
+                  reviewData={{
+                    id: review.id,
+                    reviewInfo: review.review_info,
+                    rating: review.rating,
+                    restaurantName: getRestaurantName(review.restaurant_id),
+                    userId: review.user_id,
+                  }}
+                />
+              ))
+            ) : (
+              // No reviews found
+              <div className="flex items-center justify-center w-full h-[200px] text-gray-500">
+                <p>ยังไม่มีรีวิวในขณะนี้</p>
+              </div>
+            )}
           </div>
         </div>
       </div>
