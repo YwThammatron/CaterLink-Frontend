@@ -208,11 +208,23 @@ function CustomerHomepage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [blogs]);
 
+  // Handle search results from FilterCustom component
+  const handleSearchResults = (searchResults, filterStates) => {
+    // Navigate to CustomerRestaurant page with search results and filter states
+    navigate("/customerrestaurant", {
+      state: {
+        searchResults: searchResults,
+        filterStates: filterStates,
+        isSearchActive: true,
+      },
+    });
+  };
+
   return (
     <>
       <NavbarCustom />
       <CarouselCustom />
-      <FilterCustom />
+      <FilterCustom onSearchResults={handleSearchResults} />
 
       {/* หมวดหมู่ร้านจัดเลี้ยง */}
       <div className="flex flex-col items-center">
@@ -427,13 +439,6 @@ function CustomerHomepage() {
         <div className="flex flex-col gap-4 px-32 py-10">
           <div className="flex justify-between items-center">
             <h3>แพคเกจแนะนำจาก CaterLink </h3>
-            {/* <div
-              className="flex gap-2 items-center cursor-pointer"
-              onClick={goToPackage}
-            >
-              <p className="font-bold text-gradient">ดูทั้งหมด</p>
-              <ArrowRight className="text-[#EB5B0A]" />
-            </div> */}
           </div>
 
           <div className="flex gap-4">

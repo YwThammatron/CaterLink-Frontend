@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Search, ChevronDown } from "lucide-react";
 import axios from "axios";
 
-function FilterCustom({ onSearchResults }) {
+function FilterCustom({ onSearchResults, initialFilterStates }) {
   // Search and filter states
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedMainCategoryId, setSelectedMainCategoryId] = useState("");
@@ -27,32 +27,63 @@ function FilterCustom({ onSearchResults }) {
   //Integrate with API
   const baseUrl = import.meta.env.VITE_BASE_URL;
 
+  // Effect to handle initial filter states from navigation
+  useEffect(() => {
+    if (initialFilterStates) {
+      setSearchQuery(initialFilterStates.searchQuery || "");
+      setSelectedMainCategoryId(initialFilterStates.selectedMainCategoryId || "");
+      setSelectedEventCategoryId(initialFilterStates.selectedEventCategoryId || "");
+      setSelectedFoodCategoryId(initialFilterStates.selectedFoodCategoryId || "");
+      setSelectedEventTypeLabel(initialFilterStates.selectedEventTypeLabel || "ประเภทจัดเลี้ยง");
+      setSelectedCateringTypeLabel(initialFilterStates.selectedCateringTypeLabel || "ประเภทงานอีเวนต์");
+      setSelectedCuisineLabel(initialFilterStates.selectedCuisineLabel || "ประเภทอาหาร");
+    }
+  }, [initialFilterStates]);
+
   // Search function
-  const handleSearch = async () => {
+  const handleSearch = async (overrideParams = {}) => {
     setIsSearching(true);
     try {
       const params = new URLSearchParams();
 
-      if (searchQuery.trim()) params.append("query", searchQuery.trim());
-      if (selectedMainCategoryId)
-        params.append("main_category_id", selectedMainCategoryId);
-      if (selectedFoodCategoryId)
-        params.append("food_category_id", selectedFoodCategoryId);
-      if (selectedEventCategoryId)
-        params.append("event_category_id", selectedEventCategoryId);
+      // Use override params if provided, otherwise use current state
+      const currentSearchQuery = overrideParams.searchQuery !== undefined ? overrideParams.searchQuery : searchQuery;
+      const currentMainCategoryId = overrideParams.selectedMainCategoryId !== undefined ? overrideParams.selectedMainCategoryId : selectedMainCategoryId;
+      const currentFoodCategoryId = overrideParams.selectedFoodCategoryId !== undefined ? overrideParams.selectedFoodCategoryId : selectedFoodCategoryId;
+      const currentEventCategoryId = overrideParams.selectedEventCategoryId !== undefined ? overrideParams.selectedEventCategoryId : selectedEventCategoryId;
+
+      if (currentSearchQuery.trim()) params.append("query", currentSearchQuery.trim());
+      if (currentMainCategoryId)
+        params.append("main_category_id", currentMainCategoryId);
+      if (currentFoodCategoryId)
+        params.append("food_category_id", currentFoodCategoryId);
+      if (currentEventCategoryId)
+        params.append("event_category_id", currentEventCategoryId);
 
       params.append("page", "1");
       params.append("limit", "10");
 
-      const response = await axios.get(
-        `${baseUrl}/api/restaurants/search?${params.toString()}`
-      );
+      // Only make API call if there are search parameters (query or any filter)
+      const hasSearchParams = currentSearchQuery.trim() || currentMainCategoryId || currentFoodCategoryId || currentEventCategoryId;
+      
+      if (hasSearchParams) {
+        const response = await axios.get(
+          `${baseUrl}/api/restaurants/search?${params.toString()}`
+        );
 
-      if (onSearchResults) {
-        onSearchResults(response.data);
+        if (onSearchResults) {
+          // Pass the search results along with current filter states
+          onSearchResults(response.data, {
+            searchQuery: currentSearchQuery.trim(),
+            selectedMainCategoryId: currentMainCategoryId,
+            selectedFoodCategoryId: currentFoodCategoryId,
+            selectedEventCategoryId: currentEventCategoryId,
+            selectedEventTypeLabel: overrideParams.selectedEventTypeLabel || selectedEventTypeLabel,
+            selectedCateringTypeLabel: overrideParams.selectedCateringTypeLabel || selectedCateringTypeLabel,
+            selectedCuisineLabel: overrideParams.selectedCuisineLabel || selectedCuisineLabel,
+          });
+        }
       }
-
-      console.log("Search results:", response.data);
     } catch (error) {
       console.error("Error searching restaurants:", error);
     } finally {
@@ -69,8 +100,13 @@ function FilterCustom({ onSearchResults }) {
     setSelectedMainCategoryId(categoryId);
     setSelectedEventTypeLabel(categoryName);
 
-    // Auto-search when filter changes
-    setTimeout(handleSearch, 100);
+    // Auto-search when filter changes - pass new values directly
+    setTimeout(() => {
+      handleSearch({
+        selectedMainCategoryId: categoryId,
+        selectedEventTypeLabel: categoryName,
+      });
+    }, 100);
   };
 
   const handleEventCategoryChange = (e) => {
@@ -81,8 +117,13 @@ function FilterCustom({ onSearchResults }) {
     setSelectedEventCategoryId(categoryId);
     setSelectedCateringTypeLabel(categoryName);
 
-    // Auto-search when filter changes
-    setTimeout(handleSearch, 100);
+    // Auto-search when filter changes - pass new values directly
+    setTimeout(() => {
+      handleSearch({
+        selectedEventCategoryId: categoryId,
+        selectedCateringTypeLabel: categoryName,
+      });
+    }, 100);
   };
 
   const handleFoodCategoryChange = (e) => {
@@ -93,8 +134,13 @@ function FilterCustom({ onSearchResults }) {
     setSelectedFoodCategoryId(categoryId);
     setSelectedCuisineLabel(categoryName);
 
-    // Auto-search when filter changes
-    setTimeout(handleSearch, 100);
+    // Auto-search when filter changes - pass new values directly
+    setTimeout(() => {
+      handleSearch({
+        selectedFoodCategoryId: categoryId,
+        selectedCuisineLabel: categoryName,
+      });
+    }, 100);
   };
 
   // Handle search input change
@@ -108,6 +154,22 @@ function FilterCustom({ onSearchResults }) {
     handleSearch();
   };
 
+  // Clear all filters and search
+  const clearAllFilters = () => {
+    setSearchQuery("");
+    setSelectedMainCategoryId("");
+    setSelectedEventCategoryId("");
+    setSelectedFoodCategoryId("");
+    setSelectedEventTypeLabel("ประเภทจัดเลี้ยง");
+    setSelectedCateringTypeLabel("ประเภทงานอีเวนต์");
+    setSelectedCuisineLabel("ประเภทอาหาร");
+
+    // Clear search results
+    if (onSearchResults) {
+      onSearchResults({ data: [], pagination: {} });
+    }
+  };
+
   // Main Categories
   useEffect(() => {
     const loadData = async () => {
@@ -115,7 +177,6 @@ function FilterCustom({ onSearchResults }) {
       try {
         const response = await axios.get(`${baseUrl}/api/main-categories`);
         setCategories(response.data);
-        console.log("Main categories loaded:", response.data);
       } catch (error) {
         console.error("Error fetching main categories:", error);
       } finally {
@@ -133,7 +194,6 @@ function FilterCustom({ onSearchResults }) {
       try {
         const response = await axios.get(`${baseUrl}/api/event-categories`);
         setEventCategories(response.data);
-        console.log("Event categories loaded:", response.data);
       } catch (error) {
         console.error("Error fetching event categories:", error);
       } finally {
@@ -151,7 +211,6 @@ function FilterCustom({ onSearchResults }) {
       try {
         const response = await axios.get(`${baseUrl}/api/food-categories`);
         setFoodCategories(response.data);
-        console.log("Food categories loaded:", response.data);
       } catch (error) {
         console.error("Error fetching food categories:", error);
       } finally {
@@ -270,6 +329,19 @@ function FilterCustom({ onSearchResults }) {
             </select>
             <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#7D7B7B] font-medium pointer-events-none" />
           </div>
+
+          {/* Clear filters button */}
+          {(searchQuery ||
+            selectedMainCategoryId ||
+            selectedEventCategoryId ||
+            selectedFoodCategoryId) && (
+            <button
+              onClick={clearAllFilters}
+              className="px-4 py-3 text-sm text-[#FF8A00] hover:text-[#E9580A] hover:bg-[#FF8A00]/10 rounded-lg border-2 border-transparent hover:border-[#FF8A00]/20 transition-all duration-200"
+            >
+              ล้างตัวกรอง
+            </button>
+          )}
         </div>
       </div>
     </div>
