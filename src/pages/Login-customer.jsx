@@ -4,11 +4,15 @@ import { Button } from "@/components/ui/button";
 
 import Logo from "../components/ui/Logo";
 
-function Login() {
+function LoginCustomer() {
   const [Logindata,setLogindata] = useState({
     email:"",
-    passwd:""
+    password:""
   })
+
+  const baseUrl = import.meta.env.VITE_BASE_URL
+
+
 
   const handleChange = (e) => {
     const { id,value } = e.target
@@ -18,13 +22,42 @@ function Login() {
     }))
   }
 
-  const handleLogin = () => {
-    //when click Login
+  const clearInputs = () => {
+    setLogindata({
+        email:"",
+        password:""
+    })
   }
+
+  const handleLogin = async () => {
+    //when click Login
+    try{
+        const response = await axios.post(baseUrl + "/api/auth/signin",Logindata)
+
+        //build cookie to keep token alive (1 hour)
+        document.cookie = `accessToken=${response.data.accessToken}; path=/; max-age=10; secure; samesite=strict`
+        document.cookie = `userData=${JSON.stringify(response.data.userData)}; path=/; max-age=10; secure; samesite=strict`
+        console.log(document.cookie)
+    }
+    catch(error){
+        if(error.response){
+            window.alert(`Code ${error.response.status} : ${error.response.data.error}`)
+        }
+        else if(error.request){
+            window.alert("System : No Response Received : ",error.request)
+        }
+        else{
+            window.alert("System : Internal Server Error.")
+        }
+
+        clearInputs()
+    }
+  }
+
 
   return (
     <>
-      {/*หน้าเข้าสู่ระบบ*/}
+      {/*หน้าเข้าสู่ระบบ (สำหรับร้านค้าและลูกค้า)*/}
       <div className="flex justify-center">
           {/* Container */}
           <div className="flex justify-center items-center w-[50%] h-[100vh]">
@@ -36,7 +69,7 @@ function Login() {
                 <div className="w-[48px] h-[48px]">
                   <Logo/>
                 </div>
-                <h2 className="mt-[24px]">เข้าสู่ระบบร้านค้า</h2>
+                <h2 className="mt-[24px]">เข้าสู่ระบบ</h2>
               </div>
 
               {/* form */}
@@ -57,8 +90,8 @@ function Login() {
                   <label className="flex"><p>รหัสผ่าน</p><p className="text-[#D92D20]">*</p></label>
                   <input 
                     type="password"
-                    id="passwd"
-                    value={Logindata.passwd}
+                    id="password"
+                    value={Logindata.password}
                     placeholder="เพิ่มรหัสผ่าน"
                     onChange={handleChange}
                     className="pl-[14px] pr-[14px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md"
@@ -72,7 +105,7 @@ function Login() {
               {/* row */}
               <div className="flex justify-center gap-[5px] mt-[32px]">
                 <p>ยังไม่มีบัญชี ?</p>
-                <a href="./signup"><p className="font-bold text-[#FF8A00]">สร้างบัญชีใหม่</p></a>
+                <a href="./custsignup"><p className="font-bold text-[#FF8A00]">สร้างบัญชีใหม่</p></a>
               </div>
             </div>
           </div>
@@ -80,7 +113,7 @@ function Login() {
           {/* Section (Image) */}
           <div className="w-[50%] h-[100vh]">
             <img 
-              src="https://plus.unsplash.com/premium_photo-1683707120444-7318975c7ba6?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              src="https://plus.unsplash.com/premium_photo-1723867267202-169dfe3b197a?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
               alt="login-img"
               className="object-cover w-[100%] h-[100%]"
             />
@@ -90,4 +123,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default LoginCustomer;
