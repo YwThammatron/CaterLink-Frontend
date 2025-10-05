@@ -2,10 +2,12 @@ import NavbarCustom from "../components/ui/Navbar-custom";
 import PlanningCard from "../components/ui/PlanningCard";
 import { Button } from "../components/ui/button";
 import MiniFooter from "../components/ui/miniFooter";
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 function PlanningPage() {
   const [planningCards, setPlanningCards] = useState([1]);
+  const [isSearching, setIsSearching] = useState(false);
+  const planningCardRefs = useRef({});
 
   const addPlanningCard = () => {
     const newId = planningCards.length > 0 ? Math.max(...planningCards) + 1 : 1;
@@ -19,6 +21,26 @@ function PlanningPage() {
   const removePlanningCard = (cardId) => {
     if (planningCards.length > 1) {
       setPlanningCards(planningCards.filter((id) => id !== cardId));
+    }
+  };
+
+  const searchRestaurants = async () => {
+    try {
+      setIsSearching(true);
+
+      // Call search on each planning card individually
+      for (const cardId of planningCards) {
+        const cardRef = planningCardRefs.current[cardId];
+        if (cardRef && cardRef.searchRestaurants) {
+          await cardRef.searchRestaurants();
+        }
+      }
+
+      console.log("Search completed for all planning cards");
+    } catch (error) {
+      console.error("Error during search:", error);
+    } finally {
+      setIsSearching(false);
     }
   };
 
@@ -47,7 +69,18 @@ function PlanningPage() {
 
             <div className="flex gap-4 flex-wrap">
               {planningCards.map((id) => (
-                <PlanningCard key={id} id={id} onRemove={removePlanningCard} />
+                <PlanningCard
+                  key={id}
+                  id={id}
+                  onRemove={removePlanningCard}
+                  ref={(ref) => {
+                    if (ref) {
+                      planningCardRefs.current[id] = ref;
+                    } else {
+                      delete planningCardRefs.current[id];
+                    }
+                  }}
+                />
               ))}
             </div>
 
@@ -55,10 +88,16 @@ function PlanningPage() {
               <Button variant="outline" onClick={clearAllCards}>
                 เคลียร์ทั้งหมด
               </Button>
-              <Button className="bg-gradient text-white font-semibold">
-                ค้นหาร้านค้าตามแผน
+              <Button
+                className="bg-gradient text-white font-semibold"
+                onClick={searchRestaurants}
+                disabled={isSearching}
+              >
+                {isSearching ? "กำลังค้นหา..." : "ค้นหาร้านค้าตามแผน"}
               </Button>
             </div>
+
+            {/* Search Results Section removed - now displayed within each PlanningCard */}
           </div>
         </div>
       </div>
