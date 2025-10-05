@@ -38,11 +38,16 @@ function CustomerRestaurant() {
       const results = location.state.searchResults?.data || [];
       setFilteredRestaurants(results);
       setIsSearchActive(true);
-      
+
       // Set initial filter states if they exist
       if (location.state?.filterStates) {
         setInitialFilterStates(location.state.filterStates);
       }
+    }
+
+    // Check if we came from navbar search with initial filter states
+    if (location.state?.initialFilterStates) {
+      setInitialFilterStates(location.state.initialFilterStates);
     }
   }, [location.state]);
 
@@ -156,8 +161,8 @@ function CustomerRestaurant() {
   return (
     <>
       <NavbarCustom />
-      <FilterCustom 
-        onSearchResults={handleSearchResults} 
+      <FilterCustom
+        onSearchResults={handleSearchResults}
         initialFilterStates={initialFilterStates}
       />
 

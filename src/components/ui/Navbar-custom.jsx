@@ -9,6 +9,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 function NavbarCustom() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
@@ -73,6 +74,32 @@ function NavbarCustom() {
     navigate("/login");
   };
 
+  // Handle search input change
+  const handleSearchInputChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  // Handle search submit (Enter key or search button click)
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      // Navigate to restaurant page with search query
+      navigate("/customerrestaurant", {
+        state: {
+          initialFilterStates: {
+            searchQuery: searchQuery.trim(),
+            selectedMainCategoryId: "",
+            selectedFoodCategoryId: "",
+            selectedEventCategoryId: "",
+            selectedEventTypeLabel: "ประเภทจัดเลี้ยง",
+            selectedCateringTypeLabel: "ประเภทงานอีเวนต์",
+            selectedCuisineLabel: "ประเภทอาหาร",
+          },
+        },
+      });
+    }
+  };
+
   return (
     <nav className="w-full h-fit flex flex-col py-5 gap-4 bg-white shadow-[0_2px_8px_0px_#0000001A]">
       {/* Top */}
@@ -86,14 +113,21 @@ function NavbarCustom() {
 
         <div className="flex gap-6">
           <div className="flex rounded-md border relative">
-            <input
-              type="text"
-              placeholder="ค้นหาร้านจัดเลี้ยง"
-              className="h-auto w-[647px] px-4 py-[10px] rounded-l-md gap-[10px] font-semibold"
-            />
-            <button className="bg-gradient rounded-md p-[10px] gap-[10px]">
-              <Search className="text-white" />
-            </button>
+            <form onSubmit={handleSearchSubmit} className="flex w-full">
+              <input
+                type="text"
+                placeholder="ค้นหาร้านจัดเลี้ยง"
+                className="h-auto w-[647px] px-4 py-[10px] rounded-l-md gap-[10px] font-semibold"
+                value={searchQuery}
+                onChange={handleSearchInputChange}
+              />
+              <button
+                type="submit"
+                className="bg-gradient rounded-md p-[10px] gap-[10px]"
+              >
+                <Search className="text-white" />
+              </button>
+            </form>
           </div>
 
           <button className="p-2 border-2 rounded-md border-[#FF8A00]">

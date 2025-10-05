@@ -31,13 +31,58 @@ function FilterCustom({ onSearchResults, initialFilterStates }) {
   useEffect(() => {
     if (initialFilterStates) {
       setSearchQuery(initialFilterStates.searchQuery || "");
-      setSelectedMainCategoryId(initialFilterStates.selectedMainCategoryId || "");
-      setSelectedEventCategoryId(initialFilterStates.selectedEventCategoryId || "");
-      setSelectedFoodCategoryId(initialFilterStates.selectedFoodCategoryId || "");
-      setSelectedEventTypeLabel(initialFilterStates.selectedEventTypeLabel || "ประเภทจัดเลี้ยง");
-      setSelectedCateringTypeLabel(initialFilterStates.selectedCateringTypeLabel || "ประเภทงานอีเวนต์");
-      setSelectedCuisineLabel(initialFilterStates.selectedCuisineLabel || "ประเภทอาหาร");
+      setSelectedMainCategoryId(
+        initialFilterStates.selectedMainCategoryId || ""
+      );
+      setSelectedEventCategoryId(
+        initialFilterStates.selectedEventCategoryId || ""
+      );
+      setSelectedFoodCategoryId(
+        initialFilterStates.selectedFoodCategoryId || ""
+      );
+      setSelectedEventTypeLabel(
+        initialFilterStates.selectedEventTypeLabel || "ประเภทจัดเลี้ยง"
+      );
+      setSelectedCateringTypeLabel(
+        initialFilterStates.selectedCateringTypeLabel || "ประเภทงานอีเวนต์"
+      );
+      setSelectedCuisineLabel(
+        initialFilterStates.selectedCuisineLabel || "ประเภทอาหาร"
+      );
     }
+  }, [initialFilterStates]);
+
+  // Effect to automatically perform search when initial filter states are set
+  useEffect(() => {
+    if (
+      initialFilterStates &&
+      (initialFilterStates.searchQuery ||
+        initialFilterStates.selectedMainCategoryId ||
+        initialFilterStates.selectedFoodCategoryId ||
+        initialFilterStates.selectedEventCategoryId)
+    ) {
+      // Small delay to ensure states are set
+      const timer = setTimeout(() => {
+        handleSearch({
+          searchQuery: initialFilterStates.searchQuery || "",
+          selectedMainCategoryId:
+            initialFilterStates.selectedMainCategoryId || "",
+          selectedFoodCategoryId:
+            initialFilterStates.selectedFoodCategoryId || "",
+          selectedEventCategoryId:
+            initialFilterStates.selectedEventCategoryId || "",
+          selectedEventTypeLabel:
+            initialFilterStates.selectedEventTypeLabel || "ประเภทจัดเลี้ยง",
+          selectedCateringTypeLabel:
+            initialFilterStates.selectedCateringTypeLabel || "ประเภทงานอีเวนต์",
+          selectedCuisineLabel:
+            initialFilterStates.selectedCuisineLabel || "ประเภทอาหาร",
+        });
+      }, 100);
+
+      return () => clearTimeout(timer);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialFilterStates]);
 
   // Search function
@@ -47,12 +92,25 @@ function FilterCustom({ onSearchResults, initialFilterStates }) {
       const params = new URLSearchParams();
 
       // Use override params if provided, otherwise use current state
-      const currentSearchQuery = overrideParams.searchQuery !== undefined ? overrideParams.searchQuery : searchQuery;
-      const currentMainCategoryId = overrideParams.selectedMainCategoryId !== undefined ? overrideParams.selectedMainCategoryId : selectedMainCategoryId;
-      const currentFoodCategoryId = overrideParams.selectedFoodCategoryId !== undefined ? overrideParams.selectedFoodCategoryId : selectedFoodCategoryId;
-      const currentEventCategoryId = overrideParams.selectedEventCategoryId !== undefined ? overrideParams.selectedEventCategoryId : selectedEventCategoryId;
+      const currentSearchQuery =
+        overrideParams.searchQuery !== undefined
+          ? overrideParams.searchQuery
+          : searchQuery;
+      const currentMainCategoryId =
+        overrideParams.selectedMainCategoryId !== undefined
+          ? overrideParams.selectedMainCategoryId
+          : selectedMainCategoryId;
+      const currentFoodCategoryId =
+        overrideParams.selectedFoodCategoryId !== undefined
+          ? overrideParams.selectedFoodCategoryId
+          : selectedFoodCategoryId;
+      const currentEventCategoryId =
+        overrideParams.selectedEventCategoryId !== undefined
+          ? overrideParams.selectedEventCategoryId
+          : selectedEventCategoryId;
 
-      if (currentSearchQuery.trim()) params.append("query", currentSearchQuery.trim());
+      if (currentSearchQuery.trim())
+        params.append("query", currentSearchQuery.trim());
       if (currentMainCategoryId)
         params.append("main_category_id", currentMainCategoryId);
       if (currentFoodCategoryId)
@@ -64,8 +122,12 @@ function FilterCustom({ onSearchResults, initialFilterStates }) {
       params.append("limit", "10");
 
       // Only make API call if there are search parameters (query or any filter)
-      const hasSearchParams = currentSearchQuery.trim() || currentMainCategoryId || currentFoodCategoryId || currentEventCategoryId;
-      
+      const hasSearchParams =
+        currentSearchQuery.trim() ||
+        currentMainCategoryId ||
+        currentFoodCategoryId ||
+        currentEventCategoryId;
+
       if (hasSearchParams) {
         const response = await axios.get(
           `${baseUrl}/api/restaurants/search?${params.toString()}`
@@ -78,9 +140,13 @@ function FilterCustom({ onSearchResults, initialFilterStates }) {
             selectedMainCategoryId: currentMainCategoryId,
             selectedFoodCategoryId: currentFoodCategoryId,
             selectedEventCategoryId: currentEventCategoryId,
-            selectedEventTypeLabel: overrideParams.selectedEventTypeLabel || selectedEventTypeLabel,
-            selectedCateringTypeLabel: overrideParams.selectedCateringTypeLabel || selectedCateringTypeLabel,
-            selectedCuisineLabel: overrideParams.selectedCuisineLabel || selectedCuisineLabel,
+            selectedEventTypeLabel:
+              overrideParams.selectedEventTypeLabel || selectedEventTypeLabel,
+            selectedCateringTypeLabel:
+              overrideParams.selectedCateringTypeLabel ||
+              selectedCateringTypeLabel,
+            selectedCuisineLabel:
+              overrideParams.selectedCuisineLabel || selectedCuisineLabel,
           });
         }
       }
