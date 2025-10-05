@@ -4,6 +4,7 @@ import ScrollToTop from "./components/ui/scrolltotop";
 import CustomerHomepage from "./pages/CustomerHomepage";
 import LoginCustomer from "./pages/Login-Customer";
 import LoginRestaurant from "./pages/Login-Restaurant";
+import SignupCustomer from "./pages/Signup-Customer";
 import CustomerRestaurant from "./pages/CustomerRestaurant";
 import Setting from "./pages/Setting";
 import WriteBlog from "./pages/WriteBlog";
@@ -30,7 +31,7 @@ function App() {
       <Routes>
         <Route path="/" element={<CustomerHomepage />} />
         <Route path="/writeblog" element={<WriteBlog />}/>
-        <Route path="/signup" element={<Signup />} />
+        <Route path="/custsignup" element={<SignupCustomer />} />
         <Route path="/custlogin" element={<LoginCustomer />} />
         <Route path="/restlogin" element={<LoginRestaurant />} />
         <Route path="/customerrestaurant" element={<CustomerRestaurant />} />

@@ -4,11 +4,30 @@ import { Button } from "@/components/ui/button";
 
 import Logo from "../components/ui/Logo";
 
-function Signup() {
+function SignupCustomer() {
   const [Regdata,setRegdata] = useState({
     email:"",
-    passwd:""
+    password:"",
+    name:"",
+    role:"customer",
+    bio:""
   })
+
+  const baseUrl = import.meta.env.VITE_BASE_URL
+
+  const clearInputs = () => {
+    const passwdcf = document.getElementById("passwdcf")
+
+    setRegdata({
+        email:"",
+        password:"",
+        name:"",
+        role:"customer",
+        bio:""  
+    })
+
+    passwdcf.value = ""
+  }
 
   const handleChange = (e) => {
     const { id,value } = e.target
@@ -18,17 +37,37 @@ function Signup() {
     }))
   }
 
-  const handleReg = () => {
+  const handleReg = async () => {
     //when click signup
-
+    const passwdcf = document.getElementById("passwdcf")
     //confirm password
-    const passwdcf = document.getElementById("passwdcf").value
-    console.log(passwdcf,Regdata.passwd)
-    if(Regdata.passwd != passwdcf && Regdata.email != "" && Regdata.passwd != ""){
-      window.alert("password confirm error")
+    
+    if(Regdata.password != passwdcf.value){
+        window.alert("System : Password Confirmation Error.")
+        clearInputs()
     }
     else{
-      window.alert("complete")
+        try{
+            const response = await axios.post(baseUrl + "/api/auth/signup",Regdata)
+            console.log(response.data)
+
+            //go to customer page
+        }
+        catch(error){
+            if(error.response){
+                window.alert(`Code ${error.response.status} : ${error.response.data.error}`)
+            }
+            else if(error.request){
+                window.alert("System : No Response Received : ",error.request)
+            }
+            else{
+                console.log(error)
+                window.alert("System : Internal Server Error.")
+            }
+
+            clearInputs()
+        }
+        
     }
   }
 
@@ -39,18 +78,30 @@ function Signup() {
           {/* Container */}
           <div className="flex justify-center items-center w-[50%] h-[100vh]">
             {/* Content (outer) */}
-            <div className="w-[360px] h-[524px]">
+            <div className="w-[360px] h-[618px]">
 
               {/* header */}
               <div className="flex flex-col items-center">
                 <div className="w-[48px] h-[48px]">
                   <Logo/>
                 </div>
-                <h2 className="mt-[24px]">สร้างบัญชีร้านค้า</h2>
+                <h2 className="mt-[24px]">สร้างบัญชีใหม่</h2>
               </div>
 
               {/* form */}
               <form className="grid gap-[20px] mt-[32px] mb-[24px]">
+                <div className="grid h-fit gap-[6px]">
+                  <label className="flex"><p>ชื่อผู้ใช้</p><p className="text-[#D92D20]">*</p></label>
+                  <input 
+                    type="text"
+                    id="name"
+                    value={Regdata.name}
+                    onChange={handleChange}
+                    placeholder="เพิ่มชื่อผู้ใช้"
+                    className="pl-[14px] pr-[14px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md"
+                  />
+                </div>
+
                 <div className="grid h-fit gap-[6px]">
                   <label className="flex"><p>อีเมล</p><p className="text-[#D92D20]">*</p></label>
                   <input 
@@ -67,8 +118,8 @@ function Signup() {
                   <label className="flex"><p>รหัสผ่าน</p><p className="text-[#D92D20]">*</p></label>
                   <input 
                     type="password"
-                    id="passwd"
-                    value={Regdata.passwd}
+                    id="password"
+                    value={Regdata.password}
                     placeholder="เพิ่มรหัสผ่าน"
                     onChange={handleChange}
                     className="pl-[14px] pr-[14px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md"
@@ -92,7 +143,7 @@ function Signup() {
               {/* row */}
               <div className="flex justify-center gap-[5px] mt-[32px]">
                 <p>มีบัญชีแล้ว ?</p>
-                <a href="./login"><p className="font-bold text-[#FF8A00]">เข้าสู่ระบบ</p></a>
+                <a href="./custlogin"><p className="font-bold text-[#FF8A00]">เข้าสู่ระบบ</p></a>
               </div>
             </div>
           </div>
@@ -100,7 +151,7 @@ function Signup() {
           {/* Section (Image) */}
           <div className="w-[50%] h-[100vh]">
             <img 
-              src="https://images.unsplash.com/photo-1592868859049-dfdcd6c07c29?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              src="https://images.unsplash.com/photo-1637059395523-d5a35541d544?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
               alt="signup-img"
               className="object-cover w-[100%] h-[100%]"
             />
@@ -110,4 +161,4 @@ function Signup() {
   );
 }
 
-export default Signup;
+export default SignupCustomer;
