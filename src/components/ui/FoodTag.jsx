@@ -9,15 +9,23 @@ function FoodTag({
 }) {
   // If categories prop is used, render dynamically
   if (categories.length > 0) {
+    // Deduplicate categories by ID to prevent duplicate tags
+    const uniqueCategories = categories.filter(
+      (category, index, array) =>
+        array.findIndex((c) => (c.id || c) === (category.id || category)) ===
+        index
+    );
+
     return (
-      <div className="flex gap-[2px]">
-        {categories.map((category, index) => {
+      <div className="flex flex-wrap gap-[2px]">
+        {uniqueCategories.map((category) => {
           const categoryName = category.name || category;
+          const categoryId = category.id || `${category}-${Math.random()}`;
 
           if (categoryName === "ซุ้มอาหาร") {
             return (
               <Badge
-                key={index}
+                key={categoryId}
                 variant="secondary"
                 className="border py-[3px] px-2 border-[#EAECF0] bg-white text-xs font-medium flex gap-2"
               >
@@ -62,7 +70,7 @@ function FoodTag({
           } else if (categoryName === "Snack box") {
             return (
               <Badge
-                key={index}
+                key={categoryId}
                 variant="secondary"
                 className="border py-[3px] px-2 border-[#EAECF0] bg-white text-xs font-medium flex gap-2"
               >
@@ -153,7 +161,7 @@ function FoodTag({
           } else if (categoryName === "จัดเลี้ยง") {
             return (
               <Badge
-                key={index}
+                key={categoryId}
                 variant="secondary"
                 className="border py-[3px] px-2 border-[#EAECF0] bg-white text-xs font-medium flex gap-2"
               >
@@ -217,7 +225,16 @@ function FoodTag({
             );
           }
 
-          return null; // Don't render unknown categories
+          // For other categories, render a generic badge
+          return (
+            <Badge
+              key={categoryId}
+              variant="secondary"
+              className="border py-[3px] px-2 border-[#EAECF0] bg-white text-xs font-medium"
+            >
+              {categoryName}
+            </Badge>
+          );
         })}
       </div>
     );
@@ -225,7 +242,7 @@ function FoodTag({
 
   // Fallback to old prop-based system for backward compatibility
   return (
-    <div className="flex gap-[2px]">
+    <div className="flex flex-wrap gap-[2px]">
       {showFoodStall && (
         <Badge
           variant="secondary"

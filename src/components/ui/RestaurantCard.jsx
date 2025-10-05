@@ -63,7 +63,7 @@ function RestaurantCard({
           />
         </button>
       </div>
-      <div className="flex flex-col gap-2 max-w-[224px]">
+      <div className="flex flex-col gap-2 w-[224px]">
         <div className="flex flex-col gap-1">
           <p className="font-bold text-[#101828] truncate overflow-hidden whitespace-nowrap">
             {restaurantData.name}
@@ -76,8 +76,13 @@ function RestaurantCard({
             <p className="text-[#98A2B3]">({restaurantData.reviewCount})</p>
           </div>
 
-          <div className="flex gap-[6px]">
-            <FoodTag categories={restaurantData.mainCategories || []} />
+          <div className="flex flex-wrap gap-[6px] w-full">
+            <FoodTag
+              categories={(restaurantData.mainCategories || []).filter(
+                (category, index, array) =>
+                  array.findIndex((c) => c.id === category.id) === index
+              )}
+            />
           </div>
         </div>
       </div>

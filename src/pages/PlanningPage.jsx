@@ -15,6 +15,10 @@ function PlanningPage() {
   };
 
   const clearAllCards = () => {
+    // Reset the remaining card to initial state
+    if (planningCardRefs.current[1] && planningCardRefs.current[1].resetCard) {
+      planningCardRefs.current[1].resetCard();
+    }
     setPlanningCards([1]); // minimum 1 card
   };
 

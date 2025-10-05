@@ -33,6 +33,19 @@ const PlanningCard = forwardRef(function PlanningCard({ id, onRemove }, ref) {
   const [isSearching, setIsSearching] = useState(false);
   const [searchPerformed, setSearchPerformed] = useState(false);
 
+  // Reset function to clear all states
+  const resetCard = () => {
+    setSelectedEventType("");
+    setSelectedFoodType("");
+    setSelectedMainType("");
+    setSelectedBudget("");
+    setDate(undefined);
+    setGuestCount(1);
+    setSearchResults([]);
+    setSearchPerformed(false);
+    setIsSearching(false);
+  };
+
   // Expose filter data and search function to parent component
   useImperativeHandle(ref, () => ({
     getFilterData: () => ({
@@ -44,6 +57,7 @@ const PlanningCard = forwardRef(function PlanningCard({ id, onRemove }, ref) {
       guestCount: guestCount,
     }),
     searchRestaurants: searchRestaurants,
+    resetCard: resetCard,
   }));
 
   // Search restaurants function
@@ -424,11 +438,13 @@ const PlanningCard = forwardRef(function PlanningCard({ id, onRemove }, ref) {
 
                         <div className="flex gap-[6px]">
                           <FoodTag
-                            categories={[
-                              ...(restaurant.food_categories || []),
-                              ...(restaurant.main_categories || []),
-                              ...(restaurant.event_categories || []),
-                            ]}
+                            categories={(
+                              restaurant.main_categories || []
+                            ).filter(
+                              (category, index, array) =>
+                                array.findIndex((c) => c.id === category.id) ===
+                                index
+                            )}
                           />
                         </div>
                       </div>

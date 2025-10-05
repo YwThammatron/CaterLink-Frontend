@@ -150,11 +150,10 @@ function CompareCard({ onRemove, restaurantData }) {
           </div>
           <div className="flex gap-[6px]">
             <FoodTag
-              categories={[
-                ...(displayRestaurant.food_categories || []),
-                ...(displayRestaurant.main_categories || []),
-                ...(displayRestaurant.event_categories || []),
-              ]}
+              categories={(displayRestaurant.main_categories || []).filter(
+                (category, index, array) =>
+                  array.findIndex((c) => c.id === category.id) === index
+              )}
             />
           </div>
         </div>
