@@ -2,8 +2,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Toaster } from "./components/ui/sonner";
 import ScrollToTop from "./components/ui/scrolltotop";
 import CustomerHomepage from "./pages/CustomerHomepage";
-import Signup from "./pages/Signup";
-import Login from "./pages/Login";
+import LoginCustomer from "./pages/Login-Customer";
+import LoginRestaurant from "./pages/Login-Restaurant";
 import CustomerRestaurant from "./pages/CustomerRestaurant";
 import Setting from "./pages/Setting";
 import WriteBlog from "./pages/WriteBlog";
@@ -31,7 +31,8 @@ function App() {
         <Route path="/" element={<CustomerHomepage />} />
         <Route path="/writeblog" element={<WriteBlog />}/>
         <Route path="/signup" element={<Signup />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/custlogin" element={<LoginCustomer />} />
+        <Route path="/restlogin" element={<LoginRestaurant />} />
         <Route path="/customerrestaurant" element={<CustomerRestaurant />} />
         <Route path="/setting" element={<Setting />}/>
         <Route path="/cart" element={<Cartpage />} />
