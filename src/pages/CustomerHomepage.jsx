@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 
+// UI Components
 import NavbarCustom from "../components/ui/Navbar-custom";
 import CarouselCustom from "../components/ui/Carousel-custom";
 import FilterCustom from "../components/ui/Filter-custom";
@@ -14,8 +15,56 @@ import Footer from "../components/ui/Footer";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 
+// Wrapper component to handle async restaurant name fetching
+function PackageCardWithRestaurant({ packageData, getRestaurantName }) {
+  const [restaurantName, setRestaurantName] = useState("กำลังโหลด...");
+
+  useEffect(() => {
+    const fetchRestaurantName = async () => {
+      const name = await getRestaurantName(packageData.restaurant_id);
+      setRestaurantName(name);
+    };
+
+    fetchRestaurantName();
+  }, [packageData.restaurant_id, getRestaurantName]);
+
+  return (
+    <PackageCard
+      packageData={{
+        ...packageData,
+        restaurantName: restaurantName,
+      }}
+    />
+  );
+}
+
+// Wrapper component for testimonials with async restaurant name fetching
+function TestimonialCardWithRestaurant({ reviewData, getRestaurantName }) {
+  const [restaurantName, setRestaurantName] = useState("กำลังโหลด...");
+
+  useEffect(() => {
+    const fetchRestaurantName = async () => {
+      const name = await getRestaurantName(reviewData.restaurant_id);
+      setRestaurantName(name);
+    };
+
+    fetchRestaurantName();
+  }, [reviewData.restaurant_id, getRestaurantName]);
+
+  return (
+    <TestimonialCard
+      reviewData={{
+        ...reviewData,
+        restaurantName: restaurantName,
+      }}
+    />
+  );
+}
+
 function CustomerHomepage() {
   const navigate = useNavigate();
+
+  // State management
   const [blogs, setBlogs] = useState([]);
   const [isLoadingBlogs, setIsLoadingBlogs] = useState(false);
   const [restaurants, setRestaurants] = useState([]);
@@ -48,7 +97,6 @@ function CustomerHomepage() {
         });
         setBlogs(blogsResponse.data.data);
         setFilteredBlogs(blogsResponse.data.data); // Initialize filtered blogs
-        console.log("Blogs loaded:", blogsResponse.data.data);
       } catch (error) {
         console.error("Error fetching blogs:", error);
       } finally {
@@ -61,7 +109,6 @@ function CustomerHomepage() {
           `${baseUrl}/api/main-categories`
         );
         setMainCategories(categoriesResponse.data);
-        console.log("Main categories loaded:", categoriesResponse.data);
       } catch (error) {
         console.error("Error fetching main categories:", error);
       }
@@ -78,7 +125,6 @@ function CustomerHomepage() {
           }
         );
         setRestaurants(restaurantsResponse.data);
-        console.log("Restaurants loaded:", restaurantsResponse.data);
       } catch (error) {
         console.error("Error fetching restaurants:", error);
       } finally {
@@ -91,7 +137,6 @@ function CustomerHomepage() {
           `${baseUrl}/api/restaurants`
         );
         setAllRestaurants(allRestaurantsResponse.data);
-        console.log("All restaurants loaded:", allRestaurantsResponse.data);
       } catch (error) {
         console.error("Error fetching all restaurants:", error);
       }
@@ -102,7 +147,6 @@ function CustomerHomepage() {
         const reviewsResponse = await axios.get(`${baseUrl}/api/reviews`);
         // Take only first 3 reviews
         setReviews(reviewsResponse.data.slice(0, 3));
-        console.log("Reviews loaded:", reviewsResponse.data.slice(0, 3));
       } catch (error) {
         console.error("Error fetching reviews:", error);
       } finally {
@@ -116,19 +160,6 @@ function CustomerHomepage() {
         // Take only first 4 packages
         const packagesData = packagesResponse.data.slice(0, 4);
         setPackages(packagesData);
-        console.log("Packages loaded:", packagesData);
-
-        // Debug: Check package images
-        packagesData.forEach((pkg, index) => {
-          console.log(`Package ${index + 1} (${pkg.name}):`, {
-            hasImages: pkg.package_images && pkg.package_images.length > 0,
-            imageCount: pkg.package_images ? pkg.package_images.length : 0,
-            firstImageUrl:
-              pkg.package_images && pkg.package_images.length > 0
-                ? pkg.package_images[0].url
-                : "No image",
-          });
-        });
       } catch (error) {
         console.error("Error fetching packages:", error);
         // Set empty array on error to show "no packages" message
@@ -141,6 +172,7 @@ function CustomerHomepage() {
     loadData();
   }, [baseUrl]);
 
+  // Navigation functions
   const goToRestaurant = () => {
     navigate("/customerrestaurant");
   };
@@ -153,21 +185,33 @@ function CustomerHomepage() {
     navigate("/allblog");
   };
 
-  const goToPackage = () => {
-    navigate("/customerreservation");
-  };
-
   const goToPlanning = () => {
     navigate("/planning");
   };
 
+  // Helper functions
+
   // Helper function to get restaurant name by ID
-  const getRestaurantName = (restaurantId) => {
+  const getRestaurantName = async (restaurantId) => {
+    // First try to find in loaded restaurants
     const restaurant = allRestaurants.find((r) => r.id === restaurantId);
-    return restaurant ? restaurant.name : "ร้านไม่ทราบชื่อ";
+    if (restaurant) {
+      return restaurant.name;
+    }
+
+    // If not found, fetch individual restaurant data
+    try {
+      const response = await axios.get(
+        `${baseUrl}/api/restaurants/${restaurantId}`
+      );
+      return response.data.name;
+    } catch (error) {
+      console.error(`Error fetching restaurant ${restaurantId}:`, error);
+      return "ร้านไม่ทราบชื่อ";
+    }
   };
 
-  // Handle blog filtering
+  // Blog filtering handler
   const handleBlogFilter = (filterType, categoryId = null) => {
     setBlogFilter(filterType);
 
@@ -194,10 +238,6 @@ function CustomerHomepage() {
     }
 
     setFilteredBlogs(filtered);
-    console.log(`Filtering blogs by: ${filterType}`, {
-      totalBlogs: blogs.length,
-      filteredCount: filtered.length,
-    });
   };
 
   // Update filtered blogs when blogs change
@@ -208,7 +248,7 @@ function CustomerHomepage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [blogs]);
 
-  // Handle search results from FilterCustom component
+  // Search results handler
   const handleSearchResults = (searchResults, filterStates) => {
     // Navigate to CustomerRestaurant page with search results and filter states
     navigate("/customerrestaurant", {
@@ -360,8 +400,10 @@ function CustomerHomepage() {
                       restaurant.images && restaurant.images.length > 0
                         ? restaurant.images[0].url
                         : "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=500&h=300&fit=crop&crop=center",
-                    rating: restaurant.avgRating || 0,
-                    reviewCount: restaurant.totalReview || 0,
+                    rating: restaurant.avgRating
+                      ? Number(restaurant.avgRating.toFixed(2))
+                      : 0,
+                    reviewCount: Math.floor(restaurant.totalReview || 0),
                     pricePerPerson: 290, // Default price since not in API response
                     description: restaurant.description,
                     foodCategories: restaurant.food_categories,
@@ -468,27 +510,42 @@ function CustomerHomepage() {
                     ? pkg.package_images[0].url
                     : "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=88&h=88&fit=crop";
 
-                console.log(
-                  `Rendering package: ${pkg.name}, Image URL: ${imageUrl}`
-                );
-
                 return (
-                  <PackageCard
+                  <PackageCardWithRestaurant
                     key={pkg.id}
                     packageData={{
                       id: pkg.id,
                       name: pkg.name,
                       description: pkg.description,
-                      restaurantName: getRestaurantName(pkg.restaurant_id),
+                      restaurant_id: pkg.restaurant_id,
                       packageDetails: pkg.package_details || [],
                       categoryName:
                         pkg.package_categories?.name || "ไม่ระบุหมวดหมู่",
                       discount: pkg.discount,
                       image: imageUrl,
                     }}
+                    getRestaurantName={getRestaurantName}
                   />
                 );
               })
+            ) : packages.length > 0 && allRestaurants.length === 0 ? (
+              // Packages loaded but restaurants still loading - show loading state
+              Array.from({ length: 4 }).map((_, index) => (
+                <div
+                  key={index}
+                  className="flex flex-col gap-3 max-w-[282px] p-4 border rounded-lg shadow-sm bg-white"
+                >
+                  <div className="w-[250px] h-[140px] bg-gray-200 rounded-lg animate-pulse"></div>
+                  <div className="flex flex-col gap-2">
+                    <div className="h-5 bg-gray-200 rounded animate-pulse"></div>
+                    <div className="h-4 bg-gray-200 rounded w-3/4 animate-pulse"></div>
+                    <div className="flex justify-between items-center">
+                      <div className="h-6 bg-gray-200 rounded w-20 animate-pulse"></div>
+                      <div className="h-8 bg-gray-200 rounded w-16 animate-pulse"></div>
+                    </div>
+                  </div>
+                </div>
+              ))
             ) : (
               // No packages found
               <div className="flex items-center justify-center w-full h-[200px] text-gray-500">
@@ -535,18 +592,19 @@ function CustomerHomepage() {
             ) : reviews.length > 0 ? (
               // Render actual review data
               reviews.map((review) => (
-                <TestimonialCard
+                <TestimonialCardWithRestaurant
                   key={review.id}
                   reviewData={{
                     id: review.id,
                     reviewInfo: review.review_info,
                     rating: review.rating,
-                    restaurantName: getRestaurantName(review.restaurant_id),
+                    restaurant_id: review.restaurant_id,
                     userId: review.user_id,
                     userName: review.user?.name || "ผู้ใช้",
                     userProfilePicture: review.user?.profile_picture || "",
                     timestamp: review.timestamp,
                   }}
+                  getRestaurantName={getRestaurantName}
                 />
               ))
             ) : (

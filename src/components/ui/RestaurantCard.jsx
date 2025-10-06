@@ -26,7 +26,7 @@ function RestaurantCard({
     } else if (onClick) {
       onClick();
     } else {
-      navigate("/customerreservation");
+      navigate(`/customerreservation/${restaurantData.id}`);
     }
   };
 
@@ -73,7 +73,9 @@ function RestaurantCard({
               <Star size={20} className="text-yellow-400 fill-current"></Star>
               <p className="text-[#667085]">{restaurantData.rating}</p>
             </div>
-            <p className="text-[#98A2B3]">({restaurantData.reviewCount})</p>
+            <p className="text-[#98A2B3]">
+              ({Math.floor(restaurantData.reviewCount || 0)})
+            </p>
           </div>
 
           <div className="flex flex-wrap gap-[6px] w-full">

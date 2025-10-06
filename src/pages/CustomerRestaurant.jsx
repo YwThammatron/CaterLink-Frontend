@@ -82,8 +82,12 @@ function CustomerRestaurant() {
     loadRestaurantData();
   }, [baseUrl]);
 
-  const goToReservation = () => {
-    navigate("/customerreservation");
+  const goToReservation = (restaurantId) => {
+    if (restaurantId) {
+      navigate(`/customerreservation/${restaurantId}`);
+    } else {
+      console.error("Restaurant ID is required for navigation");
+    }
   };
 
   const handleRestaurantSelect = (restaurantData) => {
@@ -100,8 +104,8 @@ function CustomerRestaurant() {
         setSelectedRestaurants([...selectedRestaurants, restaurantData]);
       }
     } else {
-      // Normal mode - go to reservation
-      goToReservation();
+      // Normal mode - go to reservation with restaurant ID
+      goToReservation(restaurantData.id);
     }
   };
 
@@ -117,8 +121,10 @@ function CustomerRestaurant() {
       id: restaurant.id,
       name: restaurant.name,
       description: restaurant.description,
-      rating: restaurant.avgRating || 0,
-      reviewCount: restaurant.totalReview || 0,
+      rating: restaurant.avgRating
+        ? Number(restaurant.avgRating.toFixed(2))
+        : 0,
+      reviewCount: Math.floor(restaurant.totalReview || 0),
       pricePerPerson: 300, // Default price since not provided in API
       image:
         restaurant.images && restaurant.images.length > 0
@@ -194,7 +200,7 @@ function CustomerRestaurant() {
             <div className="flex gap-4">
               <RestaurantCard
                 onSelect={isCompareMode ? handleRestaurantSelect : null}
-                onClick={!isCompareMode ? goToReservation : null}
+                onClick={!isCompareMode ? () => goToReservation(1) : null}
                 isSelected={selectedRestaurants.some((r) => r.id === 1)}
                 restaurantData={{
                   id: 1,
@@ -207,7 +213,7 @@ function CustomerRestaurant() {
               />
               <RestaurantCard
                 onSelect={isCompareMode ? handleRestaurantSelect : null}
-                onClick={!isCompareMode ? goToReservation : null}
+                onClick={!isCompareMode ? () => goToReservation(2) : null}
                 isSelected={selectedRestaurants.some((r) => r.id === 2)}
                 restaurantData={{
                   id: 2,
@@ -220,7 +226,7 @@ function CustomerRestaurant() {
               />
               <RestaurantCard
                 onSelect={isCompareMode ? handleRestaurantSelect : null}
-                onClick={!isCompareMode ? goToReservation : null}
+                onClick={!isCompareMode ? () => goToReservation(3) : null}
                 isSelected={selectedRestaurants.some((r) => r.id === 3)}
                 restaurantData={{
                   id: 3,
@@ -233,7 +239,7 @@ function CustomerRestaurant() {
               />
               <RestaurantCard
                 onSelect={isCompareMode ? handleRestaurantSelect : null}
-                onClick={!isCompareMode ? goToReservation : null}
+                onClick={!isCompareMode ? () => goToReservation(4) : null}
                 isSelected={selectedRestaurants.some((r) => r.id === 4)}
                 restaurantData={{
                   id: 4,
@@ -246,7 +252,7 @@ function CustomerRestaurant() {
               />
               <RestaurantCard
                 onSelect={isCompareMode ? handleRestaurantSelect : null}
-                onClick={!isCompareMode ? goToReservation : null}
+                onClick={!isCompareMode ? () => goToReservation(5) : null}
                 isSelected={selectedRestaurants.some((r) => r.id === 5)}
                 restaurantData={{
                   id: 5,
@@ -288,7 +294,11 @@ function CustomerRestaurant() {
                     <RestaurantCard
                       key={restaurant.id}
                       onSelect={isCompareMode ? handleRestaurantSelect : null}
-                      onClick={!isCompareMode ? goToReservation : null}
+                      onClick={
+                        !isCompareMode
+                          ? () => goToReservation(restaurant.id)
+                          : null
+                      }
                       isSelected={selectedRestaurants.some(
                         (r) => r.id === restaurant.id
                       )}
@@ -343,7 +353,11 @@ function CustomerRestaurant() {
                     <RestaurantCard
                       key={restaurant.id}
                       onSelect={isCompareMode ? handleRestaurantSelect : null}
-                      onClick={!isCompareMode ? goToReservation : null}
+                      onClick={
+                        !isCompareMode
+                          ? () => goToReservation(restaurant.id)
+                          : null
+                      }
                       isSelected={selectedRestaurants.some(
                         (r) => r.id === restaurant.id
                       )}
@@ -365,7 +379,11 @@ function CustomerRestaurant() {
                   <RestaurantCard
                     key={restaurant.id}
                     onSelect={isCompareMode ? handleRestaurantSelect : null}
-                    onClick={!isCompareMode ? goToReservation : null}
+                    onClick={
+                      !isCompareMode
+                        ? () => goToReservation(restaurant.id)
+                        : null
+                    }
                     isSelected={selectedRestaurants.some(
                       (r) => r.id === restaurant.id
                     )}

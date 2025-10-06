@@ -1,19 +1,88 @@
-function PackageCardPromotion() {
+function PackageCardPromotion({ packageData, onClick }) {
+  const data = packageData;
+  const displayName = data?.name || "ไม่มีชื่อแพคเกจ";
+
+  // Get package image or use placeholder
+  const getPackageImage = () => {
+    if (data?.package_images && data.package_images.length > 0) {
+      return data.package_images[0].url;
+    }
+    return "https://github.com/shadcn.png"; // Fallback placeholder
+  };
+
+  // Calculate prices from package_details only
+  let displayPrice = null;
+  let displayOldPrice = null;
+  let hasPackageDetails = false;
+  let hasValidDiscount = false;
+
+  if (data?.package_details?.length > 0) {
+    hasPackageDetails = true;
+    const discountedDetails = data.package_details.filter(
+      (detail) => detail.has_discount
+    );
+
+    if (discountedDetails.length > 0) {
+      // Use lowest discounted prices
+      const prices = discountedDetails.map((detail) => detail.price);
+      const oldPrices = discountedDetails
+        .map((detail) => detail.old_price)
+        .filter((price) => price !== null);
+
+      displayPrice = Math.min(...prices);
+      if (oldPrices.length > 0) {
+        displayOldPrice = Math.min(...oldPrices);
+        hasValidDiscount = true;
+      }
+    } else {
+      // Use regular pricing if no discounts in details
+      const prices = data.package_details.map((detail) => detail.price);
+      displayPrice = Math.min(...prices);
+    }
+  }
+
   return (
     <div className="flex flex-col gap-2 max-w-[284px] relative">
       <div className="flex gap-2 max-w-[284px]">
         <img
-          src="https://github.com/shadcn.png"
-          alt=""
+          src={getPackageImage()}
+          alt={displayName}
           className="w-[88px] h-[88px] rounded-md object-cover"
         />
         <div className="flex flex-col gap-1 max-w-[188px] relative">
-          <p className="text-[#101828] truncate overflow-hidden whitespace-nowrap">
-            บุฟฟเฟต์ไทยสแตนดาร์ต / Buffet Thai Stand
+          <p
+            className="text-[#101828] truncate overflow-hidden whitespace-nowrap"
+            title={displayName}
+          >
+            {displayName}
           </p>
-          <p className="text-xs line-through">เริ่ม 295 บาท/ท่าน</p>
-          <p className="font-bold text-gradient">เริ่ม 290 บาท/ท่าน</p>
-          <button className="w-fit h-fit p-2 bg-gradient rounded-[100px] shadow-xs text-white self-end absolute bottom-0 right-0">
+          <div className="flex-1"></div>
+
+          {hasPackageDetails ? (
+            hasValidDiscount ? (
+              <>
+                <p className="text-xs line-through text-[#667085] pr-10">
+                  เริ่ม {displayOldPrice} บาท
+                </p>
+                <p className="font-bold text-gradient pr-10">
+                  เริ่ม {displayPrice} บาท
+                </p>
+              </>
+            ) : (
+              <p className="font-bold text-gradient pr-10">
+                เริ่ม {displayPrice} บาท
+              </p>
+            )
+          ) : (
+            <p className="text-[#667085] text-sm pr-10">
+              ยังไม่มีรายละเอียดแพคเกจ
+            </p>
+          )}
+
+          <button
+            onClick={onClick}
+            className="w-fit h-fit p-2 bg-gradient rounded-[100px] shadow-xs text-white absolute bottom-0 right-0"
+          >
             <svg
               width="16px"
               height="16px"
@@ -24,9 +93,9 @@ function PackageCardPromotion() {
               <path
                 d="M12 5V19M5 12H19"
                 stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               />
             </svg>
           </button>
@@ -35,5 +104,4 @@ function PackageCardPromotion() {
     </div>
   );
 }
-
 export default PackageCardPromotion;

@@ -141,11 +141,13 @@ function CompareCard({ onRemove, restaurantData }) {
             <div className="flex gap-1 justify-center items-center">
               <Star size={20} className="text-yellow-400 fill-current"></Star>
               <p className="text-[#667085]">
-                {displayRestaurant.avgRating || 0}
+                {displayRestaurant.avgRating
+                  ? Number(displayRestaurant.avgRating.toFixed(2))
+                  : 0}
               </p>
             </div>
             <p className="text-[#98A2B3]">
-              ({displayRestaurant.totalReview || 0})
+              ({Math.floor(displayRestaurant.totalReview || 0)})
             </p>
           </div>
           <div className="flex gap-[6px]">

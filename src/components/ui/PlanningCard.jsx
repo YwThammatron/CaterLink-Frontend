@@ -428,11 +428,13 @@ const PlanningCard = forwardRef(function PlanningCard({ id, onRemove }, ref) {
                               className="text-yellow-400 fill-current"
                             />
                             <p className="text-[#667085]">
-                              {restaurant.avgRating || 0}
+                              {restaurant.avgRating
+                                ? Number(restaurant.avgRating.toFixed(2))
+                                : 0}
                             </p>
                           </div>
                           <p className="text-[#98A2B3]">
-                            ({restaurant.totalReview || 0})
+                            ({Math.floor(restaurant.totalReview || 0)})
                           </p>
                         </div>
 
