@@ -21,7 +21,10 @@ function PackageCard2({ packageData, onClick }) {
   }
 
   return (
-    <div className="flex flex-col gap-2 max-w-[284px] relative">
+    <div
+      className="flex flex-col gap-2 max-w-[284px] relative cursor-pointer hover:shadow-lg transition-shadow duration-200"
+      onClick={onClick}
+    >
       <div className="flex gap-2 max-w-[284px]">
         <img
           src={getPackageImage()}
@@ -45,10 +48,7 @@ function PackageCard2({ packageData, onClick }) {
               ยังไม่มีรายละเอียดแพคเกจ
             </p>
           )}
-          <button
-            onClick={onClick}
-            className="w-fit h-fit p-2 bg-gradient rounded-[100px] shadow-xs text-white absolute bottom-0 right-0"
-          >
+          <div className="w-fit h-fit p-2 bg-gradient rounded-[100px] shadow-xs text-white absolute bottom-0 right-0">
             <svg
               width="16px"
               height="16px"
@@ -64,7 +64,7 @@ function PackageCard2({ packageData, onClick }) {
                 strokeLinejoin="round"
               />
             </svg>
-          </button>
+          </div>
         </div>
       </div>
     </div>

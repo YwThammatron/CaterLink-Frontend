@@ -32,6 +32,7 @@ function CustomerReservation() {
   const [modalStep, setModalStep] = useState("package");
   const [selectedPackageData, setSelectedPackageData] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedCategoryData, setSelectedCategoryData] = useState(null);
 
   // Data states
   const [restaurantData, setRestaurantData] = useState(null);
@@ -102,8 +103,13 @@ function CustomerReservation() {
     fetchPackageCategories();
   }, [id, baseUrl]);
 
-  const openModal = (category = "Buffet") => {
-    setSelectedCategory(category);
+  const openModal = (categoryName = "Buffet") => {
+    // Find the category data from packageCategories
+    const categoryData = packageCategories.find(
+      (cat) => cat.name === categoryName
+    );
+    setSelectedCategory(categoryName);
+    setSelectedCategoryData(categoryData);
     setModalStep("package");
     setIsModalOpen(true);
   };
@@ -113,6 +119,7 @@ function CustomerReservation() {
     setModalStep("package");
     setSelectedPackageData(null);
     setSelectedCategory(null);
+    setSelectedCategoryData(null);
   };
 
   const showReservationDetails = (packageData) => {
@@ -490,6 +497,7 @@ function CustomerReservation() {
             onClose={closeModal}
             onShowReservation={showReservationDetails}
             category={selectedCategory}
+            categoryData={selectedCategoryData}
           />
         ) : (
           <ReservationDetails
