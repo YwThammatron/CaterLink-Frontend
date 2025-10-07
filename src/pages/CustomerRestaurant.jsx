@@ -49,7 +49,35 @@ function CustomerRestaurant() {
     if (location.state?.initialFilterStates) {
       setInitialFilterStates(location.state.initialFilterStates);
     }
-  }, [location.state]);
+
+    // Check if we came from navbar dropdown with selected filter
+    if (location.state?.selectedFilter) {
+      const selectedCategory = location.state.selectedFilter;
+
+      // Set a flag that we need to apply this filter once categories are loaded
+      const filterState = {
+        selectedCategoryName: selectedCategory, // Pass the name, let FilterCustom find the ID
+        searchTerm: "",
+        pendingNavbarFilter: true, // Flag to indicate this came from navbar
+      };
+      setInitialFilterStates(filterState);
+
+      // Also trigger automatic search for this category
+      setIsSearchActive(true);
+
+      // Filter restaurants that match the selected category
+      const filteredByCategory = allRestaurants.filter((restaurant) => {
+        const mainCategories =
+          restaurant.main_categories || restaurant.mainCategories || [];
+        return mainCategories.some(
+          (category) =>
+            category.name === selectedCategory || category === selectedCategory
+        );
+      });
+
+      setFilteredRestaurants(filteredByCategory);
+    }
+  }, [location.state, allRestaurants]);
 
   // Load restaurant data when component mounts
   useEffect(() => {

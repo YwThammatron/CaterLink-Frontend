@@ -23,6 +23,8 @@ function FilterCustom({ onSearchResults, initialFilterStates }) {
   const [foodCategories, setFoodCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
+  const [hasTriggeredNavbarSearch, setHasTriggeredNavbarSearch] =
+    useState(false); // Prevent multiple navbar searches
 
   //Integrate with API
   const baseUrl = import.meta.env.VITE_BASE_URL;
@@ -30,6 +32,9 @@ function FilterCustom({ onSearchResults, initialFilterStates }) {
   // Effect to handle initial filter states from navigation
   useEffect(() => {
     if (initialFilterStates) {
+      // Reset the navbar search flag when new initial states come in
+      setHasTriggeredNavbarSearch(false);
+
       setSearchQuery(initialFilterStates.searchQuery || "");
       setSelectedMainCategoryId(
         initialFilterStates.selectedMainCategoryId || ""
@@ -56,6 +61,7 @@ function FilterCustom({ onSearchResults, initialFilterStates }) {
   useEffect(() => {
     if (
       initialFilterStates &&
+      !initialFilterStates.pendingNavbarFilter && // Don't auto-search if it's from navbar (handled separately)
       (initialFilterStates.searchQuery ||
         initialFilterStates.selectedMainCategoryId ||
         initialFilterStates.selectedFoodCategoryId ||
@@ -252,6 +258,53 @@ function FilterCustom({ onSearchResults, initialFilterStates }) {
 
     loadData();
   }, [baseUrl]);
+
+  // Handle navbar filter after categories are loaded
+  useEffect(() => {
+    if (
+      initialFilterStates?.selectedCategoryName &&
+      initialFilterStates?.pendingNavbarFilter &&
+      categories.length > 0 &&
+      !hasTriggeredNavbarSearch // Prevent multiple triggers
+    ) {
+      // Find the category ID based on the category name
+      const matchingCategory = categories.find(
+        (category) => category.name === initialFilterStates.selectedCategoryName
+      );
+
+      if (matchingCategory) {
+        setSelectedMainCategoryId(matchingCategory.id);
+        setHasTriggeredNavbarSearch(true); // Mark as triggered
+
+        // Trigger search with the found category ID directly
+        setTimeout(async () => {
+          setIsSearching(true);
+          try {
+            const params = new URLSearchParams();
+            params.append("main_category_id", matchingCategory.id);
+
+            const response = await axios.get(
+              `${baseUrl}/api/restaurants/search?${params.toString()}`
+            );
+
+            if (onSearchResults) {
+              onSearchResults(response.data);
+            }
+          } catch (error) {
+            console.error("Error searching restaurants:", error);
+          } finally {
+            setIsSearching(false);
+          }
+        }, 100);
+      }
+    }
+  }, [
+    categories,
+    initialFilterStates,
+    baseUrl,
+    onSearchResults,
+    hasTriggeredNavbarSearch,
+  ]);
 
   // Event categories
   useEffect(() => {

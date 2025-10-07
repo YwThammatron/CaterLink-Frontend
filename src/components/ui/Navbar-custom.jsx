@@ -221,7 +221,9 @@ function NavbarCustom() {
                   className="w-full px-4 py-2 text-left text-[#475467] hover:bg-[#FF8A00]/10 hover:text-[#FF8A00] transition-colors duration-200 font-medium"
                   onClick={() => {
                     setIsDropdownOpen(false);
-                    // Add navigation logic for จัดเลี้ยง
+                    navigate("/customerrestaurant", {
+                      state: { selectedFilter: "จัดเลี้ยง" },
+                    });
                   }}
                 >
                   จัดเลี้ยง
@@ -230,7 +232,9 @@ function NavbarCustom() {
                   className="w-full px-4 py-2 text-left text-[#475467] hover:bg-[#FF8A00]/10 hover:text-[#FF8A00] transition-colors duration-200 font-medium"
                   onClick={() => {
                     setIsDropdownOpen(false);
-                    // Add navigation logic for ซุ้มอาหาร
+                    navigate("/customerrestaurant", {
+                      state: { selectedFilter: "ซุ้มอาหาร" },
+                    });
                   }}
                 >
                   ซุ้มอาหาร
@@ -239,7 +243,9 @@ function NavbarCustom() {
                   className="w-full px-4 py-2 text-left text-[#475467] hover:bg-[#FF8A00]/10 hover:text-[#FF8A00] transition-colors duration-200 font-medium"
                   onClick={() => {
                     setIsDropdownOpen(false);
-                    // Add navigation logic for Snack box
+                    navigate("/customerrestaurant", {
+                      state: { selectedFilter: "Snack box" },
+                    });
                   }}
                 >
                   Snack box
