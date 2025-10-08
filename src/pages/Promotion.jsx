@@ -17,6 +17,8 @@ function Promotion() {
     category:""
   })
 
+  const baseUrl = import.meta.env.VITE_BASE_URL
+
   const handleChange = (e) => {
     const { id,value } = e.target
     setPayload((data) => ({

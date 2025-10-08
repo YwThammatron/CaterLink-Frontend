@@ -1,14 +1,16 @@
 import axios from "axios";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { Button } from "@/components/ui/button";
 
 import Logo from "../components/ui/Logo";
 
-function Login() {
+function LoginRestaurant() {
   const [Logindata,setLogindata] = useState({
     email:"",
-    passwd:""
+    password:""
   })
+
+  const baseUrl = import.meta.env.VITE_BASE_URL
 
   const handleChange = (e) => {
     const { id,value } = e.target
@@ -18,13 +20,54 @@ function Login() {
     }))
   }
 
-  const handleLogin = () => {
-    //when click Login
+  const clearInputs = () => {
+    setLogindata({
+        email:"",
+        password:""
+    })
   }
+
+  const handleLogin = async () => {
+    //when click Login
+    try{
+        const response = await axios.post(baseUrl + "/api/auth/signin",Logindata)
+
+        //build cookie to keep token alive (1 hour)
+        document.cookie = `accessToken=${response.data.accessToken}; path=/; max-age=3600; secure; samesite=strict`
+        document.cookie = `userData=${JSON.stringify(response.data.userData)}; path=/; max-age=3600; secure; samesite=strict`
+
+        //go to restaurant setting page
+        window.location.href = "./setting"
+    }
+    catch(error){
+        if(error.response){
+            window.alert(`Code ${error.response.status} : ${error.response.data.error}`)
+        }
+        else if(error.request){
+            window.alert("System : No Response Received : ",error.request)
+        }
+        else{
+            window.alert("System : Internal Server Error.")
+        }
+
+        clearInputs()
+    }
+  }
+
+  const getAny = async () => {
+    let response = await axios.get(baseUrl + "/api/users")
+    console.log(response.data)
+    response = await axios.get(baseUrl + "/api/restaurants")
+    console.log(response.data)
+  }
+
+  useEffect(() => {
+      getAny()
+  },[])
 
   return (
     <>
-      {/*หน้าเข้าสู่ระบบ*/}
+      {/*หน้าเข้าสู่ระบบ (สำหรับร้านค้าและลูกค้า)*/}
       <div className="flex justify-center">
           {/* Container */}
           <div className="flex justify-center items-center w-[50%] h-[100vh]">
@@ -57,8 +100,8 @@ function Login() {
                   <label className="flex"><p>รหัสผ่าน</p><p className="text-[#D92D20]">*</p></label>
                   <input 
                     type="password"
-                    id="passwd"
-                    value={Logindata.passwd}
+                    id="password"
+                    value={Logindata.password}
                     placeholder="เพิ่มรหัสผ่าน"
                     onChange={handleChange}
                     className="pl-[14px] pr-[14px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md"
@@ -72,7 +115,7 @@ function Login() {
               {/* row */}
               <div className="flex justify-center gap-[5px] mt-[32px]">
                 <p>ยังไม่มีบัญชี ?</p>
-                <a href="./signup"><p className="font-bold text-[#FF8A00]">สร้างบัญชีใหม่</p></a>
+                <a href="./restsignup"><p className="font-bold text-[#FF8A00]">สร้างบัญชีใหม่</p></a>
               </div>
             </div>
           </div>
@@ -90,4 +133,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default LoginRestaurant;
