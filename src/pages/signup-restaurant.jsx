@@ -23,21 +23,23 @@ function SignupRestaurant() {
     }))
   }
 
-  const handleReg = () => {
+  const handleReg = async () => {
     //when click signup
 
     //confirm password
     const passwdcf = document.getElementById("passwdcf").value
     console.log(passwdcf,Regdata.password)
-    if(Regdata.email == "" || Regdata.password == ""){ 
-      window.alert("Invalid Input")
+    if(Regdata.email == "" || Regdata.password == "" || Regdata.name == ""){ 
+      window.alert("System : Invalid input.")
     }
     else{
       if(Regdata.password != passwdcf){
-        window.alert("password confirm error")
+        window.alert("System : Password confirm error.")
       }
       else{
-        window.alert("success")
+        const response = await axios.post(baseUrl + "/api/auth/signup",Regdata)
+        console.log(response.data)
+        // window.location.href = "./createaccount"
       }
     }
   }

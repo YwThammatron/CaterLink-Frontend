@@ -41,32 +41,40 @@ function SignupCustomer() {
     //when click signup
     const passwdcf = document.getElementById("passwdcf")
     //confirm password
-    
-    if(Regdata.password != passwdcf.value){
-        window.alert("System : Password Confirmation Error.")
-        clearInputs()
+    if(Regdata.email == "" || Regdata.password == "" || Regdata.name == ""){
+      window.alert("System : Invalid Input.")
     }
     else{
-        try{
-            const response = await axios.post(baseUrl + "/api/auth/signup",Regdata)
-            console.log(response.data)
-
-            //go to customer page
-        }
-        catch(error){
-            if(error.response){
-                window.alert(`Code ${error.response.status} : ${error.response.data.error}`)
-            }
-            else if(error.request){
-                window.alert("System : No Response Received : ",error.request)
-            }
-            else{
-                console.log(error)
-                window.alert("System : Internal Server Error.")
-            }
-
+        if(Regdata.password != passwdcf.value){
+            window.alert("System : Password confirmation error.")
             clearInputs()
         }
+        else{
+          try{
+              const response = await axios.post(baseUrl + "/api/auth/signup",Regdata)
+              console.log(response.data)
+
+              window.alert("System : User created successfully.")
+
+              //go to customer page
+              // window.location.href = "./"
+          }
+          catch(error){
+              if(error.response){
+                  window.alert(`Code ${error.response.status} : ${error.response.data.error}`)
+              }
+              else if(error.request){
+                  window.alert("System : No Response Received : ",error.request)
+              }
+              else{
+                  console.log(error)
+                  window.alert("System : Internal Server Error.")
+              }
+
+              clearInputs()
+          }
+        }
+
         
     }
   }

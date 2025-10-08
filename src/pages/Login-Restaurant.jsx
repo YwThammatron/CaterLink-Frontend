@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { Button } from "@/components/ui/button";
 
 import Logo from "../components/ui/Logo";
@@ -30,14 +30,12 @@ function LoginRestaurant() {
   const handleLogin = async () => {
     //when click Login
     try{
-        var temp = await axios.get(baseUrl + "/api/users")
-        console.log(temp.data)
         const response = await axios.post(baseUrl + "/api/auth/signin",Logindata)
 
         //build cookie to keep token alive (1 hour)
-        document.cookie = `accessToken=${response.data.accessToken}; path=/; max-age=60; secure; samesite=strict`
-        document.cookie = `userData=${JSON.stringify(response.data.userData)}; path=/; max-age=60; secure; samesite=strict`
-        
+        document.cookie = `accessToken=${response.data.accessToken}; path=/; max-age=3600; secure; samesite=strict`
+        document.cookie = `userData=${JSON.stringify(response.data.userData)}; path=/; max-age=3600; secure; samesite=strict`
+
         //go to restaurant setting page
         window.location.href = "./setting"
     }
@@ -55,6 +53,17 @@ function LoginRestaurant() {
         clearInputs()
     }
   }
+
+  const getAny = async () => {
+    let response = await axios.get(baseUrl + "/api/users")
+    console.log(response.data)
+    response = await axios.get(baseUrl + "/api/restaurants")
+    console.log(response.data)
+  }
+
+  useEffect(() => {
+      getAny()
+  },[])
 
   return (
     <>

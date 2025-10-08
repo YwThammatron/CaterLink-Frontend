@@ -14,6 +14,8 @@ import Complete from "../subpages/CreateAccount/Complete"
 function CreateAccount() {
     const [Tabindex,setTabindex] = useState(0)
 
+    const baseUrl = import.meta.env.VITE_BASE_URL
+
     const handleClickBank = (e) => {
         e.preventDefault()
         setTabindex(Tabindex => Tabindex + 1)

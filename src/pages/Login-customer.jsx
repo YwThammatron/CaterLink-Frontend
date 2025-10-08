@@ -12,8 +12,6 @@ function LoginCustomer() {
 
   const baseUrl = import.meta.env.VITE_BASE_URL
 
-
-
   const handleChange = (e) => {
     const { id,value } = e.target
     setLogindata((data) => ({
@@ -35,9 +33,11 @@ function LoginCustomer() {
         const response = await axios.post(baseUrl + "/api/auth/signin",Logindata)
 
         //build cookie to keep token alive (1 hour)
-        document.cookie = `accessToken=${response.data.accessToken}; path=/; max-age=10; secure; samesite=strict`
-        document.cookie = `userData=${JSON.stringify(response.data.userData)}; path=/; max-age=10; secure; samesite=strict`
-        console.log(document.cookie)
+        document.cookie = `accessToken=${response.data.accessToken}; path=/; max-age=3600; secure; samesite=strict`
+        document.cookie = `userData=${JSON.stringify(response.data.userData)}; path=/; max-age=3600; secure; samesite=strict`
+        
+        //go to customer homepage
+        // window.location.href = "./"
     }
     catch(error){
         if(error.response){

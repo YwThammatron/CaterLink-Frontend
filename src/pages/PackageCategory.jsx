@@ -12,6 +12,8 @@ function PackageCategory() {
     const [Tabindex,setTabindex] = useState(0)
     const [Iscreatectg,setIscreatectg] = useState(false)
 
+    const baseUrl = import.meta.env.VITE_BASE_URL
+
     const subpages = [
         {label: 'หมวดหมู่แพคเกจ',content: <ViewCategory sendClick={() => {setIscreatectg(true)}}/>},
         {label: 'สร้างแพคเกจ',content: <CreatePackage/>}
