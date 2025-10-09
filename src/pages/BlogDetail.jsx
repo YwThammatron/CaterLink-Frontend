@@ -1,8 +1,107 @@
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 import NavbarCustom from "../components/ui/Navbar-custom";
 import MiniFooter from "../components/ui/miniFooter";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 function BlogDetail() {
+  const { id } = useParams();
+  const [blog, setBlog] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Get base URL from environment
+  const baseUrl = import.meta.env.VITE_BASE_URL;
+
+  // Load blog data when component mounts
+  useEffect(() => {
+    const loadBlogDetail = async () => {
+      setIsLoading(true);
+      try {
+        const response = await axios.get(`${baseUrl}/api/blogs/${id}`);
+        setBlog(response.data);
+      } catch (error) {
+        console.error("Error fetching blog detail:", error);
+        setError("ไม่สามารถโหลดบทความได้");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (id) {
+      loadBlogDetail();
+    }
+  }, [id, baseUrl]);
+
+  // Format timestamp to readable date
+  const formatDate = (timestamp) => {
+    const date = new Date(timestamp);
+    return date.toLocaleDateString("th-TH", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+
+  // Get user initial for avatar fallback
+  const getUserInitial = (name) => {
+    return name ? name.charAt(0).toUpperCase() : "U";
+  };
+
+  // Get blog category display
+  const getBlogCategory = (role) => {
+    return role === "restaurant" ? "บทความโดยร้านค้า" : "บทความโดยลูกค้า";
+  };
+
+  // Get default image if no blog images
+  const getBlogImage = () => {
+    if (blog?.blog_images && blog.blog_images.length > 0) {
+      return blog.blog_images[0].url;
+    }
+    return "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1440&h=560&fit=crop&crop=center";
+  };
+
+  if (isLoading) {
+    return (
+      <>
+        <NavbarCustom />
+        <div className="flex flex-col items-center">
+          <div className="flex flex-col max-w-[1440px]">
+            <div className="flex flex-col gap-16 pb-16 items-center">
+              <div className="max-w-[1280px] flex flex-col items-center px-8 gap-8">
+                <div className="flex flex-col gap-3 items-center pt-10">
+                  <div className="h-6 bg-gray-200 rounded w-32 animate-pulse"></div>
+                  <div className="h-12 bg-gray-200 rounded w-96 animate-pulse"></div>
+                </div>
+                <div className="flex gap-4 max-w-[209px]">
+                  <div className="w-[56px] h-[56px] bg-gray-200 rounded-full animate-pulse"></div>
+                  <div className="flex flex-col gap-2">
+                    <div className="h-6 bg-gray-200 rounded w-32 animate-pulse"></div>
+                    <div className="h-5 bg-gray-200 rounded w-24 animate-pulse"></div>
+                  </div>
+                </div>
+              </div>
+              <div className="w-[1440px] h-[560px] bg-gray-200 animate-pulse"></div>
+            </div>
+          </div>
+        </div>
+        <MiniFooter />
+      </>
+    );
+  }
+
+  if (error || !blog) {
+    return (
+      <>
+        <NavbarCustom />
+        <div className="flex flex-col items-center justify-center min-h-[400px]">
+          <p className="text-red-500 text-lg">{error || "ไม่พบบทความ"}</p>
+        </div>
+        <MiniFooter />
+      </>
+    );
+  }
   return (
     <>
       <NavbarCustom />
@@ -11,85 +110,43 @@ function BlogDetail() {
           <div className="flex flex-col gap-16 pb-16 items-center">
             <div className="max-w-[1280px] flex flex-col items-center px-8 gap-8 ">
               <div className="flex flex-col gap-3 items-center pt-10">
-                <p className="font-semibold text-[#D87500]">บทความโดยร้านค้า</p>
-                <p className="text-5xl font-semibold text-[#101828]">
-                  UX review presentations
+                <p className="font-semibold text-[#D87500]">
+                  {getBlogCategory(blog.user.role)}
+                </p>
+                <p className="text-5xl font-semibold text-[#101828] text-center">
+                  {blog.title}
                 </p>
               </div>
 
               <div className="flex gap-4 max-w-[209px]">
                 <Avatar className="w-[56px] h-[56px]">
-                  <AvatarImage src="https://github.com/shadcn.png" />
-                  <AvatarFallback>CN</AvatarFallback>
+                  <AvatarImage src={blog.user.profile_picture} />
+                  <AvatarFallback>
+                    {getUserInitial(blog.user.name)}
+                  </AvatarFallback>
                 </Avatar>
 
                 <div className="flex flex-col max-w-[137px]">
                   <p className="text-lg font-semibold text-[#101828]">
-                    โหระพา เคทเทอริ่ง
+                    {blog.user.name}
                   </p>
-                  <p className="text-[#475467]">ม.ค. 6, 2024 </p>
+                  <p className="text-[#475467]">{formatDate(blog.timestamp)}</p>
                 </div>
               </div>
             </div>
 
             <img
-              src="https://github.com/shadcn.png"
-              alt="blogDetail"
-              className="w-[1440px] max-h-[560px]"
+              src={getBlogImage()}
+              alt={blog.title}
+              className="w-[1440px] max-h-[560px] object-cover"
             />
           </div>
 
           <div className="flex flex-col gap-12 items-center">
             <div className="max-w-[720px] flex flex-col gap-6">
-              <p className="text-lg text-[#475467]">
-                Mi tincidunt elit, id quisque ligula ac diam, amet. Vel etiam
-                suspendisse morbi eleifend faucibus eget vestibulum felis.
-                Dictum quis montes, sit sit. Tellus aliquam enim urna, etiam.
-              </p>
-
-              <p className="text-lg text-[#475467]">
-                Mauris posuere vulputate arcu amet, vitae nisi, tellus
-                tincidunt. At feugiat sapien varius id.
-              </p>
-
-              <p className="text-lg text-[#475467]">
-                Eget quis mi enim, leo lacinia pharetra, semper. Eget in
-                volutpat mollis at volutpat lectus velit, sed auctor. Porttitor
-                fames arcu quis fusce augue enim. Quis at habitant diam at.
-                Suscipit tristique risus, at donec. In turpis vel et quam
-                imperdiet. Ipsum molestie aliquet sodales id est ac volutpat.
-              </p>
-            </div>
-
-            <div className="max-w-[720px] flex flex-col gap-6">
-              <p className="text-lg text-[#475467]">
-                Dolor enim eu tortor urna sed duis nulla. Aliquam vestibulum,
-                nulla odio nisl vitae. In aliquet pellentesque aenean hac
-                vestibulum turpis mi bibendum diam.
-              </p>
-
-              <p className="text-lg text-[#475467]">
-                Tempor integer aliquam in vitae malesuada fringilla. Elit nisi
-                in eleifend sed nisi. Pulvinar at orci, proin imperdiet commodo
-                consectetur convallis risus. Sed condimentum enim dignissim
-                adipiscing faucibus consequat, urna.
-              </p>
-
-              <p className="text-lg text-[#475467]">
-                Viverra purus et erat auctor aliquam. Risus, volutpat vulputate
-                posuere purus sit congue convallis aliquet. Arcu id augue ut
-                feugiat donec porttitor neque. Mauris, neque ultricies eu
-                vestibulum, bibendum quam lorem id.
-              </p>
-
-              <p className="text-lg text-[#475467]">
-                Dolor lacus, eget nunc lectus in tellus, pharetra, porttitor.
-                Ipsum sit mattis nulla quam nulla. Gravida id gravida ac enim
-                mauris id. Non pellentesque congue eget consectetur turpis.
-                Sapien, dictum molestie sem tempor. Diam elit, orci, tincidunt
-                aenean tempus. Quis velit eget ut tortor tellus. Sed vel, congue
-                felis elit erat nam nibh orci.
-              </p>
+              <div className="text-lg text-[#475467] whitespace-pre-wrap">
+                {blog.detail}
+              </div>
             </div>
           </div>
         </div>

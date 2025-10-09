@@ -1,35 +1,40 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Toaster } from "./components/ui/sonner";
 import ScrollToTop from "./components/ui/scrolltotop";
+
+// Page components
 import CustomerHomepage from "./pages/CustomerHomepage";
 import LoginCustomer from "./pages/Login-customer";
 import LoginRestaurant from "./pages/Login-restaurant";
 import SignupCustomer from "./pages/Signup-customer";
 import SignupRestaurant from "./pages/Signup-restaurant";
 import CustomerRestaurant from "./pages/CustomerRestaurant";
-import Setting from "./pages/Setting";
-import WriteBlog from "./pages/WriteBlog";
-import Cartpage from "./pages/CartPage";
 import CustomerReservation from "./pages/CustomerReservation";
 import ComparePage from "./pages/ComparePage";
-import PackageCategory from "./pages/PackageCategory";
-import Payment from "./pages/Payment";
-import ViewAllBlog from "./pages/ViewAllBlog";
 import PlanningPage from "./pages/PlanningPage";
-import BlogDetail from "./pages/BlogDetail";
 import ReviewPage from "./pages/ReviewPage";
 import CommentPage from "./pages/CommentPage";
-
+import ViewAllBlog from "./pages/ViewAllBlog";
+import BlogDetail from "./pages/BlogDetail";
+import WriteBlog from "./pages/WriteBlog";
+import PackageCategory from "./pages/PackageCategory";
+import Cartpage from "./pages/CartPage";
+import Payment from "./pages/Payment";
 import Order from "./pages/Order";
-import CreateAccount from "./pages/CreateAccount";
-
 import Promotion from "./pages/Promotion";
+
+// Auth and user pages
+import Signup from "./pages/Signup";
+import Login from "./pages/Login";
+import CreateAccount from "./pages/CreateAccount";
+import Setting from "./pages/Setting";
 
 function App() {
   return (
     <Router>
       <ScrollToTop />
       <Routes>
+        {/* Main pages */}
         <Route path="/" element={<CustomerHomepage />} />
         <Route path="/writeblog" element={<WriteBlog />}/>
         <Route path="/custsignup" element={<SignupCustomer />} />
@@ -37,20 +42,32 @@ function App() {
         <Route path="/custlogin" element={<LoginCustomer />} />
         <Route path="/restlogin" element={<LoginRestaurant />} />
         <Route path="/customerrestaurant" element={<CustomerRestaurant />} />
-        <Route path="/setting" element={<Setting />}/>
-        <Route path="/cart" element={<Cartpage />} />
-        <Route path="/customerreservation" element={<CustomerReservation />} />
+        <Route
+          path="/customerreservation/:id"
+          element={<CustomerReservation />}
+        />
         <Route path="/compare" element={<ComparePage />} />
-        <Route path="/packagectg" element={<PackageCategory/>}/>
-        <Route path="/payment" element={<Payment />} />
-        <Route path="/allblog" element={<ViewAllBlog />} />
-        <Route path="/createaccount" element={<CreateAccount />} />
         <Route path="/planning" element={<PlanningPage />} />
-        <Route path="/order" element={<Order />} />
-        <Route path="/promotion" element={<Promotion />} />
-        <Route path="/blog" element={<BlogDetail />} />
         <Route path="/review" element={<ReviewPage />} />
         <Route path="/comment" element={<CommentPage />} />
+
+        {/* Blog pages */}
+        <Route path="/allblog" element={<ViewAllBlog />} />
+        <Route path="/blog/:id" element={<BlogDetail />} />
+        <Route path="/writeblog" element={<WriteBlog />} />
+
+        {/* E-commerce pages */}
+        <Route path="/packagectg" element={<PackageCategory />} />
+        <Route path="/cart" element={<Cartpage />} />
+        <Route path="/payment" element={<Payment />} />
+        <Route path="/order" element={<Order />} />
+        <Route path="/promotion" element={<Promotion />} />
+
+        {/* Auth and user pages */}
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/createaccount" element={<CreateAccount />} />
+        <Route path="/setting" element={<Setting />} />
         <Route
           path="/welcome"
           element={

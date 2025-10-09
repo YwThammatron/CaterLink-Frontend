@@ -14,6 +14,25 @@ function ReservationDetails({ onClose, onBack, selectedPackage }) {
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const calendarRef = useRef(null);
 
+  // Calculate total price and deposit
+  const calculateTotalPrice = () => {
+    if (!selectedPackage?.price || !selectedPackage?.customGuestCount) {
+      return 0;
+    }
+    return (
+      selectedPackage.price * parseInt(selectedPackage.customGuestCount, 10)
+    );
+  };
+
+  const calculateDeposit = () => {
+    const totalPrice = calculateTotalPrice();
+    return Math.floor(totalPrice / 2); // Using Math.floor to avoid decimal issues
+  };
+
+  const formatPrice = (price) => {
+    return price.toLocaleString("th-TH");
+  };
+
   // Generate time options in 12-hour format
   const timeOptions = [
     "08:00 AM",
@@ -71,10 +90,21 @@ function ReservationDetails({ onClose, onBack, selectedPackage }) {
       startTime: startTime || "ไม่ได้เลือก",
       endTime: endTime || "ไม่ได้เลือก",
       packageName: selectedPackage
-        ? `จำนวนแขก ${selectedPackage.guests} ท่าน - ${selectedPackage.price} บาท/ท่าน`
+        ? selectedPackage.packageInfo
+          ? `${selectedPackage.name} - ${selectedPackage.price} บาท`
+          : `จำนวนแขก ${selectedPackage.guests} ท่าน - ${selectedPackage.price} บาท/ท่าน`
         : "ยังไม่ได้เลือกแพคเก็จ",
-      guestCount: "50 ท่าน",
-      totalPrice: "14,500 บาท",
+      guestCount: selectedPackage?.customGuestCount
+        ? `${selectedPackage.customGuestCount} ท่าน`
+        : "ไม่ได้ระบุจำนวน",
+      depositAmount:
+        selectedPackage?.price && selectedPackage?.customGuestCount
+          ? `${formatPrice(calculateDeposit())} บาท`
+          : "ยังคำนวณไม่ได้",
+      totalPrice:
+        selectedPackage?.price && selectedPackage?.customGuestCount
+          ? `${formatPrice(calculateTotalPrice())} บาท`
+          : "ยังคำนวณไม่ได้",
     };
 
     console.log("Showing toast..."); // Debug log
@@ -158,11 +188,29 @@ function ReservationDetails({ onClose, onBack, selectedPackage }) {
                 <div className="flex flex-col gap-3">
                   <div className="flex justify-between items-center">
                     <p className="font-medium text-[#344054]">
-                      จำนวนแขก {selectedPackage.guests} ท่าน
+                      {selectedPackage.packageInfo
+                        ? selectedPackage.name
+                        : `จำนวนแขก ${selectedPackage.guests} ท่าน`}
                     </p>
-                    <p className="font-bold text-gradient text-lg">
-                      {selectedPackage.price} บาท/ท่าน
-                    </p>
+                    <div className="flex flex-col items-end">
+                      {selectedPackage.has_discount &&
+                      selectedPackage.old_price ? (
+                        <>
+                          <p className="font-bold text-gradient text-lg">
+                            {selectedPackage.price} บาท
+                          </p>
+                          <p className="text-sm text-gray-500 line-through">
+                            {selectedPackage.old_price} บาท
+                          </p>
+                        </>
+                      ) : (
+                        <p className="font-bold text-gradient text-lg">
+                          {selectedPackage.packageInfo
+                            ? `${selectedPackage.price} บาท`
+                            : `${selectedPackage.price} บาท/ท่าน`}
+                        </p>
+                      )}
+                    </div>
                   </div>
                   <p className="text-[#475467] text-sm leading-relaxed">
                     {selectedPackage.description}
@@ -179,21 +227,33 @@ function ReservationDetails({ onClose, onBack, selectedPackage }) {
           <div className="flex items-start justify-between">
             <p className="text-sm font-medium text-[#344054]">จำนวนท่าน/ที่</p>
             <div className="p-4 border border-[#D0D5DD] rounded-xl bg-[#F9FAFB] w-[464px] flex items-center">
-              <span className="text-[#344054]">50 ท่าน</span>
+              <span className="text-[#344054]">
+                {selectedPackage?.customGuestCount
+                  ? `${selectedPackage.customGuestCount} ท่าน`
+                  : "ไม่ได้ระบุจำนวน"}
+              </span>
             </div>
           </div>
 
           <div className="flex items-start justify-between">
             <p className="text-sm font-medium text-[#344054]">ยอดชำระมัดจำ</p>
             <div className="p-4 border border-[#D0D5DD] rounded-xl bg-[#F9FAFB] w-[464px] flex items-center">
-              <span className="text-[#344054]">3,500 บาท</span>
+              <span className="text-[#344054]">
+                {selectedPackage?.price && selectedPackage?.customGuestCount
+                  ? `${formatPrice(calculateDeposit())} บาท`
+                  : "ยังคำนวณไม่ได้"}
+              </span>
             </div>
           </div>
 
           <div className="flex items-start justify-between">
             <p className="text-sm font-medium text-[#344054]">ยอดชำระทั้งหมด</p>
             <div className="p-4 border border-[#D0D5DD] rounded-xl bg-[#F9FAFB] w-[464px] flex items-center">
-              <span className="font-semibold text-[#FF8A00]">14,500 บาท</span>
+              <span className="font-semibold text-[#FF8A00]">
+                {selectedPackage?.price && selectedPackage?.customGuestCount
+                  ? `${formatPrice(calculateTotalPrice())} บาท`
+                  : "ยังคำนวณไม่ได้"}
+              </span>
             </div>
           </div>
         </div>

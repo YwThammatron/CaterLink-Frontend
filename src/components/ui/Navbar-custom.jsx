@@ -9,6 +9,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 function NavbarCustom() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
@@ -26,13 +27,6 @@ function NavbarCustom() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-
-  // Mock user data - replace with actual user data from your auth system
-  const user = {
-    name: "John Doe",
-    email: "john@example.com",
-    avatar: "https://github.com/shadcn.png",
-  };
 
   // Function to check if current path matches the route
   const isActive = (path) => {
@@ -80,6 +74,32 @@ function NavbarCustom() {
     navigate("/login");
   };
 
+  // Handle search input change
+  const handleSearchInputChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  // Handle search submit (Enter key or search button click)
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      // Navigate to restaurant page with search query
+      navigate("/customerrestaurant", {
+        state: {
+          initialFilterStates: {
+            searchQuery: searchQuery.trim(),
+            selectedMainCategoryId: "",
+            selectedFoodCategoryId: "",
+            selectedEventCategoryId: "",
+            selectedEventTypeLabel: "ประเภทจัดเลี้ยง",
+            selectedCateringTypeLabel: "ประเภทงานอีเวนต์",
+            selectedCuisineLabel: "ประเภทอาหาร",
+          },
+        },
+      });
+    }
+  };
+
   return (
     <nav className="w-full h-fit flex flex-col py-5 gap-4 bg-white shadow-[0_2px_8px_0px_#0000001A]">
       {/* Top */}
@@ -93,14 +113,21 @@ function NavbarCustom() {
 
         <div className="flex gap-6">
           <div className="flex rounded-md border relative">
-            <input
-              type="text"
-              placeholder="ค้นหาร้านจัดเลี้ยง"
-              className="h-auto w-[647px] px-4 py-[10px] rounded-l-md gap-[10px] font-semibold"
-            />
-            <button className="bg-gradient rounded-md p-[10px] gap-[10px]">
-              <Search className="text-white" />
-            </button>
+            <form onSubmit={handleSearchSubmit} className="flex w-full">
+              <input
+                type="text"
+                placeholder="ค้นหาร้านจัดเลี้ยง"
+                className="h-auto w-[647px] px-4 py-[10px] rounded-l-md gap-[10px] font-semibold"
+                value={searchQuery}
+                onChange={handleSearchInputChange}
+              />
+              <button
+                type="submit"
+                className="bg-gradient rounded-md p-[10px] gap-[10px]"
+              >
+                <Search className="text-white" />
+              </button>
+            </form>
           </div>
 
           <button className="p-2 border-2 rounded-md border-[#FF8A00]">
@@ -126,32 +153,19 @@ function NavbarCustom() {
 
         <div className="flex gap-2">
           {isLoggedIn ? (
-            // User Avatar Profile
+            // User Avatar Profile - user data should come from props or context
             <div className="flex items-center gap-2">
               <Avatar className="w-11 h-11 cursor-pointer hover:ring-2 hover:ring-[#FF8A00] hover:ring-offset-2 transition-all">
-                <AvatarImage src={user.avatar} alt={user.name} />
+                <AvatarImage src="" alt="User" />
                 <AvatarFallback className="bg-[#FF8A00] text-white font-semibold">
-                  {user.name
-                    .split(" ")
-                    .map((n) => n[0])
-                    .join("")}
+                  U
                 </AvatarFallback>
               </Avatar>
-              {/* Test button to logout - remove in production */}
-              <button
-                onClick={() => setIsLoggedIn(false)}
-                className="text-xs text-gray-500 hover:text-gray-700"
-              >
-                Logout
-              </button>
             </div>
           ) : (
             // Login Buttons
             <>
-              <button
-                className="py-[10px] px-4"
-                onClick={() => setIsLoggedIn(true)} // Test login - replace with actual login logic
-              >
+              <button className="py-[10px] px-4">
                 <p
                   className="text-[#475467] font-semibold cursor-pointer"
                   onClick={goToSignup}
@@ -207,7 +221,9 @@ function NavbarCustom() {
                   className="w-full px-4 py-2 text-left text-[#475467] hover:bg-[#FF8A00]/10 hover:text-[#FF8A00] transition-colors duration-200 font-medium"
                   onClick={() => {
                     setIsDropdownOpen(false);
-                    // Add navigation logic for จัดเลี้ยง
+                    navigate("/customerrestaurant", {
+                      state: { selectedFilter: "จัดเลี้ยง" },
+                    });
                   }}
                 >
                   จัดเลี้ยง
@@ -216,7 +232,9 @@ function NavbarCustom() {
                   className="w-full px-4 py-2 text-left text-[#475467] hover:bg-[#FF8A00]/10 hover:text-[#FF8A00] transition-colors duration-200 font-medium"
                   onClick={() => {
                     setIsDropdownOpen(false);
-                    // Add navigation logic for ซุ้มอาหาร
+                    navigate("/customerrestaurant", {
+                      state: { selectedFilter: "ซุ้มอาหาร" },
+                    });
                   }}
                 >
                   ซุ้มอาหาร
@@ -225,7 +243,9 @@ function NavbarCustom() {
                   className="w-full px-4 py-2 text-left text-[#475467] hover:bg-[#FF8A00]/10 hover:text-[#FF8A00] transition-colors duration-200 font-medium"
                   onClick={() => {
                     setIsDropdownOpen(false);
-                    // Add navigation logic for Snack box
+                    navigate("/customerrestaurant", {
+                      state: { selectedFilter: "Snack box" },
+                    });
                   }}
                 >
                   Snack box
