@@ -3,26 +3,32 @@ import { useState,useEffect } from "react";
 
 import { Button } from "../../components/ui/button";
 
-function RestInfo({ onClick }) {
+function RestInfo({ onClick,sendPayload }) {
 
   const [Payload,setPayload] = useState({
-    name:"",
-    detail:"",
-    vatid:"",
-    location:"",
-    address:""
+      name:"",
+      description:"",
+      tax_id:"",
+      sub_location:"",
+      location:""
   })
 
   const handleChange = (e) => {
-    const { id,value } = e.target
+    const { name,value } = e.target
     setPayload((data) => ({
-      ...data,[id]:value
+      ...data,[name]:value
     }))
+  }
+
+  const handleNext = (e) => {
+    e.preventDefault()
+    sendPayload(Payload) //pass Payload up to parent
+    onClick(e) //trigger onclick method once from parent
   }
 
   useEffect(() => {
       const btn = document.getElementById('nextbtn')
-          if(Payload.name != "" && Payload.detail != "" && Payload.vatid != "" && Payload.location != "" && Payload.address != ""){
+          if(Payload.name != "" && Payload.description != "" && Payload.tax_id != "" && Payload.sub_location != "" && Payload.location != ""){
               btn.disabled = false
               btn.style.background =  'linear-gradient(to right, #FF8A00, #E9580A)'
           }
@@ -31,6 +37,10 @@ function RestInfo({ onClick }) {
               btn.style.backgroundColor = "#D0D5DD"
           }
   },[Payload])
+
+  useEffect(() => {
+     console.log(document.cookie)
+  },[])
 
 return (
     <>
@@ -50,7 +60,7 @@ return (
                   <label className="flex"><p>ชื่อบริษัทหรือร้านค้า</p><p className="text-[#D92D20]">*</p></label>
                   <input 
                     type="text"
-                    id="name"
+                    name="name"
                     value={Payload.name}
                     onChange={handleChange}
                     placeholder="เพิ่มชื่อร้านที่น่าจดจำ"
@@ -61,8 +71,8 @@ return (
                 <div className="grid h-fit gap-[6px]">
                   <label className="flex"><p>คำอธิบายร้าน</p><p className="text-[#D92D20]">*</p></label>
                   <textarea
-                    id="detail"
-                    value={Payload.detail}
+                    name="description"
+                    value={Payload.description}
                     onChange={handleChange}
                     placeholder="เพิ่มคำอธิบายสั้น ๆ เกี่ยวกับร้าน"
                     className="resize-none h-[79px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md"
@@ -73,8 +83,8 @@ return (
                   <label className="flex"><p>เลขประจำตัวผู้เสียภาษี</p><p className="text-[#D92D20]">*</p></label>
                   <input 
                     type="text"
-                    id="vatid"
-                    value={Payload.vatid}
+                    name="tax_id"
+                    value={Payload.tax_id}
                     placeholder="เช่น 1000010000100010"
                     onChange={handleChange}
                     className="h-[44px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md"
@@ -85,8 +95,8 @@ return (
                   <label className="flex"><p>ชื่ออาคาร/ถนน</p><p className="text-[#D92D20]">*</p></label>
                   <input 
                     type="text"
-                    id="location"
-                    value={Payload.location}
+                    name="sub_location"
+                    value={Payload.sub_location}
                     placeholder="เช่น ถนนลาดกระบัง"
                     onChange={handleChange}
                     className="h-[44px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md"
@@ -96,8 +106,8 @@ return (
                 <div className="grid h-fit gap-[6px]">
                   <label className="flex"><p>สถานที่ตั้งบริษัทหรือร้านค้า</p><p className="text-[#D92D20]">*</p></label>
                   <textarea
-                    id="address"
-                    value={Payload.address}
+                    name="location"
+                    value={Payload.location}
                     onChange={handleChange}
                     placeholder="เพิ่มที่อยู่ของร้านค้า"
                     className="resize-none h-[79px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md"
@@ -106,7 +116,7 @@ return (
               </form>
 
               {/* action */}
-              <Button id="nextbtn" onClick={onClick} className="w-[100%] h-[44px]  text-[16px] rounded-[8px] hover:ฺbg-black cursor-pointer transition">ต่อไป</Button>
+              <Button id="nextbtn" onClick={handleNext} className="w-[100%] h-[44px]  text-[16px] rounded-[8px] hover:ฺbg-black cursor-pointer transition">ต่อไป</Button>
             </div>
           </div>
     </>

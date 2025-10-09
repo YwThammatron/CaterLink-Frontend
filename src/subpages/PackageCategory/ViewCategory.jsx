@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "../../components/ui/badge";
 
 import {
   Accordion,
@@ -96,15 +97,22 @@ function ViewCategory({ sendClick }) {
                                                                 <Accordion key={"accordion"+data.name+j} className="w-full" type="single" collapsible>
                                                                     <AccordionItem key={"package"+j} value={data.name}>
                                                                         <AccordionTrigger className="no-underline h-[24px] flex items-center text-[16px] text-[#101828] font-[500] hover:no-underline cursor-pointer">
-                                                                            <span>{data.name}</span>
+                                                                            <span className="flex gap-[10px]">
+                                                                                {data.name}
+                                                                                {data.discount == null ? 
+                                                                                    <div></div>
+                                                                                    :
+                                                                                    <Badge className="w-auto h-[28px] pl-[12px] pr-[12px] text-[14px] text-[#5925DC] font-[500] border-[1px] border-[#D9D6FE] bg-[#F4F3FF] rounded-[1000px]">ลดราคา {data.discount}%</Badge>
+                                                                                }
+                                                                            </span>
                                                                         </AccordionTrigger>
 
                                                                         <AccordionContent className="pt-[16px] pl-[32px] pb-[16px] flex flex-col gap-[12px]">
                                                                             {data.package_details.map((subdata,k) => {
                                                                                 return (
-                                                                                    <div key={"packageDetail"+k} className="relative flex text-[#475467]">
-                                                                                        <p className="absolute left-0 text-[16px] font-[500]">{subdata.name}</p>
-                                                                                        <p className="relative ml-auto text-[14px] font-[400]">{subdata.price} บาท/ที่</p>
+                                                                                    <div key={"packageDetail"+k} className="relative flex">
+                                                                                        <p className="absolute left-0 text-[16px] font-[500] text-[#475467]">{subdata.name}</p>
+                                                                                        <p className={`relative ml-auto text-[14px] font-[400] ${data.discount == null ? 'text-[#475467]' : 'text-[#D92D20]'}`}>{data.discount == null ? subdata.price : `${subdata.old_price} -> ${subdata.price}`} บาท/ที่</p>
                                                                                     </div>
                                                                                 )
                                                                             })}

@@ -18,7 +18,6 @@ function CreatePackage() {
     
     const [Payload,setPayload] = useState({
         name:"",
-        description:"test",
         category_id:"",
         discount:0,
         start_discount_date:"",
@@ -121,7 +120,7 @@ function CreatePackage() {
         //when click save
         window.alert("System : You can add promotion to the package in promotion page.")
         let isconfirm = window.confirm("System : Are you sure to create this package?")
-        if(Payload.name != "" || Payload.category_id != "" || Payload.description != "" && isconfirm){
+        if(Payload.name != "" || Payload.category_id != "" && isconfirm){
             try{
                 const response = await axios.post(baseUrl + "/api/packages",Payload)
                 console.log(response.data)

@@ -3,41 +3,29 @@ import { useState,useEffect } from "react";
 
 import OrderCard from "../../components/ui/OrderCard";
 
-const orders = [
-    {
-        name:"มิ่งบุญ ร้อยเรียง",
-        status:"สำเร็จแล้ว",
-        food:"บุฟฟเฟต์ไทยสแตนดาร์ต / Buffet Thai Stand",
-        number:100,
-        detail:"รายการอาหาร 6 อย่าง ฟรีน้ำดื่ม, ข้าวหอมมะลิ, ของหวาน/ผลไม้รวม, จำนวนอาหารรวมทั้งหมด 8-10 รายการ",
-        price:26100,
-        deposit:13500,
-        date:"6/09/2025",
-        start:"05:00",
-        end:"10:00",
-        address:"อาคารปฏิบัติการรวมวิศวกรรมศาสตร์ 2 (ECC) เลขที่ 1 ซอยฉลองกรุง 1 แขวงลาดกระบัง เขตลาดกระบัง",
-    },
-
-    {
-        name:"มิ่งบุญ ร้อยเรียง",
-        status:"ยกเลิก",
-        food:"บุฟฟเฟต์ไทยสแตนดาร์ต / Buffet Thai Stand",
-        number:100,
-        detail:"รายการอาหาร 6 อย่าง ฟรีน้ำดื่ม, ข้าวหอมมะลิ, ของหวาน/ผลไม้รวม, จำนวนอาหารรวมทั้งหมด 8-10 รายการ",
-        price:26100,
-        deposit:13500,
-        date:"6/09/2025",
-        start:"05:00",
-        end:"10:00",
-        address:"อาคารปฏิบัติการรวมวิศวกรรมศาสตร์ 2 (ECC) เลขที่ 1 ซอยฉลองกรุง 1 แขวงลาดกระบัง เขตลาดกระบัง",
-    },
-]
-
 function History() {
     const [accessToken,setAccessToken] = useState("")
+    const [userData,setUserData] =  useState({
+        id:"",
+        name:"",
+        email:"",
+        profile_picture:"",
+        role:"restaurant",
+        bio:"",
+    })
+
+    const [Restid,setRestid] = useState("")
+    const [AllOrders,setAllOrders] = useState([])
     const [Orders,setOrders] = useState([])
 
+    const [Hispage,setHispage] = useState(1)
+
+    const numorder = 3
+
     const [Names,setNames] = useState([])
+    const [Package,setPackage] = useState([])
+    const [Packagedtdes,setPackagedtdes] = useState([])
+    const [Packagedtname,setPackagedtname] = useState([])
 
     const baseUrl = import.meta.env.VITE_BASE_URL
 
@@ -48,22 +36,47 @@ function History() {
             const tempdata = JSON.parse(parts.find(p => p.startsWith('userData=')).slice('userData='.length))
             const temptoken = parts.find(p => p.startsWith('accessToken=')).slice('accessToken='.length)
             setAccessToken(temptoken)
+            setUserData(tempdata)
         }
     }
 
+    const getRest = async () => {
+            const response = await axios.get(baseUrl + "/api/restaurants")
+            for(let restaurant of response.data){
+                if(userData.id == restaurant.user_id){
+                    setRestid(restaurant.id)
+                    break
+                }
+            }
+        }
+
     const getOrders = async () => {
-      let response = await axios.get(baseUrl+"/api/orders/me?status=all",{
+      const response = await axios.get(baseUrl+"/api/orders/restaurant/" + Restid,{
         headers:{
           Authorization: `Bearer ${accessToken}`,
         }
       })
-      console.log(response.data)
-      setOrders(response.data)
+      setAllOrders(response.data)
     }
 
-    const getNames = async () => {
+    const filterOrders = () => {
+      let temporders = []
+      for(let object of AllOrders){
+        if(object.status == "finished" || object.status == "cancel"){
+          temporders.push(object)
+        }
+      }
+
+      setOrders(temporders)
+    }
+
+    const getDetails = async () => {
       var response
       let tempname = []
+      let temppackage = []
+      let temppackagedtdes = []
+      let temppackagedtname = []
+
       for(let object of Orders){
         response = await axios.get(baseUrl + "/api/users/" + object.user_id,{
           headers:{
@@ -72,38 +85,60 @@ function History() {
         })
 
         tempname.push(response.data.name)
+
+        response = await axios.get(baseUrl + "/api/packages/" + object.package_id)
+
+        temppackage.push(response.data.name)
+
+        response = await axios.get(baseUrl + "/api/package-details/" + object.package_detail_id)
+
+        temppackagedtname.push(response.data.name)
+        temppackagedtdes.push(response.data.description)
       }
 
       setNames(tempname)
+      setPackage(temppackage)
+      setPackagedtdes(temppackagedtdes)
+      setPackagedtname(temppackagedtname)
     }
+
 
     useEffect(() => {
         checkCookie()
     },[])
 
     useEffect(() => {
-        if(accessToken){ getOrders() }
-    },[accessToken])
+        getRest()
+    },[userData])
 
     useEffect(() => {
-      getNames()
+      filterOrders()
+    },[AllOrders])
+
+    useEffect(() => {
+        getOrders()
+    },[Restid])
+
+    useEffect(() => {
+      getDetails()
     },[Orders])
 
   return (
     <>
       {/* หน้าประวัติ */}
-      <div className="flex flex-col gap-[39px]">
+      <div className="flex flex-col gap-[39px] h-[1210px]">
         {Orders.map((content,index) => {
-            if(content.status == "finished" || content.status == "cancel"){
+            if(index >= (Hispage-1)*numorder && index < Hispage*numorder){
               return (
                 <div key={index}>
                   <OrderCard
                     key={index}
                     name={Names.at(index)}
+                    dtname={Packagedtname.at(index)}
+                    message={content.message}
                     status={content.status}
-                    food={content.food}
-                    number={content.participants}
-                    detail={content.message}
+                    food={Package.at(index)}
+                    description={Packagedtdes.at(index)}
                     price={content.total_price}
                     deposit={content.deposit}
                     date={content.event_date}
@@ -117,6 +152,21 @@ function History() {
             }
         })}
       </div>
+
+      {/* Page Navigator */}
+      {Math.ceil(Orders.length/numorder) == 1 ?
+        <div></div>
+        :
+        <div className="flex gap-[10px]">
+          <p>หน้า</p>
+          {Array.from({length : Math.ceil(Orders.length/numorder)},(content,index) => (
+            <div onClick={() => setHispage(index+1)} className={`text-[16px] ${index+1 == Hispage ? 'text-[#FF8A00]' : 'text-black'} hover:text-[#FF8A00] cursor-pointer`}>{index+1}</div>
+          ))
+
+          }
+        </div>
+      }
+      
     </>
   );
 }

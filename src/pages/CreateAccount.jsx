@@ -12,7 +12,29 @@ import RestBank from "../subpages/CreateAccount/RestBank"
 import Complete from "../subpages/CreateAccount/Complete"
 
 function CreateAccount() {
+    const [accessToken,setAccessToken] = useState("")
+    const [userData,setUserData] =  useState({
+        id:"",
+        name:"",
+        email:"",
+        profile_picture:"",
+        role:"restaurant",
+        bio:"",
+    })
+
     const [Tabindex,setTabindex] = useState(0)
+
+    const [Restpayload,setRestpayload] = useState({
+        name:"",
+        description:"",
+        tax_id:"",
+        sub_location:"",
+        location:""
+    })
+
+    const [Mainspayload,setMainspayload] = useState([])
+    const [Eventspayload,setEventspayload] = useState([])
+    const [Foodspayload,setFoodspayload] = useState([])
 
     const baseUrl = import.meta.env.VITE_BASE_URL
 
@@ -76,12 +98,27 @@ function CreateAccount() {
         window.scrollTo({ top: 0, behavior: 'smooth' })
     }
 
+    const checkCookie = () => {
+        if(document.cookie){
+            const parts = document.cookie.split(';').map(part => part.trim());
+            // Extract values
+            const tempdata = JSON.parse(parts.find(p => p.startsWith('userData=')).slice('userData='.length))
+            const temptoken = parts.find(p => p.startsWith('accessToken=')).slice('accessToken='.length)
+            setAccessToken(temptoken)
+            setUserData(tempdata)
+        }
+    }
+
     const [Subpages,setSubpages] = useState([
-        {label: 'ข้อมูลร้านค้า',content: <RestInfo onClick={handleClickType}/>,index:true},
-        {label: 'ประเภทร้านค้า',content: <RestType onClick={handleClickBank} backClick={handleBackType} />,index:false},
+        {label: 'ข้อมูลร้านค้า',content: <RestInfo onClick={handleClickType} sendPayload={setRestpayload} />,index:true},
+        {label: 'ประเภทร้านค้า',content: <RestType onClick={handleClickBank} backClick={handleBackType} sendMains={setMainspayload} sendEvents={setEventspayload} sendFoods={setFoodspayload}/>,index:false},
         {label: 'บัญชีธนาคาร',content: <RestBank onClick={handleSend} backClick={handleBackBank} />,index:false},
         {label: 'ส่งข้อมูลแล้ว',content: <Complete/>}
     ])
+
+    useEffect(() => {
+        checkCookie()
+    },[])
 
 
 return (
