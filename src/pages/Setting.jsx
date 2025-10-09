@@ -9,7 +9,7 @@ const subpages = [
 ]
 
 function Setting() {
-    const [Tabindex,setTabindex] = useState(0);
+    const [Tabindex,setTabindex] = useState(0)
 
 return (
     <>
@@ -41,7 +41,7 @@ return (
             </div>
 
             {/* Content */}
-            <div className="flex flex-col gap-[24px] w-auto h-[1033px] items-center mb-[32px]">
+            <div className="flex flex-col gap-[24px] w-auto h-[1063px] items-center mb-[32px]">
                 {subpages[Tabindex].Content}
             </div>
           </div>

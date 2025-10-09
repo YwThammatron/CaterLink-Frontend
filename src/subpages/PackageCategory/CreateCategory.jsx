@@ -1,4 +1,5 @@
-import { useState } from "react";
+import axios from "axios";
+import { useState,useEffect } from "react";
 import { Button } from "@/components/ui/button";
 
 import {
@@ -11,9 +12,24 @@ import {
 
 
 function CreateCategory({ cancelClick }) {
+    const [accessToken,setAccessToken] = useState("")
+    const [userData,setUserData] =  useState({
+        id:"",
+        name:"",
+        email:"",
+        profile_picture:"",
+        role:"restaurant",
+        bio:"",
+    })
+
+    const [Restid,setRestid] = useState("")
+
     const [Payload,setPayload] = useState({
         name:"",
+        restaurant_id:""
     })
+
+    const baseUrl = import.meta.env.VITE_BASE_URL
 
     const handleChange = (e) => {
         const {id,value} = e.target
@@ -23,9 +39,61 @@ function CreateCategory({ cancelClick }) {
         }))
     }
 
-    const handleChangeSave = () => {
+    const handleChangeSave = async () => {
         //when click save
+        let isconfirm = window.confirm("System : Are you sure to add this package category?")
+        if(Payload.name != "" && isconfirm){
+            try{
+                const response = await axios.post(baseUrl + "/api/package-categories",Payload)
+                window.location.reload()
+            }
+            catch(error){
+                if(error.response){
+                    window.alert(`Code ${error.response.status} : ${error.response.data.error}`)
+                }
+            }
+            
+        }
     }
+
+    const getRest = async () => {
+        const response = await axios.get(baseUrl + "/api/restaurants")
+        console.log(response.data)
+        for(let restaurant of response.data){
+            if(userData.id == restaurant.user_id){
+                setRestid(restaurant.id)
+                break
+            }
+        }
+    }
+
+    const checkCookie = () => {
+        if(document.cookie){
+            const parts = document.cookie.split(';').map(part => part.trim());
+            // Extract values
+            const tempdata = JSON.parse(parts.find(p => p.startsWith('userData=')).slice('userData='.length))
+            const temptoken = parts.find(p => p.startsWith('accessToken=')).slice('accessToken='.length)
+            setAccessToken(temptoken)
+            setUserData(tempdata)
+        }
+    }
+
+    useEffect(() => {
+            checkCookie()
+        },[])
+        
+    useEffect(() => {
+        if(userData){getRest()}
+    },[userData])
+
+    useEffect(() => {
+        if(Restid){
+            setPayload((data) => ({
+                ...data,
+                restaurant_id:Restid
+            }))
+        }
+    },[Restid])
 
     return (
         <>

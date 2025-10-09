@@ -4,6 +4,10 @@ import ScrollToTop from "./components/ui/scrolltotop";
 
 // Page components
 import CustomerHomepage from "./pages/CustomerHomepage";
+import LoginCustomer from "./pages/Login-customer";
+import LoginRestaurant from "./pages/Login-restaurant";
+import SignupCustomer from "./pages/Signup-customer";
+import SignupRestaurant from "./pages/Signup-restaurant";
 import CustomerRestaurant from "./pages/CustomerRestaurant";
 import CustomerReservation from "./pages/CustomerReservation";
 import ComparePage from "./pages/ComparePage";
@@ -32,6 +36,11 @@ function App() {
       <Routes>
         {/* Main pages */}
         <Route path="/" element={<CustomerHomepage />} />
+        <Route path="/writeblog" element={<WriteBlog />}/>
+        <Route path="/custsignup" element={<SignupCustomer />} />
+        <Route path="/restsignup" element={<SignupRestaurant />} />
+        <Route path="/custlogin" element={<LoginCustomer />} />
+        <Route path="/restlogin" element={<LoginRestaurant />} />
         <Route path="/customerrestaurant" element={<CustomerRestaurant />} />
         <Route
           path="/customerreservation/:id"

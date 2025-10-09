@@ -1,28 +1,59 @@
-import { useState } from "react";
+import axios from "axios";
+import { useState,useEffect,useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { ChevronDown,CloudUpload } from "lucide-react";
-import { data } from "react-router-dom";
+import { ChevronDown,Image,CloudUpload } from "lucide-react";
 
 
 function CreatePackage() {
+    const [accessToken,setAccessToken] = useState("")
+    const [userData,setUserData] =  useState({
+        id:"",
+        name:"",
+        email:"",
+        profile_picture:"",
+        role:"restaurant",
+        bio:"",
+    })
+
+    
     const [Payload,setPayload] = useState({
         name:"",
-        category:"",
-        imgurl:"",
+        description:"test",
+        category_id:"",
+        discount:0,
+        start_discount_date:"",
+        end_discount_date:""
+    })
+
+    const [Payloaddt,setPayloaddt] = useState({
         sets:[
             {
-                id:1,
-                name:"",
-                price:"",
-                detail:""
+                set_id:1,
+                payload:{
+                    package_id:"",
+                    name:"",
+                    price:"",
+                    description:""
+                }
             }
         ]
     })
 
+    const [PackageCtgs,setPackageCtgs] = useState([])
+    const [Packageimg,setPackageimg] = useState(null)
+    const fileUploadref = useRef()
+    const isFirstRender = useRef(0)
+
+    const [Dtset,setDtset] = useState("")
+
+    const [Restid,setRestid] = useState("")
+    const [Packageid,setPackageid] = useState("")
+
     const [Index,setIndex] = useState(2)
     const [Tableheight, setTableheight] = useState(644)
     const [Contentheight, setContentheight] = useState(207)
+
+    const baseUrl = import.meta.env.VITE_BASE_URL
 
     const handleChange = (e) => {
         const {id,value} = e.target
@@ -34,21 +65,35 @@ function CreatePackage() {
 
     const handleChangeSet = (e,index) => {
         const {name,value} = e.target
-        setPayload((data) => ({
+        setPayloaddt((data) => ({
             ...data,
-            sets: data.sets.map(set => set.id == index ? {...set , [name]:value} : set)
+            sets: data.sets.map(set => set.set_id == index ? {...set , payload:{...set.payload,[name]:value}} : set)
         }))
     }
 
-    const handleClickAdd = () => {
-        Payload.sets.push({
-            id:Index,
-            name:"",
-            price:"",
-            detail:""
-        })
+    const handleUpload = (e) => {
+        const currentfile = e.target.files[0]
+        if(currentfile){setPackageimg(currentfile)}
+    }
 
-        console.log(Payload.sets)
+    const handlenoUpload = () => {
+        setPackageimg(null)
+        if(fileUploadref.current){
+            fileUploadref.current.value = ""
+        }
+    }
+
+    const handleClickAdd = () => {
+        Payloaddt.sets.push({
+            set_id:Index,
+            payload:{
+                package_id:"",
+                name:"",
+                price:"",
+                description:""
+            }
+            
+        })
 
         setIndex(Index+1)
         setTableheight(644 + (250*(Index-1)))
@@ -57,27 +102,150 @@ function CreatePackage() {
 
     const handleClickDelete = () => {
         setIndex(2)
-        Payload.sets.length = 0
-        Payload.sets.push({
-            id:1,
-            name:"",
-            price:"",
-            detail:""
+        Payloaddt.sets.length = 0
+        Payloaddt.sets.push({
+            set_id:1,
+            payload:{
+                package_id:"",
+                name:"",
+                price:"",
+                description:""
+            }
         })
-
-        console.log(Payload.sets)
 
         setTableheight(644)
         setContentheight(207)
     }
 
-    const handleChangeCancel = () => {
-        //When click cancel
+    const handleChangeSave = async () => {
+        //when click save
+        window.alert("System : You can add promotion to the package in promotion page.")
+        let isconfirm = window.confirm("System : Are you sure to create this package?")
+        if(Payload.name != "" || Payload.category_id != "" || Payload.description != "" && isconfirm){
+            try{
+                const response = await axios.post(baseUrl + "/api/packages",Payload)
+                console.log(response.data)
+                setPackageid(response.data.id)
+            }
+            catch(error){
+                if(error.response){
+                    window.alert(`Code ${error.response.status} : ${error.response.data.error}`)
+                }
+            }
+            
+        }
     }
 
-    const handleChangeSave = () => {
-        //when click save
+    const setPackageDetail = () => {
+        console.log(Dtset)
+        setPayloaddt((data) => (
+            {...data,sets:data.sets.map(set => ({...set,payload:{...set.payload,package_id:Packageid}}))}
+        ))
+        setDtset("set")
     }
+
+    const handlePostDetail = async () => {
+        var response
+        console.log(Packageid)
+        for(let object of Payloaddt.sets){
+            try{
+                response = await axios.post(baseUrl + "/api/package-details",object.payload)
+                console.log(response.data)
+            }
+            catch(error){
+                if(error.response){
+                    window.alert(`Code ${error.response.status} : ${error.response.data.error}`)
+                }
+            }
+            
+        }
+
+        handlePostImg()
+    }
+
+    const handlePostImg = async () => {
+        const formdata = new FormData()
+        console.log(Packageid)
+        formdata.append("package_id",Packageid)
+        formdata.append("file",Packageimg)
+
+        if(Packageimg != null){
+            try{
+                    const response = await axios.post(baseUrl + "/api/package-images",formdata,{
+                        headers:{
+                            Authorization: `Bearer ${accessToken}`,
+                            "Content-Type": "multipart/form-data"
+                        }
+                    })
+
+                    setDtset("")
+
+                    window.alert("System : Package created successfully.")
+                    window.location.reload()
+                }
+                catch(error){
+                    if(error.response){
+                        window.alert(`Code ${error.response.status} : ${error.response.data.error}`)
+                    }
+                }
+            }
+        }
+
+    const getPackageCtgs = async () => {
+        const response = await axios.get(baseUrl + "/api/package-categories/restaurant/" + Restid)
+        setPackageCtgs(response.data)
+    }
+
+    const getRest = async () => {
+        const response = await axios.get(baseUrl + "/api/restaurants")
+        for(let restaurant of response.data){
+            if(userData.id == restaurant.user_id){
+                setRestid(restaurant.id)
+                break
+            }
+        }
+    }
+
+    const checkCookie = () => {
+        if(document.cookie){
+            const parts = document.cookie.split(';').map(part => part.trim());
+            // Extract values
+            const tempdata = JSON.parse(parts.find(p => p.startsWith('userData=')).slice('userData='.length))
+            const temptoken = parts.find(p => p.startsWith('accessToken=')).slice('accessToken='.length)
+            setAccessToken(temptoken)
+            setUserData(tempdata)
+        }
+    }
+
+    useEffect(() => {
+        checkCookie()
+    },[])
+    
+    useEffect(() => {
+        if(userData){getRest()}
+    },[userData])
+    
+    useEffect(() => {
+        getPackageCtgs()
+    },[Restid])    
+
+    useEffect(() => {
+        //to prevent default run at first double render of useEffect
+        if(isFirstRender.current == 0){
+            isFirstRender.current += 1
+            return
+        }
+        else if(isFirstRender.current == 1){
+            isFirstRender.current = 2
+            return
+        }
+
+        setPackageDetail()
+    },[Packageid])
+
+    useEffect(() => {
+        if(Dtset){ handlePostDetail() }
+    },[Dtset])
 
     return (
         <>
@@ -106,16 +274,17 @@ function CreatePackage() {
                                 <label className="flex h-[20px]"><p className="h-[21px] font-[500] text-[#6D6E71] text-[14px]">หมวดหมู่แพคเกจ</p><p className="text-[#D50A0A] pl-[3px]">*</p></label>
                                 <div className="relative">
                                     <select 
-                                    id="category" 
+                                    id="category_id" 
                                     className="appearance-none w-[512px] h-[40px] pl-[14px] pr-[42px] pt-[10px] pb-[10px] text-[14px] border-[1px] border-[#D0D5DD] rounded-md"
-                                    value={Payload.category}
+                                    value={Payload.category_id}
                                     onChange={handleChange}
                                     >
                                         <option value="default" selected hidden>เลือกหมวดหมู่แพคเกจ</option>
-                                        <option value="volvo">Volvo</option>
-                                        <option value="saab">Saab</option>
-                                        <option value="fiat">Fiat</option>
-                                        <option value="audi">Audi</option>
+                                        {PackageCtgs.map((content,index) => {
+                                            return (
+                                                <option key={index} value={content.id}>{content.name}</option>
+                                            )
+                                        })}
                                     </select>
                                     <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
                                         <ChevronDown className="w-[20px] h-[20px] text-[#86878A]" />
@@ -124,27 +293,35 @@ function CreatePackage() {
                             </div> 
 
                             <div className="grid h-fit gap-[6px]">
-                                <label><p className="flex h-[21px] font-[500] text-[#6D6E71] text-[14px]">รูปปกแพคเกจ <p className="text-[#D50A0A] pl-[3px]">*</p></p></label>
+                                <label className="flex"><p className="flex h-[21px] font-[500] text-[#6D6E71] text-[14px]">รูปปกแพคเกจ</p> <p className="text-[#D50A0A] pl-[3px]">*</p></label>
                                 <div className="relative">
                                      <input 
                                         type="file"
                                         accept=".jpg,.jpeg,.png"
                                         id="img"
-                                        value={Payload.imgurl}
-                                        onChange={handleChange}
+                                        ref={fileUploadref}
+                                        onChange={handleUpload}
                                         className="hidden w-[512px] h-[104px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md"
                                     />
                                     <label
                                     htmlFor="img"
-                                    class="flex flex-col items-center gap-[12px] w-[512px] h-[104px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md"
+                                    class="flex flex-col items-center gap-[12px] w-[512px] h-[104px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md hover:cursor-pointer"
                                     >
                                     <div className="flex w-[40px] h-[40px] justify-center items-center shadow-sm border-[1px] border-[#EAECF0] rounded-[8px]">
-                                        <CloudUpload className="h-fit w-[20px] h-[20px]"/>
+                                        {Packageimg != null ? <Image className="h-fit w-[20px] h-[20px]"/> : <CloudUpload className="h-fit w-[20px] h-[20px]"/>}
                                     </div>
-                                    <div className="flex gap-[4px] text-[14px]">
-                                        <p className="cursor-pointer text-[#F78E1E] font-[600]">คลิกเพื่ออัพโหลด</p>
-                                        <p>หรือลากและวางไฟล์</p>
-                                    </div>
+
+                                    {Packageimg != null ? 
+                                        <div className="flex gap-[10px] text-[14px]">
+                                            <p className="cursor-pointer text-[#F78E1E] font-[600]">{Packageimg.name}</p>
+                                            <p onClick={handlenoUpload} className="hover:text-[#F78E1E] cursor-pointer ">ยกเลิก</p>
+                                        </div>
+                                        :
+                                        <div className="flex gap-[4px] text-[14px]">
+                                            <p className="cursor-pointer text-[#F78E1E] font-[600]">คลิกเพื่ออัพโหลด</p>
+                                            <p>หรือลากและวางไฟล์</p>
+                                        </div>
+                                    }
                                 </label>
                                 </div>
                             </div>         
@@ -162,9 +339,9 @@ function CreatePackage() {
                         </div>
                         {/* Input Field */}
                         <form className="grid gap-[32px] w-[512px]">
-                            {Payload.sets.map((content, index) => (
+                            {Payloaddt.sets.map((content, index) => (
                             <div key={index} className="grid h-[215px] gap-[16px]">
-                                <p className="text-[14px] font-[500] text-black">ชุดอาหารที่ {content.id}</p>
+                                <p className="text-[14px] font-[500] text-black">ชุดอาหารที่ {content.set_id}</p>
                                 
                                 <div className="flex gap-[16px]">
                                     <div className="grid w-[248px] h-fit gap-[6px]">
@@ -172,9 +349,9 @@ function CreatePackage() {
                                         <input 
                                         type="text"
                                         name="name"
-                                        id={"name"+content.id}
-                                        value={Payload.sets[index].name}
-                                        onChange={(event) => handleChangeSet(event,content.id)}
+                                        id={"name"+content.set_id}
+                                        value={Payloaddt.sets[index].payload.name}
+                                        onChange={(event) => handleChangeSet(event,content.set_id)}
                                         placeholder="เพิ่มชุดข้อมูลอาหาร"
                                         className="h-[36px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] text-[14px] border-[1px] border-[#D0D5DD] rounded-md"
                                         />
@@ -185,9 +362,9 @@ function CreatePackage() {
                                         <input 
                                         type="number"
                                         name="price"
-                                        id={"price"+content.id}
-                                        value={Payload.sets[index].price}
-                                        onChange={(event) => handleChangeSet(event,content.id)}
+                                        id={"price"+content.set_id}
+                                        value={Payloaddt.sets[index].payload.price}
+                                        onChange={(event) => handleChangeSet(event,content.set_id)}
                                         placeholder="เพิ่มตัวเลข"
                                         className="h-[36px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] text-[14px] border-[1px] border-[#D0D5DD] rounded-md"
                                         />
@@ -197,10 +374,10 @@ function CreatePackage() {
                                 <div className="grid h-fit gap-[6px]">
                                     <label><p className="h-[20px] text-[14px] font-[500] text-[#6D6E71]">คำอธิบาย</p></label>
                                     <textarea 
-                                    name="detail"
-                                    id={"detail"+content.id}
-                                    value={Payload.sets[index].detail}
-                                    onChange={(event) => handleChangeSet(event,content.id)}
+                                    name="description"
+                                    id={"description"+content.set_id}
+                                    value={Payloaddt.sets[index].payload.description}
+                                    onChange={(event) => handleChangeSet(event,content.set_id)}
                                     placeholder="เพิ่มคำอธิบาย"
                                     className="resize-none w-[512px] h-[67px] pl-[14px] pr-[14px] pt-[10px] pb-[10px] text-[14px] border-[1px] border-[#D0D5DD] rounded-md"
                                     />
@@ -236,7 +413,7 @@ function CreatePackage() {
                     <div className="flex gap-[12px] ml-[885px]">
                         <Button
                         className="w-[80px] h-[44px] rounded-[8px] text-[#344054] text-[16px] bg-white border-[1px] border-[#D0D5DD] hover:bg-transparent cursor-pointer transition"
-                        onClick={handleChangeCancel}
+                        onClick={() => window.location.reload()}
                         >
                             ยกเลิก
                         </Button>

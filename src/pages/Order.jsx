@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 
 import SidebarCustom from "../components/ui/Sidebar-custom";
 import Purchase from "../subpages/Order/Purchase";
@@ -11,8 +11,51 @@ const subpages = [
 ]
 
 function Order() {
-
     const [Tabindex,setTabindex] = useState(0)
+
+    const [accessToken,setAccessToken] = useState("")
+    const [userData,setUserData] =  useState({
+        id:"",
+        name:"",
+        email:"",
+        profile_picture:"",
+        role:"restaurant",
+        bio:"",
+    })
+
+    const baseUrl = import.meta.env.VITE_BASE_URL
+
+    const checkCookie = () => {
+        if(document.cookie){
+            const parts = document.cookie.split(';').map(part => part.trim());
+            // Extract values
+            const tempdata = JSON.parse(parts.find(p => p.startsWith('userData=')).slice('userData='.length))
+            const temptoken = parts.find(p => p.startsWith('accessToken=')).slice('accessToken='.length)
+            setAccessToken(temptoken)
+            setUserData(tempdata)
+        }
+    }
+
+    const getOrders = async () => {
+      let response = await axios.get(baseUrl+"/api/orders/me?status=all",{
+        headers:{
+          Authorization: `Bearer ${accessToken}`,
+        }
+      })
+      console.log(response.data)
+      response = await axios.get(baseUrl+"/api/orders")
+      console.log(response.data)
+      response = await axios.get(baseUrl+"/api/users")
+      console.log(response.data)
+    }
+
+    useEffect(() => {
+        checkCookie()
+    },[])
+
+    useEffect(() => {
+        if(accessToken){getOrders()}
+    },[accessToken])
 
   return (
     <>
