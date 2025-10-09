@@ -24,8 +24,6 @@ import Order from "./pages/Order";
 import Promotion from "./pages/Promotion";
 
 // Auth and user pages
-import Signup from "./pages/Signup";
-import Login from "./pages/Login";
 import CreateAccount from "./pages/CreateAccount";
 import Setting from "./pages/Setting";
 
@@ -36,7 +34,7 @@ function App() {
       <Routes>
         {/* Main pages */}
         <Route path="/" element={<CustomerHomepage />} />
-        <Route path="/writeblog" element={<WriteBlog />}/>
+        <Route path="/writeblog" element={<WriteBlog />} />
         <Route path="/custsignup" element={<SignupCustomer />} />
         <Route path="/restsignup" element={<SignupRestaurant />} />
         <Route path="/custlogin" element={<LoginCustomer />} />
@@ -64,8 +62,6 @@ function App() {
         <Route path="/promotion" element={<Promotion />} />
 
         {/* Auth and user pages */}
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/login" element={<Login />} />
         <Route path="/createaccount" element={<CreateAccount />} />
         <Route path="/setting" element={<Setting />} />
         <Route
