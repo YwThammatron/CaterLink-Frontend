@@ -67,11 +67,11 @@ function NavbarCustom() {
   };
 
   const goToSignup = () => {
-    navigate("/signup");
+    navigate("/custsignup");
   };
 
   const goToLogin = () => {
-    navigate("/login");
+    navigate("/custlogin");
   };
 
   // Handle search input change
