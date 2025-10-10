@@ -1,10 +1,12 @@
 import axios from "axios";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 import Logo from "../components/ui/Logo";
 
 function LoginCustomer() {
+  const navigate = useNavigate();
   const [Logindata,setLogindata] = useState({
     email:"",
     password:""
@@ -36,8 +38,21 @@ function LoginCustomer() {
         document.cookie = `accessToken=${response.data.accessToken}; path=/; max-age=3600; secure; samesite=strict`
         document.cookie = `userData=${JSON.stringify(response.data.userData)}; path=/; max-age=3600; secure; samesite=strict`
         
-        //go to customer homepage
-        // window.location.href = "./"
+        // Check if there's a return URL from reservation flow
+        const returnUrl = localStorage.getItem('loginReturnUrl');
+        const isFromReservation = localStorage.getItem('navigatingToLogin');
+        
+        if (isFromReservation && returnUrl) {
+          // Clear the navigation flags
+          localStorage.removeItem('navigatingToLogin');
+          localStorage.removeItem('loginReturnUrl');
+          
+          // Navigate back to the reservation page
+          navigate(returnUrl);
+        } else {
+          // Default redirect to customer homepage
+          navigate("/");
+        }
     }
     catch(error){
         if(error.response){

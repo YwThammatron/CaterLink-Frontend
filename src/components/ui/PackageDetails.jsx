@@ -19,6 +19,7 @@ function PackageDetails({
       ? categoryData.packages.flatMap((pkg) =>
           pkg.package_details.map((detail) => ({
             ...detail,
+            // Keep original price values as numbers (don't round here for display accuracy)
             packageInfo: {
               id: pkg.id,
               name: pkg.name,
