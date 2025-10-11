@@ -507,7 +507,7 @@ function CustomerHomepage() {
                         ? restaurant.images[0].url
                         : "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=500&h=300&fit=crop&crop=center",
                     rating: restaurant.avgRating
-                      ? Number(restaurant.avgRating.toFixed(1))
+                      ? Number(restaurant.avgRating.toFixed(2))
                       : 0,
                     reviewCount: restaurant.totalReview || 0,
                     pricePerPerson: 290, // Default price since not in API response

@@ -263,7 +263,7 @@ function CartCard({
       },
       button: {
         className:
-          "text-[#475467] bg-white border-none hover:text-gray-200 transition-colors duration-200",
+          "text-[#475467] bg-white border-none hover:text-[#B42318] hover:bg-[#FEF3F2] transition-colors duration-200",
         onClick: cancelOrder,
         text: isUpdatingStatus ? "กำลังยกเลิก..." : "ยกเลิกคำขอ",
       },

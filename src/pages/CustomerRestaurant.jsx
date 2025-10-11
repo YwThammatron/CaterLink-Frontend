@@ -19,6 +19,8 @@ function CustomerRestaurant() {
   const [filteredRestaurants, setFilteredRestaurants] = useState([]);
   const [isSearchActive, setIsSearchActive] = useState(false);
   const [initialFilterStates, setInitialFilterStates] = useState(null);
+  const [recommendedRestaurants, setRecommendedRestaurants] = useState([]);
+  const [isLoadingRecommended, setIsLoadingRecommended] = useState(false);
 
   // Get base URL from environment
   const baseUrl = import.meta.env.VITE_BASE_URL;
@@ -93,6 +95,25 @@ function CustomerRestaurant() {
         console.error("Error fetching top restaurants:", error);
       } finally {
         setIsLoadingTopRestaurants(false);
+      }
+
+      // Load recommended restaurants (top favorite restaurants)
+      setIsLoadingRecommended(true);
+      try {
+        const recommendedResponse = await axios.get(
+          `${baseUrl}/api/restaurants/top/favorite`,
+          {
+            params: {
+              limit: 5,
+            },
+          }
+        );
+        setRecommendedRestaurants(recommendedResponse.data);
+      } catch (error) {
+        console.error("Error fetching recommended restaurants:", error);
+        setRecommendedRestaurants([]);
+      } finally {
+        setIsLoadingRecommended(false);
       }
 
       // Load all restaurants
@@ -226,71 +247,44 @@ function CustomerRestaurant() {
           <div className="flex flex-col gap-4 py-10">
             <h3>ร้านแนะนำจาก CaterLink</h3>
             <div className="flex gap-4">
-              <RestaurantCard
-                onSelect={isCompareMode ? handleRestaurantSelect : null}
-                onClick={!isCompareMode ? () => goToReservation(1) : null}
-                isSelected={selectedRestaurants.some((r) => r.id === 1)}
-                restaurantData={{
-                  id: 1,
-                  name: "ร้านแนะนำ 1",
-                  rating: 4.5,
-                  reviewCount: 25,
-                  pricePerPerson: 350,
-                  image: "https://picsum.photos/224/220?random=1",
-                }}
-              />
-              <RestaurantCard
-                onSelect={isCompareMode ? handleRestaurantSelect : null}
-                onClick={!isCompareMode ? () => goToReservation(2) : null}
-                isSelected={selectedRestaurants.some((r) => r.id === 2)}
-                restaurantData={{
-                  id: 2,
-                  name: "ร้านแนะนำ 2",
-                  rating: 4.3,
-                  reviewCount: 18,
-                  pricePerPerson: 290,
-                  image: "https://picsum.photos/224/220?random=2",
-                }}
-              />
-              <RestaurantCard
-                onSelect={isCompareMode ? handleRestaurantSelect : null}
-                onClick={!isCompareMode ? () => goToReservation(3) : null}
-                isSelected={selectedRestaurants.some((r) => r.id === 3)}
-                restaurantData={{
-                  id: 3,
-                  name: "ร้านแนะนำ 3",
-                  rating: 4.1,
-                  reviewCount: 22,
-                  pricePerPerson: 250,
-                  image: "https://picsum.photos/224/220?random=3",
-                }}
-              />
-              <RestaurantCard
-                onSelect={isCompareMode ? handleRestaurantSelect : null}
-                onClick={!isCompareMode ? () => goToReservation(4) : null}
-                isSelected={selectedRestaurants.some((r) => r.id === 4)}
-                restaurantData={{
-                  id: 4,
-                  name: "ร้านแนะนำ 4",
-                  rating: 4.4,
-                  reviewCount: 30,
-                  pricePerPerson: 320,
-                  image: "https://picsum.photos/224/220?random=4",
-                }}
-              />
-              <RestaurantCard
-                onSelect={isCompareMode ? handleRestaurantSelect : null}
-                onClick={!isCompareMode ? () => goToReservation(5) : null}
-                isSelected={selectedRestaurants.some((r) => r.id === 5)}
-                restaurantData={{
-                  id: 5,
-                  name: "ร้านแนะนำ 5",
-                  rating: 4.0,
-                  reviewCount: 15,
-                  pricePerPerson: 280,
-                  image: "https://picsum.photos/224/220?random=5",
-                }}
-              />
+              {isLoadingRecommended ? (
+                // Loading state - show 5 skeleton cards
+                Array.from({ length: 5 }).map((_, index) => (
+                  <div key={index} className="flex flex-col gap-2 w-[224px]">
+                    <div className="w-[224px] h-[220px] bg-gray-200 rounded-lg animate-pulse"></div>
+                    <div className="flex flex-col gap-2 p-3">
+                      <div className="h-5 bg-gray-200 rounded animate-pulse"></div>
+                      <div className="h-4 bg-gray-200 rounded w-3/4 animate-pulse"></div>
+                      <div className="h-4 bg-gray-200 rounded w-1/2 animate-pulse"></div>
+                    </div>
+                  </div>
+                ))
+              ) : recommendedRestaurants.length > 0 ? (
+                // Render actual recommended restaurant data
+                recommendedRestaurants.map((restaurant) => {
+                  const formattedData = formatRestaurantData(restaurant);
+                  return (
+                    <RestaurantCard
+                      key={restaurant.id}
+                      onSelect={isCompareMode ? handleRestaurantSelect : null}
+                      onClick={
+                        !isCompareMode
+                          ? () => goToReservation(restaurant.id)
+                          : null
+                      }
+                      isSelected={selectedRestaurants.some(
+                        (r) => r.id === restaurant.id
+                      )}
+                      restaurantData={formattedData}
+                    />
+                  );
+                })
+              ) : (
+                // No recommended restaurants found
+                <div className="flex items-center justify-center w-full h-[200px] text-gray-500">
+                  <p>ไม่พบร้านแนะนำในขณะนี้</p>
+                </div>
+              )}
             </div>
           </div>
         </div>
