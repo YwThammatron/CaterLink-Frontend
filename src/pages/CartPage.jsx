@@ -21,8 +21,11 @@ function CartPage() {
     "waiting for payment": "ที่ต้องชำระ",
     "done preparing": "จัดเตรียมสำเร็จ",
     preparing: "กำลังจัดเตรียม",
+    "in preparation": "กำลังจัดเตรียม", // Alternative status name
     finished: "สำเร็จแล้ว",
+    completed: "สำเร็จแล้ว", // Alternative status name
     cancel: "ยกเลิก",
+    cancelled: "ยกเลิก", // Alternative status name
   };
 
   // Helper function to check authentication
@@ -103,6 +106,28 @@ function CartPage() {
   // Load orders when component mounts
   useEffect(() => {
     fetchOrders(selectedStatus);
+  }, [fetchOrders, selectedStatus]);
+
+  // Refresh orders when page gains focus or becomes visible (e.g., returning from payment)
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        fetchOrders(selectedStatus);
+      }
+    };
+
+    const handleFocus = () => {
+      fetchOrders(selectedStatus);
+    };
+
+    // Listen for both visibility change and window focus
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("focus", handleFocus);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("focus", handleFocus);
+    };
   }, [fetchOrders, selectedStatus]);
 
   // Format time for display (convert Z suffix time to readable format)

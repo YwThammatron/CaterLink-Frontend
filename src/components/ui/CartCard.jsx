@@ -48,7 +48,15 @@ function CartCard({
   };
 
   const goToPayment = () => {
-    navigate("/payment");
+    // Pass order data to payment page via state
+    navigate("/payment", {
+      state: {
+        orderData,
+        restaurantName,
+        packageName,
+        packageDescription,
+      },
+    });
   };
 
   const goToComment = () => {
