@@ -78,9 +78,9 @@ function SignupRestaurant() {
     try{
       const response = await axios.post(baseUrl + "/api/auth/signin",Logindata)
 
-      //build cookie to keep token alive (2 hours)
-      document.cookie = `accessToken=${response.data.accessToken}; path=/; max-age=7200; secure; samesite=strict`
-      document.cookie = `userData=${JSON.stringify(response.data.userData)}; path=/; max-age=7200; secure; samesite=strict`
+      //build cookie to keep token alive (3 hours)
+      document.cookie = `accessToken=${response.data.accessToken}; path=/; max-age=10800; secure; samesite=strict`
+      document.cookie = `userData=${JSON.stringify(response.data.userData)}; path=/; max-age=10800; secure; samesite=strict`
 
       //go to create account page
       window.location.href = "./createaccount"
@@ -93,7 +93,7 @@ function SignupRestaurant() {
   }
 
   useEffect(() => {
-    handleLogin()
+    if(Logindata.email != "" && Logindata.password != ""){ handleLogin() }
   },[Logindata])
 
   return (

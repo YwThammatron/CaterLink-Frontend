@@ -215,7 +215,7 @@ function Purchase() {
       </div>
 
       {/* Page Navigator */}
-      {Math.ceil(Orders.length/numorder) == 1 ?
+      {Math.ceil(Orders.length/numorder) == 1 || Orders.length == 0?
         <div></div>
         :
         <div className="flex gap-[10px]">

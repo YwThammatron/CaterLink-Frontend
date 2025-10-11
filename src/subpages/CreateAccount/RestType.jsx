@@ -33,7 +33,7 @@ const foodtypes = [
 ]
 
 
-function RestType({ onClick,backClick,sendMains,sendEvents,sendFoods }) {
+function RestType({ onClick,backClick,sendMains,sendEvents,sendFoods,receiveCopymain,receiveCopyevent,receiveCopyfood }) {
 
   const [Mainlist,setMainlist] = useState([])
   const [Eventlist,setEventlist] = useState([])
@@ -61,6 +61,14 @@ function RestType({ onClick,backClick,sendMains,sendEvents,sendFoods }) {
                 btn.style.backgroundColor = "#D0D5DD"
             }
   },[Mainlist,Eventlist,Foodlist])
+
+  useEffect(() => {
+    if(receiveCopymain && receiveCopyevent && receiveCopyfood){
+      setMainlist(receiveCopymain)
+      setEventlist(receiveCopyevent)
+      setFoodlist(receiveCopyfood)
+    }
+  },[receiveCopymain,receiveCopyevent,receiveCopyfood])
 
 return (
     <>

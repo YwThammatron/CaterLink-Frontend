@@ -138,7 +138,7 @@ function ViewCategory({ sendClick }) {
 
                                 onClick={sendClick}
                                 >
-                                    สร้างหมวดหมู่แพคเกจ
+                                    จัดการหมวดหมู่แพคเกจ
                                 </Button>
                             </div>
                         </div>

@@ -3,7 +3,7 @@ import { useState,useEffect } from "react";
 
 import { Button } from "../../components/ui/button";
 
-function RestInfo({ onClick,sendPayload }) {
+function RestInfo({ onClick,sendPayload,receiveCopy }) {
 
   const [Payload,setPayload] = useState({
       name:"",
@@ -39,8 +39,10 @@ function RestInfo({ onClick,sendPayload }) {
   },[Payload])
 
   useEffect(() => {
-     console.log(document.cookie)
-  },[])
+    if(receiveCopy){
+      setPayload(receiveCopy)
+    }
+  },[receiveCopy])
 
 return (
     <>
