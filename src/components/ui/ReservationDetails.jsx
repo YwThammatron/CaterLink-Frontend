@@ -570,7 +570,7 @@ function ReservationDetails({ onClose, onBack, selectedPackage }) {
         <div className="flex flex-col gap-3">
           <div className="flex items-start justify-between">
             <p className="text-sm font-medium text-[#344054]">
-              วันที่ต้องการนัด
+              วันที่ต้องการนัด <span className="text-red-500">*</span>
             </p>
             <div className="relative w-[464px]" ref={calendarRef}>
               {/* Date Input */}
@@ -606,7 +606,9 @@ function ReservationDetails({ onClose, onBack, selectedPackage }) {
           </div>
 
           <div className="flex items-start justify-between">
-            <p className="text-sm font-medium text-[#344054]">ระยะเวลานัด*</p>
+            <p className="text-sm font-medium text-[#344054]">
+              ระยะเวลานัด<span className="text-red-500">*</span>
+            </p>
             <div className="flex flex-col gap-3 w-[464px]">
               <div className="flex gap-3">
                 {/* Start Time */}
@@ -659,7 +661,7 @@ function ReservationDetails({ onClose, onBack, selectedPackage }) {
 
           <div className="flex items-start justify-between">
             <p className="text-sm font-medium text-[#344054]">
-              สถานที่นัดกับร้าน
+              สถานที่นัดกับร้าน<span className="text-red-500">*</span>
             </p>
             <Input
               value={meetingLocation}
