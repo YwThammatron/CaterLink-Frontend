@@ -69,6 +69,8 @@ function CustomerHomepage() {
   const [isLoadingBlogs, setIsLoadingBlogs] = useState(false);
   const [restaurants, setRestaurants] = useState([]);
   const [isLoadingRestaurants, setIsLoadingRestaurants] = useState(false);
+  const [recommendedRestaurants, setRecommendedRestaurants] = useState([]);
+  const [isLoadingRecommended, setIsLoadingRecommended] = useState(false);
   const [reviews, setReviews] = useState([]);
   const [isLoadingReviews, setIsLoadingReviews] = useState(false);
   const [allRestaurants, setAllRestaurants] = useState([]);
@@ -166,6 +168,25 @@ function CustomerHomepage() {
         setPackages([]);
       } finally {
         setIsLoadingPackages(false);
+      }
+
+      // Load recommended restaurants (top favorite restaurants)
+      setIsLoadingRecommended(true);
+      try {
+        const recommendedResponse = await axios.get(
+          `${baseUrl}/api/restaurants/top/favorite`,
+          {
+            params: {
+              limit: 5,
+            },
+          }
+        );
+        setRecommendedRestaurants(recommendedResponse.data);
+      } catch (error) {
+        console.error("Error fetching recommended restaurants:", error);
+        setRecommendedRestaurants([]);
+      } finally {
+        setIsLoadingRecommended(false);
       }
     };
 
@@ -328,10 +349,6 @@ function CustomerHomepage() {
         <div className="flex flex-col px-32 py-10 gap-4">
           <div className="flex justify-between items-center">
             <h3>โปรโมชั่นเด็ดจากร้านดัง</h3>
-            <div className="flex gap-2 items-center">
-              <p className="font-bold text-gradient">ดูทั้งหมด</p>
-              <ArrowRight className="text-[#EB5B0A]" />
-            </div>
           </div>
           <div className="flex gap-4">
             <img
@@ -467,11 +484,47 @@ function CustomerHomepage() {
           </div>
 
           <div className="flex gap-4">
-            <RestaurantCard />
-            <RestaurantCard />
-            <RestaurantCard />
-            <RestaurantCard />
-            <RestaurantCard />
+            {isLoadingRecommended ? (
+              // Loading state - show 5 skeleton cards
+              Array.from({ length: 5 }).map((_, index) => (
+                <div key={index} className="flex flex-col gap-2 max-w-[224px]">
+                  <div className="w-[224px] h-[220px] bg-gray-200 rounded-lg animate-pulse"></div>
+                  <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
+                  <div className="h-3 bg-gray-200 rounded w-3/4 animate-pulse"></div>
+                  <div className="h-3 bg-gray-200 rounded w-1/2 animate-pulse"></div>
+                </div>
+              ))
+            ) : recommendedRestaurants.length > 0 ? (
+              // Render actual recommended restaurant data
+              recommendedRestaurants.map((restaurant) => (
+                <RestaurantCard
+                  key={restaurant.id}
+                  restaurantData={{
+                    id: restaurant.id,
+                    name: restaurant.name,
+                    image:
+                      restaurant.images && restaurant.images.length > 0
+                        ? restaurant.images[0].url
+                        : "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=500&h=300&fit=crop&crop=center",
+                    rating: restaurant.avgRating
+                      ? Number(restaurant.avgRating.toFixed(2))
+                      : 0,
+                    reviewCount: restaurant.totalReview || 0,
+                    pricePerPerson: 290, // Default price since not in API response
+                    description: restaurant.description,
+                    foodCategories: restaurant.food_categories,
+                    eventCategories: restaurant.event_categories,
+                    mainCategories: restaurant.main_categories,
+                    favoriteCount: restaurant.favoriteCount,
+                  }}
+                />
+              ))
+            ) : (
+              // No recommended restaurants found
+              <div className="flex items-center justify-center w-full h-[200px] text-gray-500">
+                <p>ไม่พบร้านแนะนำในขณะนี้</p>
+              </div>
+            )}
           </div>
         </div>
       </div>

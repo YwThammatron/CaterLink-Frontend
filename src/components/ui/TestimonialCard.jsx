@@ -1,6 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Star } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 
 function TestimonialCard({
   reviewData = {
@@ -15,12 +14,6 @@ function TestimonialCard({
     timestamp: new Date().toISOString(),
   },
 }) {
-  const navigate = useNavigate();
-
-  const handleClick = () => {
-    navigate("/review");
-  };
-
   // Function to render stars based on rating
   const renderStars = (rating) => {
     const fullStars = Math.floor(rating);
@@ -70,7 +63,7 @@ function TestimonialCard({
         month: "long",
         day: "numeric",
       });
-    } catch (error) {
+    } catch {
       return new Date().toLocaleDateString("th-TH");
     }
   };
