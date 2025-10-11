@@ -24,7 +24,10 @@ function RestaurantCard({
   const [isLoading, setIsLoading] = useState(false);
   const [favoriteId, setFavoriteId] = useState(initialFavoriteId); // Store favorite ID for deletion
   const [hasUserInteracted, setHasUserInteracted] = useState(false); // Track if user has manually toggled
-  const currentStateRef = useRef({ isLiked: isFavorite, favoriteId: initialFavoriteId }); // Track current state
+  const currentStateRef = useRef({
+    isLiked: isFavorite,
+    favoriteId: initialFavoriteId,
+  }); // Track current state
   const navigate = useNavigate();
   const baseUrl = import.meta.env.VITE_BASE_URL || "http://localhost:8000";
 
@@ -89,7 +92,7 @@ function RestaurantCard({
       });
 
       const favorites = response.data || [];
-      
+
       // Find if this restaurant is in the user's favorites
       const favorite = favorites.find(
         (fav) => String(fav.restaurant_id) === String(restaurantData.id)
@@ -127,18 +130,18 @@ function RestaurantCard({
     };
 
     // Listen for localStorage changes (like when user logs in/out)
-    window.addEventListener('storage', handleStorageChange);
-    
+    window.addEventListener("storage", handleStorageChange);
+
     // Listen for visibility changes (when user switches tabs and comes back)
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
     // Also listen for custom events that might indicate auth status change
-    window.addEventListener('authStatusChanged', handleStorageChange);
+    window.addEventListener("authStatusChanged", handleStorageChange);
 
     return () => {
-      window.removeEventListener('storage', handleStorageChange);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-      window.removeEventListener('authStatusChanged', handleStorageChange);
+      window.removeEventListener("storage", handleStorageChange);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("authStatusChanged", handleStorageChange);
     };
   }, [fetchFavoriteStatus]);
 
@@ -169,11 +172,11 @@ function RestaurantCard({
     // Check authentication first
     if (!isUserAuthenticated()) {
       toast.error("กรุณาเข้าสู่ระบบก่อนทำการเพิ่มรายการโปรด");
-      
+
       // Set return URL to come back to this page after login
       const currentPath = window.location.pathname + window.location.search;
       localStorage.setItem("loginReturnUrl", currentPath);
-      
+
       // Redirect to login page
       navigate("/custlogin");
       return;
@@ -184,7 +187,7 @@ function RestaurantCard({
       setHasUserInteracted(true); // Mark that user has interacted
 
       const token = getAuthToken();
-      
+
       if (!token) {
         toast.error("กรุณาเข้าสู่ระบบก่อนทำการเพิ่มรายการโปรด");
         navigate("/custlogin");
@@ -234,22 +237,25 @@ function RestaurantCard({
         } else {
           // Fallback: if we don't have favoriteId, fetch it from API first
           try {
-            const favoritesResponse = await axios.get(`${baseUrl}/api/favorites/me`, {
-              headers
-            });
-            
+            const favoritesResponse = await axios.get(
+              `${baseUrl}/api/favorites/me`,
+              {
+                headers,
+              }
+            );
+
             const favorites = favoritesResponse.data || [];
             const favorite = favorites.find(
               (fav) => String(fav.restaurant_id) === String(restaurantData.id)
             );
-            
+
             if (favorite) {
               // Now we have the favorite ID, delete it
               const deleteResponse = await axios.delete(
                 `${baseUrl}/api/favorites/${favorite.id}`,
                 { headers }
               );
-              
+
               if (deleteResponse.status === 200) {
                 setIsLiked(false);
                 setFavoriteId(null);
@@ -280,7 +286,8 @@ function RestaurantCard({
           toast.error("กรุณาเข้าสู่ระบบใหม่อีกครั้ง");
           // Clear invalid tokens
           localStorage.removeItem("accessToken");
-          document.cookie = "accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+          document.cookie =
+            "accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
           navigate("/custlogin");
         } else if (error.response.status === 403) {
           toast.error("ไม่มีสิทธิ์ในการเข้าถึง");
