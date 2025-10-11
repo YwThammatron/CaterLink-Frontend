@@ -110,39 +110,48 @@ function CustomerReservation() {
     const checkForSavedReservation = () => {
       try {
         // First, check for URL parameter (backup method)
-        const packageIdFromUrl = searchParams.get('packageId');
-        
+        const packageIdFromUrl = searchParams.get("packageId");
+
         // Then check localStorage
-        const savedState = localStorage.getItem('pendingReservation');
-        
+        const savedState = localStorage.getItem("pendingReservation");
+
         if ((savedState || packageIdFromUrl) && packageCategories.length > 0) {
           let actualPackageData = null;
           let categoryData = null;
-          
+
           // If we have localStorage data, prioritize it
           if (savedState) {
             const state = JSON.parse(savedState);
-            
+
             // Check if the saved state is for this restaurant and not too old (24 hours)
-            const isStateValid = state.timestamp && (Date.now() - state.timestamp) < 24 * 60 * 60 * 1000;
-            
-            if (isStateValid && state.restaurantId === id && state.selectedPackage) {
+            const isStateValid =
+              state.timestamp &&
+              Date.now() - state.timestamp < 24 * 60 * 60 * 1000;
+
+            if (
+              isStateValid &&
+              state.restaurantId === id &&
+              state.selectedPackage
+            ) {
               const savedPackage = state.selectedPackage;
-              
+
               // Try to find the actual package data from current packageCategories
               for (const category of packageCategories) {
-                const foundPackage = category.packages.find(pkg => 
-                  pkg.id === savedPackage.id || 
-                  (savedPackage.packageInfo && pkg.id === savedPackage.packageInfo.id)
+                const foundPackage = category.packages.find(
+                  (pkg) =>
+                    pkg.id === savedPackage.id ||
+                    (savedPackage.packageInfo &&
+                      pkg.id === savedPackage.packageInfo.id)
                 );
-                
+
                 if (foundPackage) {
                   // Reconstruct the package data with current structure
                   actualPackageData = {
                     ...savedPackage,
                     packageInfo: foundPackage,
                     // Preserve any custom data like guest count
-                    customGuestCount: savedPackage.customGuestCount || savedPackage.guests,
+                    customGuestCount:
+                      savedPackage.customGuestCount || savedPackage.guests,
                   };
                   categoryData = category;
                   break;
@@ -150,12 +159,14 @@ function CustomerReservation() {
               }
             }
           }
-          
+
           // If localStorage didn't work, try URL parameter
           if (!actualPackageData && packageIdFromUrl) {
             for (const category of packageCategories) {
-              const foundPackage = category.packages.find(pkg => pkg.id === packageIdFromUrl);
-              
+              const foundPackage = category.packages.find(
+                (pkg) => pkg.id === packageIdFromUrl
+              );
+
               if (foundPackage) {
                 // Create basic package data structure
                 actualPackageData = {
@@ -171,13 +182,13 @@ function CustomerReservation() {
                 break;
               }
             }
-            
+
             // Clear the URL parameter
             if (actualPackageData) {
-              window.history.replaceState({}, '', `/customerreservation/${id}`);
+              window.history.replaceState({}, "", `/customerreservation/${id}`);
             }
           }
-            
+
           // If we found the package, open the reservation modal directly
           if (actualPackageData && actualPackageData.id) {
             // Use setTimeout to ensure the modal opens after component is fully rendered
@@ -189,16 +200,18 @@ function CustomerReservation() {
               setIsModalOpen(true);
             }, 300);
           } else {
-            console.warn('Could not find matching package for saved reservation state');
-            localStorage.removeItem('pendingReservation');
+            console.warn(
+              "Could not find matching package for saved reservation state"
+            );
+            localStorage.removeItem("pendingReservation");
           }
         } else {
           // No saved state to restore
-          localStorage.removeItem('pendingReservation');
+          localStorage.removeItem("pendingReservation");
         }
       } catch (error) {
-        console.error('Error checking for saved reservation:', error);
-        localStorage.removeItem('pendingReservation');
+        console.error("Error checking for saved reservation:", error);
+        localStorage.removeItem("pendingReservation");
       }
     };
 

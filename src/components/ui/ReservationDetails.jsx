@@ -32,57 +32,76 @@ function ReservationDetails({ onClose, onBack, selectedPackage }) {
       messageToRestaurant,
       selectedPackage,
       restaurantId,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
-    
-    localStorage.setItem('pendingReservation', JSON.stringify(reservationState));
-  }, [date, startTime, endTime, meetingLocation, messageToRestaurant, selectedPackage, restaurantId]);
+
+    localStorage.setItem(
+      "pendingReservation",
+      JSON.stringify(reservationState)
+    );
+  }, [
+    date,
+    startTime,
+    endTime,
+    meetingLocation,
+    messageToRestaurant,
+    selectedPackage,
+    restaurantId,
+  ]);
 
   const loadReservationState = useCallback(() => {
     try {
-      const savedState = localStorage.getItem('pendingReservation');
-      
+      const savedState = localStorage.getItem("pendingReservation");
+
       if (savedState) {
         const state = JSON.parse(savedState);
-        
+
         // Check if the saved state is not too old (24 hours)
-        const isStateValid = state.timestamp && (Date.now() - state.timestamp) < 24 * 60 * 60 * 1000;
-        
-        if (isStateValid && String(state.restaurantId) === String(restaurantId)) {
+        const isStateValid =
+          state.timestamp && Date.now() - state.timestamp < 24 * 60 * 60 * 1000;
+
+        if (
+          isStateValid &&
+          String(state.restaurantId) === String(restaurantId)
+        ) {
           // Check if we actually have data to restore
-          const hasDataToRestore = state.date || state.startTime || state.endTime || 
-                                   state.meetingLocation || state.messageToRestaurant;
-          
+          const hasDataToRestore =
+            state.date ||
+            state.startTime ||
+            state.endTime ||
+            state.meetingLocation ||
+            state.messageToRestaurant;
+
           if (hasDataToRestore && !hasLoadedSavedData) {
             setDate(state.date ? new Date(state.date) : null);
             setStartTime(state.startTime || "");
             setEndTime(state.endTime || "");
             setMeetingLocation(state.meetingLocation || "");
             setMessageToRestaurant(state.messageToRestaurant || "");
-            
+
             // Mark that we've loaded the data
             setHasLoadedSavedData(true);
-            
+
             // Clear the saved state after successfully loading form data
-            localStorage.removeItem('pendingReservation');
-            
+            localStorage.removeItem("pendingReservation");
+
             // Show success message to user
             toast.success("ข้อมูลการจองของคุณได้รับการกู้คืนแล้ว", {
               duration: 3000,
             });
           }
         } else {
-          localStorage.removeItem('pendingReservation');
+          localStorage.removeItem("pendingReservation");
         }
       }
     } catch (error) {
-      console.error('Error loading reservation state:', error);
-      localStorage.removeItem('pendingReservation');
+      console.error("Error loading reservation state:", error);
+      localStorage.removeItem("pendingReservation");
     }
   }, [restaurantId, hasLoadedSavedData]);
 
   const clearReservationState = useCallback(() => {
-    localStorage.removeItem('pendingReservation');
+    localStorage.removeItem("pendingReservation");
   }, []);
 
   // Helper function to check authentication
@@ -221,7 +240,7 @@ function ReservationDetails({ onClose, onBack, selectedPackage }) {
     const timeoutId = setTimeout(() => {
       loadReservationState();
     }, 200);
-    
+
     return () => clearTimeout(timeoutId);
   }, [loadReservationState]);
 
@@ -231,7 +250,7 @@ function ReservationDetails({ onClose, onBack, selectedPackage }) {
       const timeoutId = setTimeout(() => {
         loadReservationState();
       }, 150);
-      
+
       return () => clearTimeout(timeoutId);
     }
   }, [selectedPackage, loadReservationState, hasLoadedSavedData]);
@@ -239,7 +258,7 @@ function ReservationDetails({ onClose, onBack, selectedPackage }) {
   // Force reload attempt if we still have pending data but haven't loaded it
   useEffect(() => {
     const checkAndReload = () => {
-      const savedState = localStorage.getItem('pendingReservation');
+      const savedState = localStorage.getItem("pendingReservation");
       if (savedState && !hasLoadedSavedData) {
         loadReservationState();
       }
@@ -261,7 +280,7 @@ function ReservationDetails({ onClose, onBack, selectedPackage }) {
   useEffect(() => {
     return () => {
       // Only clear if we're not navigating to login and we've already loaded the data
-      const isNavigatingToLogin = localStorage.getItem('navigatingToLogin');
+      const isNavigatingToLogin = localStorage.getItem("navigatingToLogin");
       if (!isNavigatingToLogin && hasLoadedSavedData) {
         clearReservationState();
       }
@@ -274,15 +293,17 @@ function ReservationDetails({ onClose, onBack, selectedPackage }) {
     if (!isUserAuthenticated()) {
       // Save current reservation state before redirecting to login
       saveReservationState();
-      
+
       // Set flag to indicate we're navigating to login
-      localStorage.setItem('navigatingToLogin', 'true');
-      
+      localStorage.setItem("navigatingToLogin", "true");
+
       // Set return URL to come back to this reservation with package info
-      const packageParam = selectedPackage?.id ? `?packageId=${selectedPackage.id}` : '';
+      const packageParam = selectedPackage?.id
+        ? `?packageId=${selectedPackage.id}`
+        : "";
       const returnUrl = `/customerreservation/${restaurantId}${packageParam}`;
-      localStorage.setItem('loginReturnUrl', returnUrl);
-      
+      localStorage.setItem("loginReturnUrl", returnUrl);
+
       toast.error("กรุณาเข้าสู่ระบบก่อนทำการจอง");
       // Redirect to login page
       navigate("/custlogin");
@@ -290,8 +311,8 @@ function ReservationDetails({ onClose, onBack, selectedPackage }) {
     }
 
     // Clear the navigation flag if user is authenticated
-    localStorage.removeItem('navigatingToLogin');
-    localStorage.removeItem('loginReturnUrl');
+    localStorage.removeItem("navigatingToLogin");
+    localStorage.removeItem("loginReturnUrl");
 
     // Validation
     if (!date) {
