@@ -52,7 +52,15 @@ function CartCard({
   };
 
   const goToComment = () => {
-    navigate("/comment");
+    // Pass order data to comment page via state
+    navigate("/comment", {
+      state: {
+        orderData,
+        restaurantName,
+        packageName,
+        packageDescription,
+      },
+    });
   };
 
   // Cancel order function
