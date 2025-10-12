@@ -544,12 +544,6 @@ function CustomerReservation() {
               {category.name}
             </Button>
           ))}
-          <Button
-            variant="outline"
-            className="py-1 px-4 rounded-sm border-[#EAECF0] text-[#344054]"
-          >
-            ค้นหาแพคเกจ
-          </Button>
         </div>
 
         {isLoadingPackages ? (
