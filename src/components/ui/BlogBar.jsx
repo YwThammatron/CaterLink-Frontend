@@ -36,7 +36,32 @@ function BlogBar({ onSearch, onAuthorFilter, onCateringFilter }) {
   }, [baseUrl]);
 
   const goToWriteBlog = () => {
-    navigate("/writeblog");
+    // Check authentication status
+    let isAuthenticated = false;
+
+    // Check for authentication token in cookies
+    if (document.cookie) {
+      const parts = document.cookie.split(";").map((part) => part.trim());
+      const tokenPart = parts.find((p) => p.startsWith("accessToken="));
+      if (tokenPart) {
+        isAuthenticated = true;
+      }
+    }
+
+    // Fallback to localStorage if not found in cookies
+    if (!isAuthenticated) {
+      const token = localStorage.getItem("accessToken");
+      if (token) {
+        isAuthenticated = true;
+      }
+    }
+
+    // Navigate based on authentication status
+    if (isAuthenticated) {
+      navigate("/writeblog");
+    } else {
+      navigate("/custlogin");
+    }
   };
 
   const handleSearch = () => {

@@ -395,8 +395,6 @@ function ReservationDetails({ onClose, onBack, selectedPackage }) {
         }
       );
 
-      console.log("Reservation successful:", response.data); // Debug log
-
       // Show success toast with custom JSX content
       const toastId = toast(
         <div className="relative max-w-[480px]">
@@ -426,8 +424,8 @@ function ReservationDetails({ onClose, onBack, selectedPackage }) {
               <button
                 className="text-[#FF8A00] text-sm font-semibold text-left hover:text-[#E6720A] transition-colors"
                 onClick={() => {
-                  console.log("View booking status clicked");
-                  // Add navigation logic here if needed
+                  toast.dismiss(toastId); // Dismiss the toast
+                  navigate("/cart"); // Redirect to cart page
                 }}
               >
                 ดูสถานะการจอง
@@ -570,7 +568,7 @@ function ReservationDetails({ onClose, onBack, selectedPackage }) {
         <div className="flex flex-col gap-3">
           <div className="flex items-start justify-between">
             <p className="text-sm font-medium text-[#344054]">
-              วันที่ต้องการนัด <span className="text-red-500">*</span>
+              วันที่ต้องการนัด<span className="text-red-500">*</span>
             </p>
             <div className="relative w-[464px]" ref={calendarRef}>
               {/* Date Input */}

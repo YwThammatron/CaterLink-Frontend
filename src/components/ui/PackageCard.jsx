@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+
 function PackageCard({
   packageData = {
     id: "default",
@@ -12,6 +14,8 @@ function PackageCard({
       "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=88&h=88&fit=crop",
   },
 }) {
+  const navigate = useNavigate();
+
   // Calculate the display price (lowest price from package details or fallback)
   const getDisplayPrice = () => {
     if (packageData.packageDetails && packageData.packageDetails.length > 0) {
@@ -21,8 +25,18 @@ function PackageCard({
     return packageData.price || 295;
   };
 
+  // Handle card click to navigate to restaurant reservation page
+  const handleCardClick = () => {
+    if (packageData.restaurant_id) {
+      navigate(`/customerreservation/${packageData.restaurant_id}`);
+    }
+  };
+
   return (
-    <div className="flex flex-col gap-2 w-[284px] relative">
+    <div
+      className="flex flex-col gap-2 w-[284px] relative cursor-pointer hover:shadow-lg transition-shadow duration-200"
+      onClick={handleCardClick}
+    >
       <div className="flex gap-[6px] justify-start items-center">
         <svg
           width="12px"

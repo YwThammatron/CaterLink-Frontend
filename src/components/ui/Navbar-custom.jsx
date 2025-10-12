@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Search, LogOut, User, Settings } from "lucide-react";
+import { Search, LogOut } from "lucide-react";
 import { ShoppingCart } from "lucide-react";
 import { ChevronDown } from "lucide-react";
 import Logo from "./Logo";
@@ -280,28 +280,6 @@ function NavbarCustom() {
                     </div>
 
                     {/* Menu Items */}
-                    <button
-                      className="w-full flex items-center gap-2 px-4 py-2 text-left text-[#475467] hover:bg-[#FF8A00]/10 hover:text-[#FF8A00] transition-colors duration-200"
-                      onClick={() => {
-                        setIsUserDropdownOpen(false);
-                        navigate("/setting");
-                      }}
-                    >
-                      <Settings className="w-4 h-4" />
-                      <span>การตั้งค่า</span>
-                    </button>
-
-                    <button
-                      className="w-full flex items-center gap-2 px-4 py-2 text-left text-[#475467] hover:bg-[#FF8A00]/10 hover:text-[#FF8A00] transition-colors duration-200"
-                      onClick={() => {
-                        setIsUserDropdownOpen(false);
-                        navigate("/order");
-                      }}
-                    >
-                      <User className="w-4 h-4" />
-                      <span>ประวัติการสั่งซื้อ</span>
-                    </button>
-
                     <hr className="my-1" />
 
                     <button
