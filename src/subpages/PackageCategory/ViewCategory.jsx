@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "../../components/ui/badge";
 
+import { Inbox } from "lucide-react";
+
 import {
   Accordion,
   AccordionContent,
@@ -82,6 +84,12 @@ function ViewCategory({ sendClick }) {
                         <div className="grid justify-center items-center border-[1px] border-[#F2F4F7] rounded-[24px] w-[1104px] bg-white">
                             {/* Content (Package Category) */}
                             <div className="grid w-[1040px] pt-[8px]">
+                                {Packages.length == 0 ? 
+                                <div className="grid justify-center items-center h-[120px]">
+                                    <Inbox className="grid justify-self-center w-[50px] h-[50px] text-[#667085]"/>
+                                    <p className="grid justify-self-center pb-[20px] text-[#667085]">ไม่มีหมวดหมู่แพคเกจในขณะนี้</p>
+                                </div> 
+                                :
                                 <Accordion className="w-full" type="single" collapsible>
                                 {Packages.map((content,i) => {
                                     return (
@@ -126,6 +134,7 @@ function ViewCategory({ sendClick }) {
                                     )
                                 })}
                                 </Accordion>
+                                }
                             </div>
                         </div>
                         
