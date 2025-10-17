@@ -12,8 +12,32 @@ import RestBank from "../subpages/CreateAccount/RestBank"
 import Complete from "../subpages/CreateAccount/Complete"
 
 function CreateAccount() {
+    const [accessToken,setAccessToken] = useState("")
+    const [userData,setUserData] =  useState({
+        id:"",
+        name:"",
+        email:"",
+        profile_picture:"",
+        role:"restaurant",
+        bio:"",
+    })
+
+    const [Restid,setRestid] = useState("")
+
     const [Tabindex,setTabindex] = useState(0)
 
+    const [Restpayload,setRestpayload] = useState({
+        name:"",
+        description:"",
+        tax_id:"",
+        sub_location:"",
+        location:""
+    })
+    
+    const [Mainspayload,setMainspayload] = useState([])
+    const [Eventspayload,setEventspayload] = useState([])
+    const [Foodspayload,setFoodspayload] = useState([])
+    
     const baseUrl = import.meta.env.VITE_BASE_URL
 
     const handleClickBank = (e) => {
@@ -69,20 +93,93 @@ function CreateAccount() {
         window.scrollTo({ top: 0, behavior: 'smooth' })
     }
 
-    const handleSend = (e) => {
+    const handleSend = async (e) => {
         e.preventDefault()
-        setTabindex(Tabindex => Tabindex + 1)
+        //Create Restaurant
+        const response = await axios.post(baseUrl + "/api/restaurants",Restpayload,{
+            headers:{
+                Authorization:`Bearer ${accessToken}`
+            }
+        })
 
+        setRestid(response.data.id)
+    }
+
+    const handleSendCtgs = async () => {
+        //Send Category Payloads
+        for(let id of Mainspayload){
+            response = await axios.post(baseUrl + "/api/restaurant-main-category-maps",{
+                restaurant_id:Restid,
+                main_category_id:id
+            })
+        }
+        for(let id of Eventspayload){
+            response = await axios.post(baseUrl + "/api/restaurant-event-category-maps",{
+                restaurant_id:Restid,
+                event_category_id:id
+            })
+        }
+        for(let id of Foodspayload){
+            response = await axios.post(baseUrl + "/api/restaurant-food-category-maps",{
+                restaurant_id:Restid,
+                food_category_id:id
+            })
+        }
+
+        setTabindex(Tabindex => Tabindex + 1)
         window.scrollTo({ top: 0, behavior: 'smooth' })
     }
 
+    const checkCookie = () => {
+        if(document.cookie){
+            const parts = document.cookie.split(';').map(part => part.trim());
+            // Extract values
+            const tempdata = JSON.parse(parts.find(p => p.startsWith('userData=')).slice('userData='.length))
+            const temptoken = parts.find(p => p.startsWith('accessToken=')).slice('accessToken='.length)
+            setAccessToken(temptoken)
+            setUserData(tempdata)
+        }
+    }
+
     const [Subpages,setSubpages] = useState([
-        {label: 'ข้อมูลร้านค้า',content: <RestInfo onClick={handleClickType}/>,index:true},
-        {label: 'ประเภทร้านค้า',content: <RestType onClick={handleClickBank} backClick={handleBackType} />,index:false},
-        {label: 'บัญชีธนาคาร',content: <RestBank onClick={handleSend} backClick={handleBackBank} />,index:false},
-        {label: 'ส่งข้อมูลแล้ว',content: <Complete/>}
+        //use key instead of content to prevent one time render which Restcopy has to be updated
+        {label: 'ข้อมูลร้านค้า',key: 'RestInfo',index:true},
+        {label: 'ประเภทร้านค้า',key: 'RestType' ,index:false},
+        {label: 'บัญชีธนาคาร',key: 'RestBank' ,index:false},
+        {label: 'ส่งข้อมูลแล้ว',key: 'Complete'}
     ])
 
+    const RenderContent = (key) => {
+        switch(key){
+            case 'RestInfo':
+                return <RestInfo onClick={handleClickType} sendPayload={setRestpayload} receiveCopy={Restpayload} />
+            case 'RestType':
+                return <RestType 
+                onClick={handleClickBank} 
+                backClick={handleBackType} 
+                sendMains={setMainspayload} 
+                sendEvents={setEventspayload} 
+                sendFoods={setFoodspayload}
+                receiveCopymain={Mainspayload}
+                receiveCopyevent={Eventspayload}
+                receiveCopyfood={Foodspayload}
+                />
+            case 'RestBank':
+                return <RestBank onClick={handleSend} backClick={handleBackBank} />
+            case 'Complete':
+                return <Complete/>
+            default:
+                return null
+        }
+    }
+
+    useEffect(() => {
+        checkCookie()
+    },[])
+
+    useEffect(() => {
+        if(Restid){ handleSendCtgs() }
+    },[Restid])
 
 return (
     <>
@@ -130,7 +227,7 @@ return (
                 </div>
 
                 {/* Content */}
-                {Subpages[Tabindex].content}
+                {RenderContent(Subpages[Tabindex].key)}
             </div>
         </div>
     </>

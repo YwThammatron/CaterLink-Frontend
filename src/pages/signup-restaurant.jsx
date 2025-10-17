@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { Button } from "@/components/ui/button";
 
 import Logo from "../components/ui/Logo";
@@ -13,6 +13,11 @@ function SignupRestaurant() {
     bio:""
   })
 
+  const [Logindata,setLogindata] = useState({
+    email:"",
+    password:""
+  })
+
   const baseUrl = import.meta.env.VITE_BASE_URL
 
   const handleChange = (e) => {
@@ -23,6 +28,16 @@ function SignupRestaurant() {
     }))
   }
 
+  const clearInputs = () => {
+    setRegdata({
+        email:"",
+        password:"",
+        name:"",
+        role:"restaurant",
+        bio:""
+    })
+  }
+
   const handleReg = async () => {
     //when click signup
 
@@ -31,18 +46,55 @@ function SignupRestaurant() {
     console.log(passwdcf,Regdata.password)
     if(Regdata.email == "" || Regdata.password == "" || Regdata.name == ""){ 
       window.alert("System : Invalid input.")
+      clearInputs()
     }
     else{
       if(Regdata.password != passwdcf){
         window.alert("System : Password confirm error.")
+        clearInputs()
       }
       else{
-        const response = await axios.post(baseUrl + "/api/auth/signup",Regdata)
-        console.log(response.data)
-        // window.location.href = "./createaccount"
+        try{
+          const response = await axios.post(baseUrl + "/api/auth/signup",Regdata)
+          console.log(response.data)
+
+          //set login payload to login to get accesstoken 
+          setLogindata({
+            email:Regdata.email,
+            password:Regdata.password
+          })
+        }
+        catch(error){
+          if(error.response){
+            window.alert(`Code ${error.response.status} : ${error.response.data.error}`)
+          }
+        }
+        
       }
     }
   }
+
+  const handleLogin = async () => {
+    try{
+      const response = await axios.post(baseUrl + "/api/auth/signin",Logindata)
+
+      //build cookie to keep token alive (3 hours)
+      document.cookie = `accessToken=${response.data.accessToken}; path=/; max-age=10800; secure; samesite=strict`
+      document.cookie = `userData=${JSON.stringify(response.data.userData)}; path=/; max-age=10800; secure; samesite=strict`
+
+      //go to create account page
+      window.location.href = "./createaccount"
+    }
+    catch(error){
+      if(error.response){
+        window.alert(`Code ${error.response.status} : ${error.response.data.error}`)
+      }
+    }
+  }
+
+  useEffect(() => {
+    if(Logindata.email != "" && Logindata.password != ""){ handleLogin() }
+  },[Logindata])
 
   return (
     <>
@@ -51,7 +103,7 @@ function SignupRestaurant() {
           {/* Container */}
           <div className="flex justify-center items-center w-[50%] h-[100vh]">
             {/* Content (outer) */}
-            <div className="w-[360px] h-[524px]">
+            <div className="w-[360px] h-[618px]">
 
               {/* header */}
               <div className="flex flex-col items-center">
@@ -63,6 +115,18 @@ function SignupRestaurant() {
 
               {/* form */}
               <form className="grid gap-[20px] mt-[32px] mb-[24px]">
+                <div className="grid h-fit gap-[6px]">
+                  <label className="flex"><p>ชื่อผู้ใช้</p><p className="text-[#D92D20]">*</p></label>
+                  <input 
+                    type="text"
+                    id="name"
+                    value={Regdata.name}
+                    onChange={handleChange}
+                    placeholder="เพิ่มชื่อผู้ใช้"
+                    className="pl-[14px] pr-[14px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md"
+                  />
+                </div>
+
                 <div className="grid h-fit gap-[6px]">
                   <label className="flex"><p>อีเมล</p><p className="text-[#D92D20]">*</p></label>
                   <input 

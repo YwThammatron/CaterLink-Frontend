@@ -62,7 +62,7 @@ function SidebarCustom(){
 
     const handleMenu = () => {
         const logoutdiv = document.getElementById("logoutdiv")
-        Isshow == true ? logoutdiv.style.display = "flex" : logoutdiv.style.display = "none"
+        Isshow == true ? logoutdiv.style.display = "none" : logoutdiv.style.display = "flex" 
         setIsshow(!Isshow)
     }
 
@@ -84,11 +84,11 @@ function SidebarCustom(){
 
             {/* Content */}
             <div className="pl-[36px] text-[14px]">
-                <a href="./order"><p id="order" className="pt-[13.5px] pb-[13.5px]">คำสั่งซื้อ</p></a>
-                <a href="./packagectg"><p id="packagectg" className="pt-[13.5px] pb-[13.5px]">จัดการแพคเกจ</p></a>
-                <a href="./promotion"><p id="promotion" className="pt-[13.5px] pb-[13.5px]">จัดการโปรโมชัน</p></a>
-                <a href="./writeblog"><p id="writeblog" className="pt-[13.5px] pb-[13.5px]">บทความ</p></a>
-                <a href="./setting"><p id="setting" className="pt-[13.5px] pb-[13.5px]">จัดการร้านค้า</p></a>
+                <a href="./order"><p id="order" className="pt-[13.5px] pb-[13.5px] hover:text-[#667085] transition">คำสั่งซื้อ</p></a>
+                <a href="./packagectg"><p id="packagectg" className="pt-[13.5px] pb-[13.5px] hover:text-[#667085] transition">จัดการแพคเกจ</p></a>
+                <a href="./promotion"><p id="promotion" className="pt-[13.5px] pb-[13.5px] hover:text-[#667085] transition">จัดการโปรโมชัน</p></a>
+                <a href="./writeblog"><p id="writeblog" className="pt-[13.5px] pb-[13.5px] hover:text-[#667085] transitions">บทความ</p></a>
+                <a href="./setting"><p id="setting" className="pt-[13.5px] pb-[13.5px] hover:text-[#667085] transition">จัดการร้านค้า</p></a>
             </div>
 
             {/* Profile (Frame 154) */}
@@ -103,7 +103,7 @@ function SidebarCustom(){
                         className="w-[32px] h-[32px] rounded-[50%]"
                     />
                     <p className="font-[14px]">{userData.name}</p>
-                    {Isshow == true ? <ChevronDown onClick={handleMenu} className="text-[#F78E1E] w-[24px] h-[24px] hover:cursor-pointer" /> : <ChevronUp onClick={handleMenu} className="text-[#F78E1E] w-[24px] h-[24px] hover:cursor-pointer" />}
+                    {Isshow ? <ChevronUp onClick={handleMenu} className="text-[#F78E1E] w-[24px] h-[24px] hover:cursor-pointer" /> : <ChevronDown onClick={handleMenu} className="text-[#F78E1E] w-[24px] h-[24px] hover:cursor-pointer" />}
                 </div>
             </div>
             
