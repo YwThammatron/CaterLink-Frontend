@@ -175,7 +175,7 @@ function CreateCategory({ cancelClick }) {
                 </div>
                 
                 {/* Action */}
-                <div className="flex items-center ml-[933px] mb-[20px] w-[1104px] h-[48px]">
+                <div className="flex items-center ml-[933px] mb-[20px] w-[222px] h-[48px]">
                     {/* Right */}
                     <div className="flex gap-[12px]">
                         <Button
@@ -229,7 +229,7 @@ function CreateCategory({ cancelClick }) {
                 </div>
                 
                 {/* Action */}
-                <div className="flex items-center ml-[933px] mb-[691px] w-[1104px] h-[48px]">
+                <div className="flex items-center ml-[933px] mb-[691px] w-[222px] h-[48px]">
                     {/* Right */}
                     <div className="flex gap-[12px]">
                         <Button
