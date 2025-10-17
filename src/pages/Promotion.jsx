@@ -63,10 +63,11 @@ function Promotion() {
                 setPackage({
                     name:response.data.name,
                     category_id:response.data.category_id,
-                    discount:response.data.discount,
-                    start_discount_date:response.data.start_discount_date,
-                    end_discount_date:response.data.end_discount_date
+                    discount:parseInt(Payload.discount),
+                    start_discount_date:Payload.startdate,
+                    end_discount_date:Payload.enddate
                 })
+
             }
         }
     }
@@ -113,15 +114,6 @@ function Promotion() {
         }
     }
 
-    const changePayload = () => {
-        setPackage((data) => ({
-            ...data,
-            discount:parseInt(Payload.discount),
-            start_discount_date:Payload.startdate,
-            end_discount_date:Payload.enddate
-        }))
-    }
-
     const sendPayload = async () => {
         console.log(Package)
         try{
@@ -130,6 +122,8 @@ function Promotion() {
                     Authorization: `Bearer ${accessToken}`
                 }
             })
+
+            console.log(response.data)
 
             window.alert("System : Promotion added successfully.")
             window.location.reload()
@@ -170,10 +164,7 @@ function Promotion() {
   },[Payload.packagectgid])
 
   useEffect(() => {
-    if(Package){ changePayload() }
-  },[Package.name])
-
-  useEffect(() => {
+    console.log("Package Discount changed")
     if(Package.discount != 0){ sendPayload() }
   },[Package.discount])
 
@@ -230,7 +221,7 @@ function Promotion() {
                         <form className="grid w-[512px] gap-[6px]">
                             <div className="flex gap-[16px]">
                                 <div className="grid gap-[8px]">
-                                    <label><p className="flex h-[21px] font-[500] text-[#6D6E71] text-[14px]">วันที่เริ่ม<p className="text-[#D50A0A] pl-[4px]">*</p></p></label>
+                                    <label className="flex"><p className="flex h-[21px] font-[500] text-[#6D6E71] text-[14px]">วันที่เริ่ม</p><p className="text-[#D50A0A] pl-[3px]">*</p></label>
                                     <input 
                                     type="date"
                                     id="startdate"
@@ -242,7 +233,7 @@ function Promotion() {
                                 </div>
 
                                 <div className="grid gap-[8px]">
-                                    <label><p className="flex h-[21px] font-[500] text-[#6D6E71] text-[14px]">วันที่จบ<p className="text-[#D50A0A] pl-[4px]">*</p></p></label>
+                                    <label className="flex"><p className="flex h-[21px] font-[500] text-[#6D6E71] text-[14px]">วันที่จบ</p><p className="text-[#D50A0A] pl-[3px]">*</p></label>
                                     <input 
                                     type="date"
                                     id="enddate"
@@ -264,7 +255,7 @@ function Promotion() {
                         <p className="text-[14px] w-[312px] font-[600]">ข้อมูลแพคเกจ</p>
                         {/* Input Field */}
                         <form className="grid w-[512px]">
-                            <label><p className="flex h-[21px] font-[500] text-[#6D6E71] text-[14px]">หมวดหมู่แพคเกจ<p className="text-[#D50A0A] pl-[4px]">*</p></p></label>
+                            <label className="flex"><p className="flex h-[21px] font-[500] text-[#6D6E71] text-[14px]">หมวดหมู่แพคเกจ</p><p className="text-[#D50A0A] pl-[4px]">*</p></label>
                             <div className="relative">
                                 <select id="packagectgid" value={Payload.packagectgid} onChange={handleChange} className="appearance-none w-[512px] h-[40px] text-[14px] pl-[12px] pr-[44px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md">
                                     <option value="default" selected hidden>เลือกหมวดหมู่แพคเกจ</option>
@@ -277,7 +268,7 @@ function Promotion() {
                                 </div>
                             </div>
 
-                            <label><p className="flex h-[21px] font-[500] text-[#6D6E71] text-[14px]">แพคเกจ<p className="text-[#D50A0A] pl-[4px]">*</p></p></label>
+                            <label className="flex"><p className="flex h-[21px] font-[500] text-[#6D6E71] text-[14px]">แพคเกจ</p><p className="text-[#D50A0A] pl-[3px]">*</p></label>
                             <div className="relative">
                                 <select id="packageid" value={Payload.packageid} onChange={handleChange} className="appearance-none w-[512px] h-[40px] text-[14px] pl-[12px] pr-[44px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md">
                                     <option id="packagedefault" value="default" selected hidden>เลือกแพคเกจ</option>

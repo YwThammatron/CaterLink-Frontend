@@ -17,8 +17,8 @@ function OrderCard(props) {
   }
 
   return (
-    <div className="relative w-[1072px] h-[377px]">
-        <div className="absolute flex flex-col w-[1072px] h-[377px] border-[1px] border-[#D0D5DD] bg-white rounded-[8px]">
+    <div className="relative w-[1072px] h-auto min-h-[377px]">
+        <div className="absolute flex flex-col w-[1072px] h-auto min-h-[377px] border-[1px] border-[#D0D5DD] bg-white rounded-[8px]">
             {/* Content Upside */}
             <div className="flex h-[49px] items-center">
                 <p className="pl-[32px] pr-[16px] text-[14px] text-[#344054] font-[500]">{props.name}</p>
@@ -36,9 +36,9 @@ function OrderCard(props) {
             <div className="w-full h-[1px] bg-[#EFEFEF]"></div>
 
             {/* Content Downside */}
-            <div className="flex w-full h-[165px]">
+            <div className="flex w-full h-auto">
                 {/* Content */}
-                <div className="flex flex-col w-[668px] h-[104px] gap-[12px] pt-[14px] mb-[16px] pl-[32px] pr-[205px]">
+                <div className="flex flex-col w-[668px] h-auto gap-[12px] pt-[14px] pl-[32px] pr-[205px]">
                     <p className="text-[16px] font-[700]">{props.food}</p>
                     <div className="grid gap-[16px] w-full text-[16px] text-[#475467] ">
                         <div className="grid">
@@ -55,7 +55,7 @@ function OrderCard(props) {
                         <div className="grid">
                             <p className="font-[400] pb-[4px]">วันที่ {FormatDate(props.date)} เวลา {props.start.slice(0,5)} PM - {props.end.slice(0,5)} PM</p>
                             <p className="font-[400] pb-[16px]">{props.address}</p>
-                            <p className="font-[400]">{props.message}</p>
+                            <p className="font-[400] pb-[16px]">{props.message}</p>
                         </div>
                     </div>
                 </div>

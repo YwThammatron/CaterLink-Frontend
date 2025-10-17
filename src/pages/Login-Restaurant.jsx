@@ -32,6 +32,10 @@ function LoginRestaurant() {
     try{
         let response = await axios.post(baseUrl + "/api/auth/signin",Logindata)
 
+        //delete old cookie
+        document.cookie = "userData=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        document.cookie = "accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
         //build cookie to keep token alive (1 hour)
         document.cookie = `accessToken=${response.data.accessToken}; path=/; max-age=3600; secure; samesite=strict`
         document.cookie = `userData=${JSON.stringify(response.data.userData)}; path=/; max-age=3600; secure; samesite=strict`
@@ -40,7 +44,7 @@ function LoginRestaurant() {
         console.log(response.data)
 
         //go to restaurant setting page
-        // window.location.href = "./setting"
+        window.location.href = "./setting"
     }
     catch(error){
         if(error.response){
