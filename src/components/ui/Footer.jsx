@@ -6,7 +6,7 @@ function Footer() {
   const navigate = useNavigate();
 
   const handleButtonClick = () => {
-    navigate("/signup");
+    navigate("/restsignup");
   };
   return (
     <div className="w-full h-fit py-8 flex flex-col gap-10 border border-[#EAECF0]">
