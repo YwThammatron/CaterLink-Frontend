@@ -41,8 +41,21 @@ function LoginCustomer() {
           document.cookie = `accessToken=${response.data.accessToken}; path=/; max-age=3600; secure; samesite=strict`
           document.cookie = `userData=${JSON.stringify(response.data.userData)}; path=/; max-age=3600; secure; samesite=strict`
           
-          //go to customer homepage
-          // window.location.href = "./"
+          // Check if there's a return URL from reservation flow
+          const returnUrl = localStorage.getItem("loginReturnUrl");
+          const isFromReservation = localStorage.getItem("navigatingToLogin");
+
+          if (isFromReservation && returnUrl) {
+            // Clear the navigation flags
+            localStorage.removeItem("navigatingToLogin");
+            localStorage.removeItem("loginReturnUrl");
+
+            // Navigate back to the reservation page
+            navigate(returnUrl);
+          } else {
+            // Default redirect to customer homepage
+            navigate("/");
+          }
         }
         else if(response.data.userData.role == "restaurant"){
           window.alert("System : Wrong login portal for restaurant. System will redirect you to restaurant portal.")
