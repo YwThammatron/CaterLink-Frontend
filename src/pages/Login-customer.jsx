@@ -37,7 +37,6 @@ function LoginCustomer() {
         Logindata
       );
 
-<<<<<<< HEAD
         if(response.data.userData.role == "customer"){
           //delete old cookie
           document.cookie = "userData=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
@@ -67,45 +66,22 @@ function LoginCustomer() {
           window.alert("System : Wrong login portal for restaurant. System will redirect you to restaurant portal.")
           window.location.href = "./restlogin"
         }
-
-        
-=======
-      //build cookie to keep token alive (1 hour)
-      document.cookie = `accessToken=${response.data.accessToken}; path=/; max-age=3600; secure; samesite=strict`;
-      document.cookie = `userData=${JSON.stringify(
-        response.data.userData
-      )}; path=/; max-age=3600; secure; samesite=strict`;
-
-      // Check if there's a return URL from reservation flow
-      const returnUrl = localStorage.getItem("loginReturnUrl");
-      const isFromReservation = localStorage.getItem("navigatingToLogin");
-
-      if (isFromReservation && returnUrl) {
-        // Clear the navigation flags
-        localStorage.removeItem("navigatingToLogin");
-        localStorage.removeItem("loginReturnUrl");
-
-        // Navigate back to the reservation page
-        navigate(returnUrl);
-      } else {
-        // Default redirect to customer homepage
-        navigate("/");
-      }
-    } catch (error) {
-      if (error.response) {
-        window.alert(
-          `Code ${error.response.status} : ${error.response.data.error}`
-        );
-      } else if (error.request) {
-        window.alert("System : No Response Received : ", error.request);
-      } else {
-        window.alert("System : Internal Server Error.");
-      }
-
-      clearInputs();
->>>>>>> origin/dev
+      
     }
-  };
+    catch(error){
+        if(error.response){
+            window.alert(`Code ${error.response.status} : ${error.response.data.error}`)
+        }
+        else if(error.request){
+            window.alert("System : No Response Received : ",error.request)
+        }
+        else{
+            window.alert("System : Internal Server Error.")
+        }
+
+        clearInputs()
+    }   
+  }
 
   return (
     <>
