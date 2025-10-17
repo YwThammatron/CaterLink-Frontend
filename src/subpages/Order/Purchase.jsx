@@ -3,6 +3,8 @@ import { useState,useEffect } from "react";
 
 import OrderCard from "../../components/ui/OrderCard";
 
+import { Inbox } from "lucide-react";
+
 const allstatus = [
   "pending",
   "waiting for payment",
@@ -184,6 +186,13 @@ function Purchase() {
     <>
       {/* หน้ารายการสั่งซื้อ */}
       <div className="flex flex-col gap-[39px] h-[1210px]">
+        {Orders.length == 0 ? 
+        <div className="grid justify-center items-center h-[120px]">
+            <Inbox className="grid justify-self-center w-[50px] h-[50px] text-[#667085]"/>
+            <p className="grid justify-self-center pb-[20px] text-[#667085]">ไม่มีคำสั่งซื้อในขณะนี้</p>
+        </div> 
+        :
+        <div>
         {Orders.map((content,index) => {
           if(index >= (Purpage-1)*numorder && index < (Purpage)*numorder){
             return (
@@ -212,6 +221,8 @@ function Purchase() {
             )
           }
         })}
+        </div>
+        }
       </div>
 
       {/* Page Navigator */}
