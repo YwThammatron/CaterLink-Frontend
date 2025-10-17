@@ -118,7 +118,7 @@ return (
               </form>
 
               {/* action */}
-              <Button id="nextbtn" onClick={handleNext} className="w-[100%] h-[44px]  text-[16px] rounded-[8px] hover:ฺbg-black cursor-pointer transition">ต่อไป</Button>
+              <Button id="nextbtn" onClick={handleNext} className="w-[100%] h-[44px]  text-[16px] bg-linear-to-r from-[#F78E1E] to-[#E9580A] rounded-[8px] hover:ฺbg-black cursor-pointer transition">ต่อไป</Button>
             </div>
           </div>
     </>

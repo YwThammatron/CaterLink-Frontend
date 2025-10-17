@@ -12,6 +12,9 @@ import RestBank from "../subpages/CreateAccount/RestBank"
 import Complete from "../subpages/CreateAccount/Complete"
 
 function CreateAccount() {
+    const urlparams = new URLSearchParams(window.location.search)
+    const subpage = urlparams.get('subpage')
+
     const [accessToken,setAccessToken] = useState("")
     const [userData,setUserData] =  useState({
         id:"",
@@ -72,7 +75,6 @@ function CreateAccount() {
         const updated = Subpages.map(item => 
             item.label === 'ประเภทร้านค้า' ? {...item,index:true} : item
         )
-        console.log(Subpages)
         setSubpages(updated)
         const pline2 = document.getElementById('pline2')
         pline2.style.backgroundColor = '#EAECF0'
@@ -95,17 +97,31 @@ function CreateAccount() {
 
     const handleSend = async (e) => {
         e.preventDefault()
-        //Create Restaurant
-        const response = await axios.post(baseUrl + "/api/restaurants",Restpayload,{
+        //Create Restaurant (for mocking)
+        const response1 = await axios.post(baseUrl + "/api/restaurants",Restpayload,{
             headers:{
                 Authorization:`Bearer ${accessToken}`
             }
         })
+        
+        //Post Verification form with status approved (for mocking)
+        const response2 = await axios.post(baseUrl + "/api/verification-forms",{
+            restaurant_id: response1.data.id,
+            verification_info: Restpayload.name + " Mock Verification Approved",
+            status: "approved"
+        },{
+            headers:{
+                Authorization: `Bearer ${accessToken}`
+            }
+        })
 
-        setRestid(response.data.id)
+        console.log(response2.data)
+
+        setRestid(response1.data.id)
     }
 
     const handleSendCtgs = async () => {
+        var response
         //Send Category Payloads
         for(let id of Mainspayload){
             response = await axios.post(baseUrl + "/api/restaurant-main-category-maps",{
@@ -125,6 +141,10 @@ function CreateAccount() {
                 food_category_id:id
             })
         }
+
+        //delete cookie
+        document.cookie = "userData=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        document.cookie = "accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 
         setTabindex(Tabindex => Tabindex + 1)
         window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -175,6 +195,15 @@ function CreateAccount() {
 
     useEffect(() => {
         checkCookie()
+        if(subpage == 3){
+            setSubpages([
+                {label: 'ข้อมูลร้านค้า',key: 'RestInfo',index:true},
+                {label: 'ประเภทร้านค้า',key: 'RestType' ,index:true},
+                {label: 'บัญชีธนาคาร',key: 'RestBank' ,index:true},
+                {label: 'ส่งข้อมูลแล้ว',key: 'Complete'}
+            ])
+            setTabindex(subpage)
+        }
     },[])
 
     useEffect(() => {
