@@ -32,12 +32,20 @@ function LoginCustomer() {
     try{
         const response = await axios.post(baseUrl + "/api/auth/signin",Logindata)
 
-        //build cookie to keep token alive (1 hour)
-        document.cookie = `accessToken=${response.data.accessToken}; path=/; max-age=3600; secure; samesite=strict`
-        document.cookie = `userData=${JSON.stringify(response.data.userData)}; path=/; max-age=3600; secure; samesite=strict`
+        if(response.data.userData.role == "customer"){
+          //build cookie to keep token alive (1 hour)
+          document.cookie = `accessToken=${response.data.accessToken}; path=/; max-age=3600; secure; samesite=strict`
+          document.cookie = `userData=${JSON.stringify(response.data.userData)}; path=/; max-age=3600; secure; samesite=strict`
+          
+          //go to customer homepage
+          // window.location.href = "./"
+        }
+        else if(response.data.userData.role == "restaurant"){
+          window.alert("System : Wrong login portal for restaurant. System will redirect you to restaurant portal.")
+          window.location.href = "./restlogin"
+        }
+
         
-        //go to customer homepage
-        // window.location.href = "./"
     }
     catch(error){
         if(error.response){
