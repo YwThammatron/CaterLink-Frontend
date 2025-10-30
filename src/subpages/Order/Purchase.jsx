@@ -126,7 +126,7 @@ function Purchase() {
               }
             })
 
-            window.alert(`System : Order id ${orderid} status updated to \"cancel\"`)
+            window.alert(`System : Order status updated to \"cancel\"`)
             window.location.reload()
           }
           catch(error){
@@ -150,7 +150,7 @@ function Purchase() {
               }
             })
 
-            window.alert(`System : Order id ${orderid} status updated to \"${allstatus[allstatus.indexOf(orderstatus) + 1]}\"`)
+            window.alert(`System : Order status updated to \"${allstatus[allstatus.indexOf(orderstatus) + 1]}\"`)
             window.location.reload()
           }
           catch(error){
