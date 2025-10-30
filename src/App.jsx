@@ -17,6 +17,7 @@ import CommentPage from "./pages/CommentPage";
 import ViewAllBlog from "./pages/ViewAllBlog";
 import BlogDetail from "./pages/BlogDetail";
 import WriteBlog from "./pages/WriteBlog";
+import CustWriteBlog from "./pages/CustWriteBlog";
 import PackageCategory from "./pages/PackageCategory";
 import Cartpage from "./pages/CartPage";
 import Payment from "./pages/Payment";
@@ -53,6 +54,7 @@ function App() {
         <Route path="/allblog" element={<ViewAllBlog />} />
         <Route path="/blog/:id" element={<BlogDetail />} />
         <Route path="/writeblog" element={<WriteBlog />} />
+        <Route path="/custwriteblog" element={<CustWriteBlog />} />
 
         {/* E-commerce pages */}
         <Route path="/packagectg" element={<PackageCategory />} />

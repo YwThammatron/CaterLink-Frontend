@@ -21,15 +21,43 @@ function ViewAllBlog() {
     const loadAllBlogs = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get(`${baseUrl}/api/blogs`, {
+        // Fetch first page to get pagination info
+        const first = await axios.get(`${baseUrl}/api/blogs`, {
           params: {
             page: 1,
             sortBy: "timestamp",
             sortOrder: "desc",
           },
         });
-        setBlogs(response.data.data);
-        setFilteredBlogs(response.data.data); // Initialize filtered blogs
+
+        const firstData = first.data.data || [];
+        const pagination = first.data.pagination;
+
+        // If pagination info present and there are more pages, fetch them
+        if (pagination && pagination.totalPages > 1) {
+          const pages = [];
+          for (let p = 2; p <= pagination.totalPages; p++) pages.push(p);
+
+          // Fetch remaining pages in parallel
+          const remainingResponses = await Promise.all(
+            pages.map((p) =>
+              axios.get(`${baseUrl}/api/blogs`, {
+                params: { page: p, sortBy: "timestamp", sortOrder: "desc" },
+              })
+            )
+          );
+
+          const remainingData = remainingResponses.flatMap(
+            (r) => r.data.data || []
+          );
+          const all = [...firstData, ...remainingData];
+          setBlogs(all);
+          setFilteredBlogs(all);
+        } else {
+          // Single page or no pagination info - use first page data
+          setBlogs(firstData);
+          setFilteredBlogs(firstData);
+        }
       } catch (error) {
         console.error("Error fetching blogs:", error);
       } finally {
@@ -128,7 +156,7 @@ function ViewAllBlog() {
         <div className="flex flex-col gap-4 w-full">
           <h3>
             บทความทั้งหมด
-            {filteredBlogs.length > 0 && ` (${filteredBlogs.length} บทความ)`}
+            {/* {filteredBlogs.length > 0 && ` (${filteredBlogs.length} บทความ)`} */}
           </h3>
 
           {isLoading ? (
