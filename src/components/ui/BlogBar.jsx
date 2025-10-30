@@ -58,7 +58,7 @@ function BlogBar({ onSearch, onAuthorFilter, onCateringFilter }) {
 
     // Navigate based on authentication status
     if (isAuthenticated) {
-      navigate("/writeblog");
+      navigate("/custwriteblog");
     } else {
       navigate("/custlogin");
     }
