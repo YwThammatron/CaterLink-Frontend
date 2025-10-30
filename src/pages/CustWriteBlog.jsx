@@ -302,9 +302,7 @@ function CustWriteBlog() {
                           </p>
                         </div>
                       ) : (
-                        <div className="text-sm">
-                          คลิกเพื่ออัพโหลด หรือ ลากและวางไฟล์
-                        </div>
+                        <div className=" text-gradient">คลิกเพื่ออัพโหลด</div>
                       )}
                     </label>
                   </div>
