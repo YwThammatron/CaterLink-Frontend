@@ -18,7 +18,6 @@ function CreatePackage() {
     
     const [Payload,setPayload] = useState({
         name:"",
-        description:"test",
         category_id:"",
         discount:0,
         start_discount_date:"",
