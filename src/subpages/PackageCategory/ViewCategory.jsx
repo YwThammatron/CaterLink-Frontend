@@ -69,20 +69,21 @@ function ViewCategory({ sendClick }) {
         let startcut = today.indexOf('-')
         let lastcut = today.lastIndexOf('-')
 
-        let year = today.slice(0,startcut)
+        let day = today.slice(0,startcut)
         let month = today.slice(startcut+1,lastcut)
-        let day = today.slice(lastcut+1,date.length)
+        let year = today.slice(lastcut+1,date.length)
 
-        return year + "-" + month + "-" + day
+        return year + "-" + day + "-" + month
     }
 
     const CompareDate = (date1,date2) => {
         //Compare if date1 < date2
         //int year,month,day
-        if(date1 == null){ return true }
+        if(date1 == null && date2 != null){ return true }
+        else if(date1 != null && date2 == null){ return false }
         else{
             let firstdate = [parseInt(date1.slice(0,date1.indexOf('-'))),parseInt(date1.slice(date1.indexOf('-')+1,date1.lastIndexOf('-'))),parseInt(date1.slice(date1.lastIndexOf('-')+1,date1.length))]
-            let seconddate = [parseInt(date2.slice(date2.lastIndexOf('-')+1,date2.length)),parseInt(date2.slice(0,date2.indexOf('-'))),parseInt(date2.slice(date2.indexOf('-')+1,date2.lastIndexOf('-')))]
+            let seconddate = [parseInt(date2.slice(0,date1.indexOf('-'))),parseInt(date2.slice(date1.indexOf('-')+1,date2.lastIndexOf('-'))),parseInt(date2.slice(date2.lastIndexOf('-')+1,date2.length))]
 
             if(firstdate[0] > seconddate[0]){ return false }
             else if(firstdate[0] < seconddate[0]){ return true }
@@ -138,14 +139,13 @@ function ViewCategory({ sendClick }) {
                                                         
                                                     <AccordionContent className="pl-[32px] pb-[16px] flex flex-col gap-[12px]">
                                                         {content.packages.map((data,j) => {
-                                                            console.log(data,CompareDate(data.end_discount_date,FormatDate(new Date())))
                                                             return (
                                                                 <Accordion key={"accordion"+data.name+j} className="w-full" type="single" collapsible>
                                                                     <AccordionItem key={"package"+j} value={data.name}>
                                                                         <AccordionTrigger className="no-underline h-[24px] flex items-center text-[16px] text-[#101828] font-[500] hover:no-underline cursor-pointer">
                                                                             <span className="flex gap-[10px]">
                                                                                 {data.name}
-                                                                                {data.discount == null || CompareDate(data.end_discount_date,FormatDate(new Date())) ? 
+                                                                                {data.discount == null || CompareDate(data.end_discount_date,FormatDate(new Date())) || CompareDate(FormatDate(new Date()),data.start_discount_date) ? 
                                                                                     <div></div>
                                                                                     :
                                                                                     <Badge className="w-auto h-[28px] pl-[12px] pr-[12px] text-[14px] text-[#5925DC] font-[500] border-[1px] border-[#D9D6FE] bg-[#F4F3FF] rounded-[1000px]">ลดราคา {data.discount}%</Badge>
@@ -158,7 +158,7 @@ function ViewCategory({ sendClick }) {
                                                                                 return (
                                                                                     <div key={"packageDetail"+k} className="relative flex">
                                                                                         <p className="absolute left-0 text-[16px] font-[500] text-[#475467]">{subdata.name}</p>
-                                                                                        <p className={`relative ml-auto text-[14px] font-[400] ${data.discount == null || CompareDate(data.end_discount_date,FormatDate(new Date())) ? 'text-[#475467]' : 'text-[#D92D20]'}`}>{data.discount == null || CompareDate(data.end_discount_date,FormatDate(new Date())) ? subdata.price : `${subdata.old_price} -> ${subdata.price}`} บาท/ที่</p>
+                                                                                        <p className={`relative ml-auto text-[14px] font-[400] ${data.discount == null || CompareDate(data.end_discount_date,FormatDate(new Date())) || CompareDate(FormatDate(new Date()),data.start_discount_date) ? 'text-[#475467]' : 'text-[#D92D20]'}`}> {data.discount == null || CompareDate(data.end_discount_date,FormatDate(new Date())) || CompareDate(FormatDate(new Date()),data.start_discount_date) ? subdata.price : `${subdata.old_price} -> ${subdata.price}`} บาท/ที่</p>
                                                                                     </div>
                                                                                 )
                                                                             })}
