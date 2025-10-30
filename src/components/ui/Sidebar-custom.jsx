@@ -92,11 +92,11 @@ function SidebarCustom(){
             </div>
 
             {/* Profile (Frame 154) */}
-            <div className="flex flex-col fixed bottom-[32px] w-[212px] h-auto">
+            <div className="flex flex-col fixed bottom-[32px] w-[16%] h-auto">
                 <div id="logoutdiv" className="flex hidden justify-center w-[100px] h-[50px] ml-[120px] bg-white">
                     <button onClick={handleLogout} className="hover:text-[#F78E1E] cursor-pointer">Logout</button>
                 </div>
-                <div className="flex w-[212px] h-[48px] ml-[14px] mr-[14px] pl-[8px] pr-[8px] gap-[8px] justify-between items-center bottom-[32px] bg-white rounded-[12px] border-[#F2F4F7] border-[1px]">
+                <div className="flex w-[87%] h-[48px] ml-[14px] mr-[14px] pl-[8px] pr-[8px] gap-[8px] justify-between items-center bottom-[32px] bg-white rounded-[12px] border-[#F2F4F7] border-[1px]">
                     <img
                         src={userData.profile_picture == "" ? "https://plus.unsplash.com/premium_photo-1714589991638-235c15633f59?q=80&w=688&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" : userData.profile_picture}
                         alt=""
