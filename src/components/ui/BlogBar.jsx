@@ -36,31 +36,61 @@ function BlogBar({ onSearch, onAuthorFilter, onCateringFilter }) {
   }, [baseUrl]);
 
   const goToWriteBlog = () => {
-    // Check authentication status
+    // Check authentication status (token present)
     let isAuthenticated = false;
-
-    // Check for authentication token in cookies
     if (document.cookie) {
       const parts = document.cookie.split(";").map((part) => part.trim());
       const tokenPart = parts.find((p) => p.startsWith("accessToken="));
-      if (tokenPart) {
-        isAuthenticated = true;
-      }
+      if (tokenPart) isAuthenticated = true;
     }
-
-    // Fallback to localStorage if not found in cookies
     if (!isAuthenticated) {
       const token = localStorage.getItem("accessToken");
-      if (token) {
-        isAuthenticated = true;
+      if (token) isAuthenticated = true;
+    }
+
+    // If not authenticated, redirect to login
+    if (!isAuthenticated) {
+      navigate("/custlogin");
+      return;
+    }
+
+    // Try to read user role from cookies first, then fall back to localStorage
+    let role = null;
+    try {
+      if (document.cookie) {
+        const parts = document.cookie.split(";").map((part) => part.trim());
+        const userPart = parts.find((p) => p.startsWith("userData="));
+        if (userPart) {
+          const raw = userPart.slice("userData=".length);
+          const parsed = JSON.parse(decodeURIComponent(raw));
+          role = parsed?.role || null;
+        }
+      }
+    } catch (err) {
+      console.error("Error parsing userData from cookies:", err);
+      role = null;
+    }
+
+    if (!role) {
+      // fallback to localStorage
+      try {
+        const stored = localStorage.getItem("userData");
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          role = parsed?.role || null;
+        }
+      } catch (err) {
+        console.error("Error parsing userData from localStorage:", err);
+        role = null;
       }
     }
 
-    // Navigate based on authentication status
-    if (isAuthenticated) {
-      navigate("/custwriteblog");
+    // Redirect based on role
+    if (role === "restaurant") {
+      navigate("/writeblog");
     } else {
-      navigate("/custlogin");
+      // default / customer goes to cust write blog
+      navigate("/custwriteblog");
     }
   };
 

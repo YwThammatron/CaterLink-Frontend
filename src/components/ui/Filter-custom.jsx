@@ -356,7 +356,7 @@ function FilterCustom({ onSearchResults, initialFilterStates }) {
             />
             <button
               type="submit"
-              className="bg-gradient rounded-md p-[10px] gap-[10px]"
+              className="bg-gradient rounded-md p-[10px] gap-[10px] cursor-pointer"
               disabled={isSearching}
             >
               {isSearching ? (

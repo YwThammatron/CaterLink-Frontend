@@ -232,33 +232,88 @@ function CustomerHomepage() {
     }
   };
 
-  // Blog filtering handler
-  const handleBlogFilter = (filterType, categoryId = null) => {
+  // Fetch all blog pages from the API (same strategy as ViewAllBlog.jsx)
+  // Returns an array of blog objects. This helper centralizes pagination
+  // logic and makes handleBlogFilter much simpler.
+  const fetchAllBlogs = async () => {
+    setIsLoadingBlogs(true);
+    try {
+      const first = await axios.get(`${baseUrl}/api/blogs`, {
+        params: { page: 1, sortBy: "timestamp", sortOrder: "desc" },
+      });
+
+      const firstData = first.data.data || [];
+      const pagination = first.data.pagination;
+
+      if (pagination && pagination.totalPages > 1) {
+        const pages = [];
+        for (let p = 2; p <= pagination.totalPages; p++) pages.push(p);
+
+        const remainingResponses = await Promise.all(
+          pages.map((p) =>
+            axios.get(`${baseUrl}/api/blogs`, {
+              params: { page: p, sortBy: "timestamp", sortOrder: "desc" },
+            })
+          )
+        );
+
+        const remainingData = remainingResponses.flatMap(
+          (r) => r.data.data || []
+        );
+        return [...firstData, ...remainingData];
+      }
+
+      return firstData;
+    } catch (err) {
+      console.error("Error fetching all blog pages:", err);
+      return [];
+    } finally {
+      setIsLoadingBlogs(false);
+    }
+  };
+
+  // Apply a simple filter to a list of blogs. Returns filtered array (not sliced).
+  const applyFilter = (blogList, filterType, categoryId = null) => {
+    if (!Array.isArray(blogList)) return [];
+
+    if (filterType === "all") return blogList;
+
+    if (filterType === "restaurant")
+      return blogList.filter((b) => b.user?.role === "restaurant");
+
+    if (filterType === "customer")
+      return blogList.filter((b) => b.user?.role === "customer");
+
+    if (categoryId)
+      return blogList.filter((b) => b.restaurant_main_category === categoryId);
+
+    return blogList;
+  };
+
+  // Blog filtering handler (async to allow server fetch). Uses the small
+  // helpers fetchAllBlogs and applyFilter to keep this function readable.
+  const handleBlogFilter = async (filterType, categoryId = null) => {
     setBlogFilter(filterType);
 
-    let filtered = [...blogs];
-
-    switch (filterType) {
-      case "all":
-        filtered = blogs;
-        break;
-      case "restaurant":
-        filtered = blogs.filter((blog) => blog.user?.role === "restaurant");
-        break;
-      case "customer":
-        filtered = blogs.filter((blog) => blog.user?.role === "customer");
-        break;
-      default:
-        // Filter by main category ID
-        if (categoryId) {
-          filtered = blogs.filter(
-            (blog) => blog.restaurant_main_category === categoryId
-          );
-        }
-        break;
+    // Quick path for 'all' to keep homepage light: use the already-loaded small batch
+    if (filterType === "all") {
+      setFilteredBlogs(blogs.slice(0, 5));
+      return;
     }
 
-    setFilteredBlogs(filtered);
+    try {
+      // Fetch every page (like ViewAllBlog.jsx), then apply the requested filter
+      const all = await fetchAllBlogs();
+      const filtered = applyFilter(all, filterType, categoryId);
+
+      // Homepage only shows up to 5 items per filter
+      setFilteredBlogs(filtered.slice(0, 5));
+    } catch (err) {
+      console.error("Error applying homepage blog filter:", err);
+      // Fallback to filtering the small set already loaded
+      const fallback = applyFilter(blogs, filterType, categoryId);
+      setFilteredBlogs(fallback.slice(0, 5));
+    }
   };
 
   // Update filtered blogs when blogs change
@@ -295,19 +350,19 @@ function CustomerHomepage() {
             <img
               src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=384&h=140&fit=crop"
               alt="Thai Restaurant"
-              className="rounded-md"
+              className="rounded-md cursor-pointer"
               onClick={goToRestaurant}
             />
             <img
               src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=384&h=140&fit=crop"
               alt="Chinese Restaurant"
-              className="rounded-md"
+              className="rounded-md cursor-pointer"
               onClick={goToRestaurant}
             />
             <img
               src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=384&h=140&fit=crop"
               alt="Italian Restaurant"
-              className="rounded-md"
+              className="rounded-md cursor-pointer"
               onClick={goToRestaurant}
             />
           </div>
