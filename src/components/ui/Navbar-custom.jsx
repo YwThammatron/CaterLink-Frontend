@@ -1,24 +1,108 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Search } from "lucide-react";
+import { Search, LogOut } from "lucide-react";
 import { ShoppingCart } from "lucide-react";
 import { ChevronDown } from "lucide-react";
 import Logo from "./Logo";
 import { Avatar, AvatarImage, AvatarFallback } from "./avatar";
 import { useNavigate, useLocation } from "react-router-dom";
+import { toast } from "sonner";
 
 function NavbarCustom() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userData, setUserData] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const dropdownRef = useRef(null);
+  const userDropdownRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
+
+  // Check authentication status
+  const checkAuthStatus = () => {
+    // Check for authentication token and user data in cookies
+    if (document.cookie) {
+      const parts = document.cookie.split(";").map((part) => part.trim());
+
+      // Check for access token
+      const tokenPart = parts.find((p) => p.startsWith("accessToken="));
+
+      // Check for user data
+      const userDataPart = parts.find((p) => p.startsWith("userData="));
+
+      if (tokenPart && userDataPart) {
+        try {
+          const userDataValue = userDataPart.slice("userData=".length);
+          const decodedUserData = JSON.parse(decodeURIComponent(userDataValue));
+          setUserData(decodedUserData);
+          setIsLoggedIn(true);
+          return;
+        } catch (error) {
+          console.error("Error parsing user data from cookies:", error);
+        }
+      }
+    }
+
+    // Fallback to localStorage
+    const token = localStorage.getItem("accessToken");
+    const storedUserData = localStorage.getItem("userData");
+
+    if (token && storedUserData) {
+      try {
+        const parsedUserData = JSON.parse(storedUserData);
+        setUserData(parsedUserData);
+        setIsLoggedIn(true);
+      } catch (error) {
+        console.error("Error parsing user data from localStorage:", error);
+        setIsLoggedIn(false);
+        setUserData(null);
+      }
+    } else {
+      setIsLoggedIn(false);
+      setUserData(null);
+    }
+  };
+
+  // Logout function
+  const handleLogout = () => {
+    // Clear cookies
+    document.cookie =
+      "accessToken=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+    document.cookie =
+      "userData=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+
+    // Clear localStorage
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("userData");
+
+    // Update state
+    setIsLoggedIn(false);
+    setUserData(null);
+    setIsUserDropdownOpen(false);
+
+    // Show success message
+    toast.success("ออกจากระบบเรียบร้อยแล้ว");
+
+    // Redirect to home page
+    navigate("/");
+  };
+
+  // Check auth status on component mount and when location changes
+  useEffect(() => {
+    checkAuthStatus();
+  }, [location.pathname]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsDropdownOpen(false);
+      }
+      if (
+        userDropdownRef.current &&
+        !userDropdownRef.current.contains(event.target)
+      ) {
+        setIsUserDropdownOpen(false);
       }
     };
 
@@ -153,27 +237,74 @@ function NavbarCustom() {
 
         <div className="flex gap-2">
           {isLoggedIn ? (
-            // User Avatar Profile - user data should come from props or context
-            <div className="flex items-center gap-2">
-              <Avatar className="w-11 h-11 cursor-pointer hover:ring-2 hover:ring-[#FF8A00] hover:ring-offset-2 transition-all">
-                <AvatarImage src="" alt="User" />
-                <AvatarFallback className="bg-[#FF8A00] text-white font-semibold">
-                  U
-                </AvatarFallback>
-              </Avatar>
+            // User Avatar Profile with dropdown
+            <div className="relative" ref={userDropdownRef}>
+              <div
+                className="flex items-center gap-2 cursor-pointer"
+                onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
+              >
+                <Avatar className="w-11 h-11 hover:ring-2 hover:ring-[#FF8A00] hover:ring-offset-2 transition-all">
+                  <AvatarImage
+                    src={userData?.profile_picture || ""}
+                    alt={userData?.name || "User"}
+                  />
+                  <AvatarFallback className="bg-[#FF8A00] text-white font-semibold">
+                    {userData?.name
+                      ? userData.name.charAt(0).toUpperCase()
+                      : "U"}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="flex items-center gap-1">
+                  <span className="text-[#475467] font-medium">
+                    {userData?.name || "ผู้ใช้"}
+                  </span>
+                  <ChevronDown
+                    className={`text-[#475467] w-4 h-4 transition-transform duration-200 ${
+                      isUserDropdownOpen ? "rotate-180" : ""
+                    }`}
+                  />
+                </div>
+              </div>
+
+              {isUserDropdownOpen && (
+                <div className="absolute top-full right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+                  <div className="py-2">
+                    {/* User Info */}
+                    <div className="px-4 py-2 border-b border-gray-100">
+                      <p className="text-sm font-medium text-[#101828]">
+                        {userData?.name || "ผู้ใช้"}
+                      </p>
+                      <p className="text-xs text-[#667085]">
+                        {userData?.email || ""}
+                      </p>
+                    </div>
+
+                    {/* Menu Items */}
+                    <hr className="my-1" />
+
+                    <button
+                      className="w-full flex items-center gap-2 px-4 py-2 text-left text-red-600 hover:bg-red-50 transition-colors duration-200"
+                      onClick={handleLogout}
+                    >
+                      <LogOut className="w-4 h-4" />
+                      <span>ออกจากระบบ</span>
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           ) : (
             // Login Buttons
             <>
               <button className="py-[10px] px-4">
                 <p
-                  className="text-[#475467] font-semibold cursor-pointer"
+                  className="text-[#475467] font-semibold cursor-pointer hover:text-[#FF8A00] transition-colors duration-200"
                   onClick={goToSignup}
                 >
-                  ลงชื่อเข้าใช้
+                  สมัครสมาชิก
                 </p>
               </button>
-              <button className="p-3 border-none rounded-md bg-gradient">
+              <button className="p-3 border-none rounded-md bg-gradient hover:shadow-lg transition-all duration-200">
                 <p
                   className="text-white font-semibold cursor-pointer"
                   onClick={goToLogin}

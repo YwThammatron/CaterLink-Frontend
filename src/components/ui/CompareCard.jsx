@@ -90,7 +90,9 @@ function CompareCard({ onRemove, restaurantData }) {
   const firstPackageDetail = firstPackage?.package_details?.[0] || null;
 
   const handleViewRestaurant = () => {
-    navigate("/customerreservation");
+    if (restaurantData?.id) {
+      navigate(`/customerreservation/${restaurantData.id}`);
+    }
   };
 
   const handleRemove = () => {

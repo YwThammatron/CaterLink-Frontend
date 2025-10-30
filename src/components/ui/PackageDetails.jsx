@@ -19,6 +19,7 @@ function PackageDetails({
       ? categoryData.packages.flatMap((pkg) =>
           pkg.package_details.map((detail) => ({
             ...detail,
+            // Keep original price values as numbers (don't round here for display accuracy)
             packageInfo: {
               id: pkg.id,
               name: pkg.name,
@@ -31,6 +32,12 @@ function PackageDetails({
       : [];
 
   const handleSelectPackage = () => {
+    // Validate that guest count is filled and greater than 0
+    if (!guestCount || parseInt(guestCount, 10) <= 0) {
+      alert("กรุณาระบุจำนวนท่าน/ที่");
+      return;
+    }
+
     const selected = packageDetails[selectedPackage];
     // Always include the guest count input for all categories
     selected.customGuestCount = guestCount;
@@ -50,10 +57,10 @@ function PackageDetails({
     const numValue = parseInt(value, 10);
 
     // Only allow positive numbers (greater than 0)
-    if (!isNaN(numValue) && numValue >= 0) {
+    if (!isNaN(numValue) && numValue > 0) {
       setGuestCount(numValue.toString());
     }
-    // If negative or invalid, don't update the state (ignore the input)
+    // If zero, negative or invalid, don't update the state (ignore the input)
   };
 
   // Prevent typing invalid characters (minus, plus, e, etc.)
@@ -164,14 +171,16 @@ function PackageDetails({
       {/* Action Buttons with Guest Count Input */}
       <div className="flex gap-3 p-6 border-t border-gray-100 bg-gray-50/50 items-end justify-between">
         <div className="flex flex-col gap-[6px]">
-          <p>จำนวนท่าน/ที่ *</p>
+          <p>
+            จำนวนท่าน/ที่ <span className="text-red-500">*</span>
+          </p>
           <Input
             type="number"
             value={guestCount}
             onChange={handleGuestCountChange}
             onKeyDown={handleKeyDown}
             placeholder="ระบุจำนวน"
-            min="0"
+            min="1"
           />
         </div>
 

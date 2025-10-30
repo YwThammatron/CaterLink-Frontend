@@ -1,6 +1,9 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "../../components/ui/badge";
+
+import { Inbox } from "lucide-react";
 
 import {
   Accordion,
@@ -61,6 +64,43 @@ function ViewCategory({ sendClick }) {
         
     }
 
+    const FormatDate = (date) => {
+        let today = date.toLocaleDateString().replaceAll('/','-')
+        let startcut = today.indexOf('-')
+        let lastcut = today.lastIndexOf('-')
+
+        let year = today.slice(0,startcut)
+        let month = today.slice(startcut+1,lastcut)
+        let day = today.slice(lastcut+1,date.length)
+
+        return year + "-" + month + "-" + day
+    }
+
+    const CompareDate = (date1,date2) => {
+        //Compare if date1 < date2
+        //int year,month,day
+        if(date1 == null){ return true }
+        else{
+            let firstdate = [parseInt(date1.slice(0,date1.indexOf('-'))),parseInt(date1.slice(date1.indexOf('-')+1,date1.lastIndexOf('-'))),parseInt(date1.slice(date1.lastIndexOf('-')+1,date1.length))]
+            let seconddate = [parseInt(date2.slice(date2.lastIndexOf('-')+1,date2.length)),parseInt(date2.slice(0,date2.indexOf('-'))),parseInt(date2.slice(date2.indexOf('-')+1,date2.lastIndexOf('-')))]
+
+            if(firstdate[0] > seconddate[0]){ return false }
+            else if(firstdate[0] < seconddate[0]){ return true }
+            else if(firstdate[0] == seconddate[0]){
+
+                if(firstdate[1] > seconddate[1]){ return false }
+                else if(firstdate[1] < seconddate[1]){ return true }
+                else if(firstdate[1] == seconddate[1]){
+
+                    if(firstdate[2] > seconddate[2]){ return false }
+                    else if(firstdate[2] < seconddate[2]){ return true }
+                    else if(firstdate[2] == seconddate[2]){ return false } // date1 = date2 in this case return false
+                }
+            }
+        }
+        
+    }
+
     useEffect(() => {
         checkCookie()
     },[])
@@ -81,6 +121,12 @@ function ViewCategory({ sendClick }) {
                         <div className="grid justify-center items-center border-[1px] border-[#F2F4F7] rounded-[24px] w-[1104px] bg-white">
                             {/* Content (Package Category) */}
                             <div className="grid w-[1040px] pt-[8px]">
+                                {Packages.length == 0 ? 
+                                <div className="grid justify-center items-center h-[120px]">
+                                    <Inbox className="grid justify-self-center w-[50px] h-[50px] text-[#667085]"/>
+                                    <p className="grid justify-self-center pb-[20px] text-[#667085]">ไม่มีหมวดหมู่แพคเกจในขณะนี้</p>
+                                </div> 
+                                :
                                 <Accordion className="w-full" type="single" collapsible>
                                 {Packages.map((content,i) => {
                                     return (
@@ -92,19 +138,27 @@ function ViewCategory({ sendClick }) {
                                                         
                                                     <AccordionContent className="pl-[32px] pb-[16px] flex flex-col gap-[12px]">
                                                         {content.packages.map((data,j) => {
+                                                            console.log(data,CompareDate(data.end_discount_date,FormatDate(new Date())))
                                                             return (
                                                                 <Accordion key={"accordion"+data.name+j} className="w-full" type="single" collapsible>
                                                                     <AccordionItem key={"package"+j} value={data.name}>
                                                                         <AccordionTrigger className="no-underline h-[24px] flex items-center text-[16px] text-[#101828] font-[500] hover:no-underline cursor-pointer">
-                                                                            <span>{data.name}</span>
+                                                                            <span className="flex gap-[10px]">
+                                                                                {data.name}
+                                                                                {data.discount == null || CompareDate(data.end_discount_date,FormatDate(new Date())) ? 
+                                                                                    <div></div>
+                                                                                    :
+                                                                                    <Badge className="w-auto h-[28px] pl-[12px] pr-[12px] text-[14px] text-[#5925DC] font-[500] border-[1px] border-[#D9D6FE] bg-[#F4F3FF] rounded-[1000px]">ลดราคา {data.discount}%</Badge>
+                                                                                }
+                                                                            </span>
                                                                         </AccordionTrigger>
 
                                                                         <AccordionContent className="pt-[16px] pl-[32px] pb-[16px] flex flex-col gap-[12px]">
                                                                             {data.package_details.map((subdata,k) => {
                                                                                 return (
-                                                                                    <div key={"packageDetail"+k} className="relative flex text-[#475467]">
-                                                                                        <p className="absolute left-0 text-[16px] font-[500]">{subdata.name}</p>
-                                                                                        <p className="relative ml-auto text-[14px] font-[400]">{subdata.price} บาท/ที่</p>
+                                                                                    <div key={"packageDetail"+k} className="relative flex">
+                                                                                        <p className="absolute left-0 text-[16px] font-[500] text-[#475467]">{subdata.name}</p>
+                                                                                        <p className={`relative ml-auto text-[14px] font-[400] ${data.discount == null || CompareDate(data.end_discount_date,FormatDate(new Date())) ? 'text-[#475467]' : 'text-[#D92D20]'}`}>{data.discount == null || CompareDate(data.end_discount_date,FormatDate(new Date())) ? subdata.price : `${subdata.old_price} -> ${subdata.price}`} บาท/ที่</p>
                                                                                     </div>
                                                                                 )
                                                                             })}
@@ -118,6 +172,7 @@ function ViewCategory({ sendClick }) {
                                     )
                                 })}
                                 </Accordion>
+                                }
                             </div>
                         </div>
                         
@@ -130,7 +185,7 @@ function ViewCategory({ sendClick }) {
 
                                 onClick={sendClick}
                                 >
-                                    สร้างหมวดหมู่แพคเกจ
+                                    จัดการหมวดหมู่แพคเกจ
                                 </Button>
                             </div>
                         </div>

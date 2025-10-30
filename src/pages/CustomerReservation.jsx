@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import axios from "axios";
 
 // UI Components
@@ -26,6 +26,7 @@ function CustomerReservation() {
   const baseUrl = import.meta.env.VITE_BASE_URL || "http://localhost:8000";
   const { id } = useParams();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   // Modal states
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -42,6 +43,7 @@ function CustomerReservation() {
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingPackages, setIsLoadingPackages] = useState(false);
   const [error, setError] = useState(null);
+  const [hasCheckedSavedState, setHasCheckedSavedState] = useState(false);
 
   // Filter state
   const [selectedFilterCategory, setSelectedFilterCategory] =
@@ -102,6 +104,123 @@ function CustomerReservation() {
 
     fetchPackageCategories();
   }, [id, baseUrl]);
+
+  // Check for saved reservation state after successful login
+  useEffect(() => {
+    const checkForSavedReservation = () => {
+      try {
+        // First, check for URL parameter (backup method)
+        const packageIdFromUrl = searchParams.get("packageId");
+
+        // Then check localStorage
+        const savedState = localStorage.getItem("pendingReservation");
+
+        if ((savedState || packageIdFromUrl) && packageCategories.length > 0) {
+          let actualPackageData = null;
+          let categoryData = null;
+
+          // If we have localStorage data, prioritize it
+          if (savedState) {
+            const state = JSON.parse(savedState);
+
+            // Check if the saved state is for this restaurant and not too old (24 hours)
+            const isStateValid =
+              state.timestamp &&
+              Date.now() - state.timestamp < 24 * 60 * 60 * 1000;
+
+            if (
+              isStateValid &&
+              state.restaurantId === id &&
+              state.selectedPackage
+            ) {
+              const savedPackage = state.selectedPackage;
+
+              // Try to find the actual package data from current packageCategories
+              for (const category of packageCategories) {
+                const foundPackage = category.packages.find(
+                  (pkg) =>
+                    pkg.id === savedPackage.id ||
+                    (savedPackage.packageInfo &&
+                      pkg.id === savedPackage.packageInfo.id)
+                );
+
+                if (foundPackage) {
+                  // Reconstruct the package data with current structure
+                  actualPackageData = {
+                    ...savedPackage,
+                    packageInfo: foundPackage,
+                    // Preserve any custom data like guest count
+                    customGuestCount:
+                      savedPackage.customGuestCount || savedPackage.guests,
+                  };
+                  categoryData = category;
+                  break;
+                }
+              }
+            }
+          }
+
+          // If localStorage didn't work, try URL parameter
+          if (!actualPackageData && packageIdFromUrl) {
+            for (const category of packageCategories) {
+              const foundPackage = category.packages.find(
+                (pkg) => pkg.id === packageIdFromUrl
+              );
+
+              if (foundPackage) {
+                // Create basic package data structure
+                actualPackageData = {
+                  id: foundPackage.id,
+                  packageInfo: foundPackage,
+                  name: foundPackage.name,
+                  price: foundPackage.price,
+                  description: foundPackage.description,
+                  // Default guest count
+                  customGuestCount: foundPackage.min_guests || 1,
+                };
+                categoryData = category;
+                break;
+              }
+            }
+
+            // Clear the URL parameter
+            if (actualPackageData) {
+              window.history.replaceState({}, "", `/customerreservation/${id}`);
+            }
+          }
+
+          // If we found the package, open the reservation modal directly
+          if (actualPackageData && actualPackageData.id) {
+            // Use setTimeout to ensure the modal opens after component is fully rendered
+            setTimeout(() => {
+              setSelectedPackageData(actualPackageData);
+              setSelectedCategory(categoryData?.name);
+              setSelectedCategoryData(categoryData);
+              setModalStep("reservation");
+              setIsModalOpen(true);
+            }, 300);
+          } else {
+            console.warn(
+              "Could not find matching package for saved reservation state"
+            );
+            localStorage.removeItem("pendingReservation");
+          }
+        } else {
+          // No saved state to restore
+          localStorage.removeItem("pendingReservation");
+        }
+      } catch (error) {
+        console.error("Error checking for saved reservation:", error);
+        localStorage.removeItem("pendingReservation");
+      }
+    };
+
+    // Only check after packages are loaded and if modal is not already open
+    if (packageCategories.length > 0 && !isModalOpen && !hasCheckedSavedState) {
+      setHasCheckedSavedState(true);
+      checkForSavedReservation();
+    }
+  }, [packageCategories, id, isModalOpen, hasCheckedSavedState, searchParams]);
 
   const openModal = (categoryName = "Buffet") => {
     // Find the category data from packageCategories
@@ -425,12 +544,6 @@ function CustomerReservation() {
               {category.name}
             </Button>
           ))}
-          <Button
-            variant="outline"
-            className="py-1 px-4 rounded-sm border-[#EAECF0] text-[#344054]"
-          >
-            ค้นหาแพคเกจ
-          </Button>
         </div>
 
         {isLoadingPackages ? (

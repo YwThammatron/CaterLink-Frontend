@@ -30,14 +30,53 @@ function LoginRestaurant() {
   const handleLogin = async () => {
     //when click Login
     try{
-        const response = await axios.post(baseUrl + "/api/auth/signin",Logindata)
+        const response1 = await axios.post(baseUrl + "/api/auth/signin",Logindata)
+        
+        const response2 = await axios.get(baseUrl + "/api/verification-forms")
 
-        //build cookie to keep token alive (1 hour)
-        document.cookie = `accessToken=${response.data.accessToken}; path=/; max-age=3600; secure; samesite=strict`
-        document.cookie = `userData=${JSON.stringify(response.data.userData)}; path=/; max-age=3600; secure; samesite=strict`
+        console.log(response1.data,response2.data)
+        
+        //check verification form if status is approved to login
+        if(response1.data.userData.role == "restaurant"){
+          for(let form of response2.data){
+            if(response1.data.userData.id == form.user_id){
+              if(form.status == "approved"){
+                //delete old cookie
+                document.cookie = "userData=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                document.cookie = "accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 
-        //go to restaurant setting page
-        window.location.href = "./setting"
+                //build cookie to keep token alive (1 hour)
+                document.cookie = `accessToken=${response1.data.accessToken}; path=/; max-age=3600; secure; samesite=strict`
+                document.cookie = `userData=${JSON.stringify(response1.data.userData)}; path=/; max-age=3600; secure; samesite=strict`
+
+                //go to restaurant setting page
+                window.location.href = "./setting"
+                return
+              }
+              else if(form.status == "rejected"){
+                window.alert("System : Your restaurant is not verified.")
+                window.location.reload()
+                return
+              }
+              else if(form.status == "pending"){
+                //go to create account complete subpage
+                window.location.href = "./createaccount?subpage=3"
+                return
+              }
+            }
+          }
+
+          //if not find in verification form (mocking)
+          window.alert("System : Cannot find your restaurant verification form.")
+          clearInputs()
+        }
+        else if(response1.data.userData.role == "customer"){
+          window.alert("System : Wrong login portal for customer. System will redirect you to customer portal.")
+          window.location.href = "./custlogin"
+        }
+        
+
+        
     }
     catch(error){
         if(error.response){
@@ -60,6 +99,7 @@ function LoginRestaurant() {
     response = await axios.get(baseUrl + "/api/restaurants")
     console.log(response.data)
   }
+
 
   useEffect(() => {
       getAny()
