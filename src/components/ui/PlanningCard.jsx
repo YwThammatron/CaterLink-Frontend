@@ -424,6 +424,9 @@ const PlanningCard = forwardRef(function PlanningCard({ id, onRemove }, ref) {
                         <div className="flex gap-5">
                           <div className="flex gap-1 justify-center items-center">
                             <Star
+                              Super
+                              Delight
+                              Meal
                               size={20}
                               className="text-yellow-400 fill-current"
                             />
