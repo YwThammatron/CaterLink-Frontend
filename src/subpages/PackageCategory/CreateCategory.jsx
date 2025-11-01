@@ -74,7 +74,7 @@ function CreateCategory({ cancelClick }) {
         if(Packagectgid != "" && isconfirm){
             try{
                 const response = await axios.delete(baseUrl + "/api/package-categories/" + Packagectgid)
-                window.alert(`System : Package category id ${Packagectgid} deleted.`)
+                window.alert(`System : Package category deleted.`)
                 window.location.reload()
             }
             catch(error){
