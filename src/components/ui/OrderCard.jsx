@@ -17,7 +17,7 @@ function OrderCard(props) {
   }
 
   return (
-    <div className="relative w-[1072px] h-auto min-h-[377px]">
+    <div className="relative w-[1072px] h-auto min-h-[377px] max-h-[400px]">
         <div className="absolute flex flex-col w-[1072px] h-auto min-h-[377px] border-[1px] border-[#D0D5DD] bg-white rounded-[8px]">
             {/* Content Upside */}
             <div className="flex h-[49px] items-center">
