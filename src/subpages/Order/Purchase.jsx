@@ -185,7 +185,7 @@ function Purchase() {
   return (
     <>
       {/* หน้ารายการสั่งซื้อ */}
-      <div className="flex flex-col h-[1210px]">
+      <div className="flex flex-col h-[1300px]">
         {Orders.length == 0 ? 
         <div className="grid justify-center items-center h-[120px]">
             <Inbox className="grid justify-self-center w-[50px] h-[50px] text-[#667085]"/>
