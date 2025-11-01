@@ -2,34 +2,58 @@ import { Star, BadgeCheck, HandPlatter, Heart } from "lucide-react";
 import { Badge } from "./badge";
 import { Button } from "./button";
 import { Input } from "./input";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 function PackageDetails({
   onClose,
   onShowReservation,
   category,
   categoryData,
+  preselectPackageId = null,
 }) {
-  const [selectedPackage, setSelectedPackage] = useState(0);
+  // selectedPackageIdx: which package in the category is selected
+  // selectedDetailIdx: which package_detail inside the selected package is selected
+  const [selectedPackageIdx, setSelectedPackageIdx] = useState(0);
+  const [selectedDetailIdx, setSelectedDetailIdx] = useState(0);
   const [guestCount, setGuestCount] = useState("");
 
-  // Get package details from the categoryData
-  const packageDetails =
-    categoryData?.packages?.length > 0
-      ? categoryData.packages.flatMap((pkg) =>
-          pkg.package_details.map((detail) => ({
-            ...detail,
-            // Keep original price values as numbers (don't round here for display accuracy)
-            packageInfo: {
-              id: pkg.id,
-              name: pkg.name,
-              description: pkg.description,
-              discount: pkg.discount,
-              package_images: pkg.package_images,
-            },
-          }))
-        )
-      : [];
+  // Reset selection when category data changes
+  useEffect(() => {
+    setSelectedPackageIdx(0);
+    setSelectedDetailIdx(0);
+    setGuestCount("");
+
+    // If a preselectPackageId is provided, try to find its index and preselect it
+    if (preselectPackageId && categoryData?.packages) {
+      const idx = categoryData.packages.findIndex(
+        (p) => p.id === preselectPackageId
+      );
+      if (idx !== -1) {
+        setSelectedPackageIdx(idx);
+        setSelectedDetailIdx(0);
+      }
+    }
+    // reset refs for new category
+    packageRefs.current = [];
+  }, [categoryData, preselectPackageId]);
+
+  // Refs to package containers so we can scroll to them when selected
+  const packageRefs = useRef([]);
+
+  // Scroll the selected package into view when selection changes
+  useEffect(() => {
+    const el = packageRefs.current[selectedPackageIdx];
+    if (el && typeof el.scrollIntoView === "function") {
+      // Use smooth behavior for a sliding effect
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }, [selectedPackageIdx]);
+
+  // Current selected package from the category
+  const currentPackage = categoryData?.packages?.[selectedPackageIdx] || null;
+
+  // Package details correspond only to the currently selected package
+  const packageDetails = currentPackage?.package_details || [];
 
   const handleSelectPackage = () => {
     // Validate that guest count is filled and greater than 0
@@ -38,8 +62,21 @@ function PackageDetails({
       return;
     }
 
-    const selected = packageDetails[selectedPackage];
-    // Always include the guest count input for all categories
+    const selected = packageDetails[selectedDetailIdx];
+    if (!selected) {
+      alert("กรุณาเลือกตัวเลือกแพคเกจ");
+      return;
+    }
+
+    // Attach package info for the selected package
+    selected.packageInfo = {
+      id: currentPackage?.id,
+      name: currentPackage?.name,
+      discount: currentPackage?.discount,
+      package_images: currentPackage?.package_images,
+    };
+
+    // Include the guest count
     selected.customGuestCount = guestCount;
     onShowReservation(selected);
   };
@@ -94,7 +131,8 @@ function PackageDetails({
 
   const PackageOption = ({ option, index, isSelected, onSelect }) => {
     // Check if this is API data (has packageInfo) or fallback data
-    const isApiData = option.packageInfo !== undefined;
+    const isApiData =
+      option.packageInfo !== undefined || option.price !== undefined;
 
     return (
       <div
@@ -156,15 +194,96 @@ function PackageDetails({
       </div>
 
       {/* Package Options */}
-      <div className="flex flex-col gap-4 p-6">
-        {packageDetails.map((option, index) => (
-          <PackageOption
-            key={index}
-            option={option}
-            index={index}
-            isSelected={selectedPackage === index}
-            onSelect={setSelectedPackage}
-          />
+      {/* Package list: each package with its own package_details (hierarchical) */}
+      <div className="flex flex-col gap-4 p-6 max-h-[60vh] overflow-y-auto">
+        {(categoryData?.packages || []).map((pkg, pkgIdx) => (
+          <div
+            key={pkg.id}
+            ref={(el) => (packageRefs.current[pkgIdx] = el)}
+            className="border rounded-lg p-4"
+          >
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-3">
+                {pkg.package_images && pkg.package_images[0] ? (
+                  <img
+                    src={pkg.package_images[0].url}
+                    alt={pkg.name}
+                    className="w-16 h-12 object-cover rounded"
+                  />
+                ) : (
+                  <div className="w-16 h-12 bg-gray-100 rounded" />
+                )}
+                <div>
+                  <p className="font-semibold text-[#101828]">{pkg.name}</p>
+                  {pkg.discount ? (
+                    <p className="text-sm text-[#FF8A00]">ลด {pkg.discount}%</p>
+                  ) : null}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-3">
+              {(pkg.package_details || []).map((detail, detailIdx) => {
+                const isSelected =
+                  selectedPackageIdx === pkgIdx &&
+                  selectedDetailIdx === detailIdx;
+                return (
+                  <div
+                    key={detail.id}
+                    className={`flex gap-3 border-2 rounded-xl p-4 cursor-pointer transition-all duration-200 ${
+                      isSelected
+                        ? "border-[#FF8A00] bg-[#FF8A00]/5 shadow-lg shadow-[#FF8A00]/20"
+                        : "border-gray-200 bg-white hover:border-[#FF8A00]/50 hover:bg-[#FF8A00]/5"
+                    }`}
+                    onClick={() => {
+                      setSelectedPackageIdx(pkgIdx);
+                      setSelectedDetailIdx(detailIdx);
+                    }}
+                  >
+                    <div className="flex items-start pt-1">
+                      <input
+                        type="radio"
+                        name={`package-detail-${pkg.id}`}
+                        checked={isSelected}
+                        onChange={() => {
+                          setSelectedPackageIdx(pkgIdx);
+                          setSelectedDetailIdx(detailIdx);
+                        }}
+                        className="w-5 h-5 text-[#FF8A00] border-gray-300 focus:ring-[#FF8A00] focus:ring-2"
+                      />
+                    </div>
+
+                    <div className="flex flex-col flex-1 min-w-0">
+                      <div className="flex justify-between items-center mb-2">
+                        <p className="font-medium text-[#344054]">
+                          {detail.name}
+                        </p>
+                        <div className="flex flex-col items-end">
+                          {detail.has_discount && detail.old_price ? (
+                            <>
+                              <p className="font-bold text-gradient text-lg">
+                                {detail.price} บาท
+                              </p>
+                              <p className="text-sm text-gray-500 line-through">
+                                {detail.old_price} บาท
+                              </p>
+                            </>
+                          ) : (
+                            <p className="font-bold text-gradient text-lg">
+                              {detail.price} บาท
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                      <p className="text-[#475467] text-sm leading-relaxed">
+                        {detail.description}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         ))}
       </div>
 

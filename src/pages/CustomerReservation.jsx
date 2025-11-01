@@ -34,6 +34,7 @@ function CustomerReservation() {
   const [selectedPackageData, setSelectedPackageData] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedCategoryData, setSelectedCategoryData] = useState(null);
+  const [preselectPackageId, setPreselectPackageId] = useState(null);
 
   // Data states
   const [restaurantData, setRestaurantData] = useState(null);
@@ -222,7 +223,7 @@ function CustomerReservation() {
     }
   }, [packageCategories, id, isModalOpen, hasCheckedSavedState, searchParams]);
 
-  const openModal = (categoryName = "Buffet") => {
+  const openModal = (categoryName = "Buffet", preselectPackageId = null) => {
     // Find the category data from packageCategories
     const categoryData = packageCategories.find(
       (cat) => cat.name === categoryName
@@ -230,7 +231,14 @@ function CustomerReservation() {
     setSelectedCategory(categoryName);
     setSelectedCategoryData(categoryData);
     setModalStep("package");
+    // store preselected package id via selectedCategoryData (passed to modal as prop)
     setIsModalOpen(true);
+    // pass preselectedPackageId when rendering PackageDetails below
+    // we will pass it as part of selectedCategoryData through state (not necessary)
+    // Instead, pass preselectPackageId directly when rendering the modal
+    // (handled via modal render props)
+    // We temporarily store it in a ref-like variable by setting a small piece of state
+    setPreselectPackageId(preselectPackageId);
   };
 
   const closeModal = () => {
@@ -501,7 +509,7 @@ function CustomerReservation() {
                         package_details: pkg.package_details,
                         package_images: pkg.package_images || [], // Include package images
                       }}
-                      onClick={() => openModal(pkg.categoryName)}
+                      onClick={() => openModal(pkg.categoryName, pkg.id)}
                     />
                   ))}
             {!isLoadingPackages && getPackagesWithDiscounts().length === 0 && (
@@ -579,7 +587,7 @@ function CustomerReservation() {
                       package_details: pkg.package_details,
                       package_images: pkg.package_images || [], // Include package images
                     }}
-                    onClick={() => openModal(category.name)}
+                    onClick={() => openModal(category.name, pkg.id)}
                   />
                 ))}
                 {category.packages.length === 0 && (
@@ -611,6 +619,7 @@ function CustomerReservation() {
             onShowReservation={showReservationDetails}
             category={selectedCategory}
             categoryData={selectedCategoryData}
+            preselectPackageId={preselectPackageId}
           />
         ) : (
           <ReservationDetails
