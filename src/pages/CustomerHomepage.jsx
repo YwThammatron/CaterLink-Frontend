@@ -348,21 +348,21 @@ function CustomerHomepage() {
           <h3>หมวดหมู่ร้านจัดเลี้ยง</h3>
           <div className="flex gap-4">
             <img
-              src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=384&h=140&fit=crop"
+              src="https://www.laoteng.co.th/wp-content/uploads/blog3.jpg"
               alt="Thai Restaurant"
-              className="rounded-md cursor-pointer"
+              className="rounded-md cursor-pointer w-[384px] h-[140px] object-cover"
               onClick={goToRestaurant}
             />
             <img
-              src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=384&h=140&fit=crop"
+              src="https://image.makewebeasy.net/makeweb/0/9TUKlNE0T/Blog/boxacatering_foodstall%E0%B8%84%E0%B8%B7%E0%B8%AD%E0%B8%AD%E0%B8%B0%E0%B9%84%E0%B8%A3_%E0%B9%80%E0%B8%A1%E0%B8%99%E0%B8%B9%E0%B8%A2%E0%B8%AD%E0%B8%94%E0%B8%99%E0%B8%B4%E0%B8%A2%E0%B8%A1.jpg"
               alt="Chinese Restaurant"
-              className="rounded-md cursor-pointer"
+              className="rounded-md cursor-pointer w-[384px] h-[140px] object-cover"
               onClick={goToRestaurant}
             />
             <img
-              src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=384&h=140&fit=crop"
+              src="https://delibites.com/wp-content/uploads/2023/04/featured_picture_delibites_socialmedia.jpg"
               alt="Italian Restaurant"
-              className="rounded-md cursor-pointer"
+              className="rounded-md cursor-pointer w-[384px] h-[140px] object-cover"
               onClick={goToRestaurant}
             />
           </div>
@@ -374,9 +374,9 @@ function CustomerHomepage() {
         <div className="flex gap-4 py-10 max-w-[1184px]">
           <div className="flex gap-10">
             <img
-              src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=336&h=288&fit=crop"
+              src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiD60tZ3P-4bagJY-vL-1we8JiXfh6NQCUf2lDRTx81ou1gdkDZgbM5xin0089Pfemdy47q3eKr5xq3beTrNJJqpDbuJ1sLpp1kkh5fPoNzOiJumqyBz3YdzGJj7iYg58Q2VEIvfCcC-lk/s1600/201508281922.jpg"
               alt="Italian Restaurant"
-              className="rounded-md"
+              className="rounded-md w-[336px] h-[288px] object-cover"
             />
             <div className="flex flex-col gap-16 items-stretch justify-center">
               <div className="flex flex-col gap-4">
@@ -499,9 +499,9 @@ function CustomerHomepage() {
         <div className="flex gap-4 py-10 max-w-[1184px]">
           <div className="flex flex-row-reverse gap-10">
             <img
-              src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=336&h=288&fit=crop"
+              src="https://cdn-icons-png.flaticon.com/512/3526/3526556.png"
               alt="Italian Restaurant"
-              className="rounded-md"
+              className="rounded-md w-[336px] h-[288px] object-cover"
             />
             <div className="flex flex-col gap-16 items-stretch justify-center">
               <div className="flex flex-col gap-4">
