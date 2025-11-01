@@ -365,18 +365,8 @@ function WriteBlog() {
 
             {/* Action */}
             <div className="flex items-center gap-[100px] w-[1104px] h-[48px]">
-              {/* Left */}
-              <div className="flex gap-[12px]">
-                <Button
-                  className="w-[100px] h-[44px] rounded-[8px] text-[#F78E1E] text-[16px] bg-transparent border-[1px] border-[#F78E1E] hover:bg-transparent cursor-pointer transition"
-                  onClick={() => (window.location.href = "./allblog")}
-                >
-                  ดูบทความ
-                </Button>
-              </div>
-
               {/* Right */}
-              <div className="flex gap-[12px] ml-[685px]">
+              <div className="flex gap-[12px] ml-[882px]">
                 <Button
                   className="w-[80px] h-[44px] rounded-[8px] text-[#344054] text-[16px] bg-white border-[1px] border-[#D0D5DD] hover:bg-transparent cursor-pointer transition"
                   onClick={() => window.location.reload()}
