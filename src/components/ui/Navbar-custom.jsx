@@ -1,23 +1,108 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Search } from "lucide-react";
+import { Search, LogOut } from "lucide-react";
 import { ShoppingCart } from "lucide-react";
 import { ChevronDown } from "lucide-react";
 import Logo from "./Logo";
 import { Avatar, AvatarImage, AvatarFallback } from "./avatar";
 import { useNavigate, useLocation } from "react-router-dom";
+import { toast } from "sonner";
 
 function NavbarCustom() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userData, setUserData] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const dropdownRef = useRef(null);
+  const userDropdownRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
+
+  // Check authentication status
+  const checkAuthStatus = () => {
+    // Check for authentication token and user data in cookies
+    if (document.cookie) {
+      const parts = document.cookie.split(";").map((part) => part.trim());
+
+      // Check for access token
+      const tokenPart = parts.find((p) => p.startsWith("accessToken="));
+
+      // Check for user data
+      const userDataPart = parts.find((p) => p.startsWith("userData="));
+
+      if (tokenPart && userDataPart) {
+        try {
+          const userDataValue = userDataPart.slice("userData=".length);
+          const decodedUserData = JSON.parse(decodeURIComponent(userDataValue));
+          setUserData(decodedUserData);
+          setIsLoggedIn(true);
+          return;
+        } catch (error) {
+          console.error("Error parsing user data from cookies:", error);
+        }
+      }
+    }
+
+    // Fallback to localStorage
+    const token = localStorage.getItem("accessToken");
+    const storedUserData = localStorage.getItem("userData");
+
+    if (token && storedUserData) {
+      try {
+        const parsedUserData = JSON.parse(storedUserData);
+        setUserData(parsedUserData);
+        setIsLoggedIn(true);
+      } catch (error) {
+        console.error("Error parsing user data from localStorage:", error);
+        setIsLoggedIn(false);
+        setUserData(null);
+      }
+    } else {
+      setIsLoggedIn(false);
+      setUserData(null);
+    }
+  };
+
+  // Logout function
+  const handleLogout = () => {
+    // Clear cookies
+    document.cookie =
+      "accessToken=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+    document.cookie =
+      "userData=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+
+    // Clear localStorage
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("userData");
+
+    // Update state
+    setIsLoggedIn(false);
+    setUserData(null);
+    setIsUserDropdownOpen(false);
+
+    // Show success message
+    toast.success("ออกจากระบบเรียบร้อยแล้ว");
+
+    // Redirect to home page
+    navigate("/");
+  };
+
+  // Check auth status on component mount and when location changes
+  useEffect(() => {
+    checkAuthStatus();
+  }, [location.pathname]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsDropdownOpen(false);
+      }
+      if (
+        userDropdownRef.current &&
+        !userDropdownRef.current.contains(event.target)
+      ) {
+        setIsUserDropdownOpen(false);
       }
     };
 
@@ -26,13 +111,6 @@ function NavbarCustom() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-
-  // Mock user data - replace with actual user data from your auth system
-  const user = {
-    name: "John Doe",
-    email: "john@example.com",
-    avatar: "https://github.com/shadcn.png",
-  };
 
   // Function to check if current path matches the route
   const isActive = (path) => {
@@ -73,11 +151,37 @@ function NavbarCustom() {
   };
 
   const goToSignup = () => {
-    navigate("/signup");
+    navigate("/custsignup");
   };
 
   const goToLogin = () => {
-    navigate("/login");
+    navigate("/custlogin");
+  };
+
+  // Handle search input change
+  const handleSearchInputChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  // Handle search submit (Enter key or search button click)
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      // Navigate to restaurant page with search query
+      navigate("/customerrestaurant", {
+        state: {
+          initialFilterStates: {
+            searchQuery: searchQuery.trim(),
+            selectedMainCategoryId: "",
+            selectedFoodCategoryId: "",
+            selectedEventCategoryId: "",
+            selectedEventTypeLabel: "ประเภทจัดเลี้ยง",
+            selectedCateringTypeLabel: "ประเภทงานอีเวนต์",
+            selectedCuisineLabel: "ประเภทอาหาร",
+          },
+        },
+      });
+    }
   };
 
   return (
@@ -93,25 +197,34 @@ function NavbarCustom() {
 
         <div className="flex gap-6">
           <div className="flex rounded-md border relative">
-            <input
-              type="text"
-              placeholder="ค้นหาร้านจัดเลี้ยง"
-              className="h-auto w-[647px] px-4 py-[10px] rounded-l-md gap-[10px] font-semibold"
-            />
-            <button className="bg-gradient rounded-md p-[10px] gap-[10px]">
-              <Search className="text-white" />
-            </button>
+            <form onSubmit={handleSearchSubmit} className="flex w-full">
+              <input
+                type="text"
+                placeholder="ค้นหาร้านจัดเลี้ยง"
+                className="h-auto w-[647px] px-4 py-[10px] rounded-l-md gap-[10px] font-semibold"
+                value={searchQuery}
+                onChange={handleSearchInputChange}
+              />
+              <button
+                type="submit"
+                className="bg-gradient rounded-md p-[10px] gap-[10px] cursor-pointer"
+              >
+                <Search className="text-white" />
+              </button>
+            </form>
           </div>
 
-          <button className="p-2 border-2 rounded-md border-[#FF8A00]">
+          <button
+            className="p-2 border-2 rounded-md border-[#FF8A00] cursor-pointer"
+            onClick={goToCart}
+          >
             <svg
               width="20px"
               height="20px"
               viewBox="0 0 24 24"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
-              className="text-[#E9580A] cursor-pointer"
-              onClick={goToCart}
+              className="text-[#E9580A]"
             >
               <path
                 d="M6.50014 17H17.3294C18.2793 17 18.7543 17 19.1414 16.8284C19.4827 16.6771 19.7748 16.4333 19.9847 16.1246C20.2228 15.7744 20.3078 15.3071 20.4777 14.3724L21.8285 6.94311C21.8874 6.61918 21.9169 6.45721 21.8714 6.33074C21.8315 6.21979 21.7536 6.12651 21.6516 6.06739C21.5353 6 21.3707 6 21.0414 6H5.00014M2 2H3.3164C3.55909 2 3.68044 2 3.77858 2.04433C3.86507 2.0834 3.93867 2.14628 3.99075 2.22563C4.04984 2.31565 4.06876 2.43551 4.10662 2.67523L6.89338 20.3248C6.93124 20.5645 6.95016 20.6843 7.00925 20.7744C7.06133 20.8537 7.13493 20.9166 7.22142 20.9557C7.31956 21 7.44091 21 7.6836 21H19"
@@ -126,40 +239,74 @@ function NavbarCustom() {
 
         <div className="flex gap-2">
           {isLoggedIn ? (
-            // User Avatar Profile
-            <div className="flex items-center gap-2">
-              <Avatar className="w-11 h-11 cursor-pointer hover:ring-2 hover:ring-[#FF8A00] hover:ring-offset-2 transition-all">
-                <AvatarImage src={user.avatar} alt={user.name} />
-                <AvatarFallback className="bg-[#FF8A00] text-white font-semibold">
-                  {user.name
-                    .split(" ")
-                    .map((n) => n[0])
-                    .join("")}
-                </AvatarFallback>
-              </Avatar>
-              {/* Test button to logout - remove in production */}
-              <button
-                onClick={() => setIsLoggedIn(false)}
-                className="text-xs text-gray-500 hover:text-gray-700"
+            // User Avatar Profile with dropdown
+            <div className="relative" ref={userDropdownRef}>
+              <div
+                className="flex items-center gap-2 cursor-pointer"
+                onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
               >
-                Logout
-              </button>
+                <Avatar className="w-11 h-11 hover:ring-2 hover:ring-[#FF8A00] hover:ring-offset-2 transition-all">
+                  <AvatarImage
+                    src={userData?.profile_picture || ""}
+                    alt={userData?.name || "User"}
+                  />
+                  <AvatarFallback className="bg-[#FF8A00] text-white font-semibold">
+                    {userData?.name
+                      ? userData.name.charAt(0).toUpperCase()
+                      : "U"}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="flex items-center gap-1">
+                  <span className="text-[#475467] font-medium">
+                    {userData?.name || "ผู้ใช้"}
+                  </span>
+                  <ChevronDown
+                    className={`text-[#475467] w-4 h-4 transition-transform duration-200 ${
+                      isUserDropdownOpen ? "rotate-180" : ""
+                    }`}
+                  />
+                </div>
+              </div>
+
+              {isUserDropdownOpen && (
+                <div className="absolute top-full right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+                  <div className="py-2">
+                    {/* User Info */}
+                    <div className="px-4 py-2 border-b border-gray-100">
+                      <p className="text-sm font-medium text-[#101828]">
+                        {userData?.name || "ผู้ใช้"}
+                      </p>
+                      <p className="text-xs text-[#667085]">
+                        {userData?.email || ""}
+                      </p>
+                    </div>
+
+                    {/* Menu Items */}
+                    <hr className="my-1" />
+
+                    <button
+                      className="w-full flex items-center gap-2 px-4 py-2 text-left text-red-600 hover:bg-red-50 transition-colors duration-200"
+                      onClick={handleLogout}
+                    >
+                      <LogOut className="w-4 h-4" />
+                      <span>ออกจากระบบ</span>
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           ) : (
             // Login Buttons
             <>
-              <button
-                className="py-[10px] px-4"
-                onClick={() => setIsLoggedIn(true)} // Test login - replace with actual login logic
-              >
+              <button className="py-[10px] px-4">
                 <p
-                  className="text-[#475467] font-semibold cursor-pointer"
+                  className="text-[#475467] font-semibold cursor-pointer hover:text-[#FF8A00] transition-colors duration-200"
                   onClick={goToSignup}
                 >
-                  ลงชื่อเข้าใช้
+                  สมัครสมาชิก
                 </p>
               </button>
-              <button className="p-3 border-none rounded-md bg-gradient">
+              <button className="p-3 border-none rounded-md bg-gradient hover:shadow-lg transition-all duration-200">
                 <p
                   className="text-white font-semibold cursor-pointer"
                   onClick={goToLogin}
@@ -207,7 +354,9 @@ function NavbarCustom() {
                   className="w-full px-4 py-2 text-left text-[#475467] hover:bg-[#FF8A00]/10 hover:text-[#FF8A00] transition-colors duration-200 font-medium"
                   onClick={() => {
                     setIsDropdownOpen(false);
-                    // Add navigation logic for จัดเลี้ยง
+                    navigate("/customerrestaurant", {
+                      state: { selectedFilter: "จัดเลี้ยง" },
+                    });
                   }}
                 >
                   จัดเลี้ยง
@@ -216,7 +365,9 @@ function NavbarCustom() {
                   className="w-full px-4 py-2 text-left text-[#475467] hover:bg-[#FF8A00]/10 hover:text-[#FF8A00] transition-colors duration-200 font-medium"
                   onClick={() => {
                     setIsDropdownOpen(false);
-                    // Add navigation logic for ซุ้มอาหาร
+                    navigate("/customerrestaurant", {
+                      state: { selectedFilter: "ซุ้มอาหาร" },
+                    });
                   }}
                 >
                   ซุ้มอาหาร
@@ -225,7 +376,9 @@ function NavbarCustom() {
                   className="w-full px-4 py-2 text-left text-[#475467] hover:bg-[#FF8A00]/10 hover:text-[#FF8A00] transition-colors duration-200 font-medium"
                   onClick={() => {
                     setIsDropdownOpen(false);
-                    // Add navigation logic for Snack box
+                    navigate("/customerrestaurant", {
+                      state: { selectedFilter: "Snack box" },
+                    });
                   }}
                 >
                   Snack box

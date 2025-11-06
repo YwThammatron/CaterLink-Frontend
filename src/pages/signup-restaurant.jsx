@@ -1,14 +1,24 @@
 import axios from "axios";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { Button } from "@/components/ui/button";
 
 import Logo from "../components/ui/Logo";
 
-function Signup() {
+function SignupRestaurant() {
   const [Regdata,setRegdata] = useState({
     email:"",
-    passwd:""
+    password:"",
+    name:"",
+    role:"restaurant",
+    bio:""
   })
+
+  const [Logindata,setLogindata] = useState({
+    email:"",
+    password:""
+  })
+
+  const baseUrl = import.meta.env.VITE_BASE_URL
 
   const handleChange = (e) => {
     const { id,value } = e.target
@@ -18,19 +28,73 @@ function Signup() {
     }))
   }
 
-  const handleReg = () => {
+  const clearInputs = () => {
+    setRegdata({
+        email:"",
+        password:"",
+        name:"",
+        role:"restaurant",
+        bio:""
+    })
+  }
+
+  const handleReg = async () => {
     //when click signup
 
     //confirm password
     const passwdcf = document.getElementById("passwdcf").value
-    console.log(passwdcf,Regdata.passwd)
-    if(Regdata.passwd != passwdcf && Regdata.email != "" && Regdata.passwd != ""){
-      window.alert("password confirm error")
+    console.log(passwdcf,Regdata.password)
+    if(Regdata.email == "" || Regdata.password == "" || Regdata.name == ""){ 
+      window.alert("System : Invalid input.")
+      clearInputs()
     }
     else{
-      window.alert("complete")
+      if(Regdata.password != passwdcf){
+        window.alert("System : Password confirm error.")
+        clearInputs()
+      }
+      else{
+        try{
+          const response = await axios.post(baseUrl + "/api/auth/signup",Regdata)
+          console.log(response.data)
+
+          //set login payload to login to get accesstoken 
+          setLogindata({
+            email:Regdata.email,
+            password:Regdata.password
+          })
+        }
+        catch(error){
+          if(error.response){
+            window.alert(`Code ${error.response.status} : ${error.response.data.error}`)
+          }
+        }
+        
+      }
     }
   }
+
+  const handleLogin = async () => {
+    try{
+      const response = await axios.post(baseUrl + "/api/auth/signin",Logindata)
+
+      //build cookie to keep token alive (3 hours)
+      document.cookie = `accessToken=${response.data.accessToken}; path=/; max-age=10800; secure; samesite=strict`
+      document.cookie = `userData=${JSON.stringify(response.data.userData)}; path=/; max-age=10800; secure; samesite=strict`
+
+      //go to create account page
+      window.location.href = "./createaccount"
+    }
+    catch(error){
+      if(error.response){
+        window.alert(`Code ${error.response.status} : ${error.response.data.error}`)
+      }
+    }
+  }
+
+  useEffect(() => {
+    if(Logindata.email != "" && Logindata.password != ""){ handleLogin() }
+  },[Logindata])
 
   return (
     <>
@@ -39,7 +103,7 @@ function Signup() {
           {/* Container */}
           <div className="flex justify-center items-center w-[50%] h-[100vh]">
             {/* Content (outer) */}
-            <div className="w-[360px] h-[524px]">
+            <div className="w-[360px] h-[618px]">
 
               {/* header */}
               <div className="flex flex-col items-center">
@@ -51,6 +115,18 @@ function Signup() {
 
               {/* form */}
               <form className="grid gap-[20px] mt-[32px] mb-[24px]">
+                <div className="grid h-fit gap-[6px]">
+                  <label className="flex"><p>ชื่อผู้ใช้</p><p className="text-[#D92D20]">*</p></label>
+                  <input 
+                    type="text"
+                    id="name"
+                    value={Regdata.name}
+                    onChange={handleChange}
+                    placeholder="เพิ่มชื่อผู้ใช้"
+                    className="pl-[14px] pr-[14px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md"
+                  />
+                </div>
+
                 <div className="grid h-fit gap-[6px]">
                   <label className="flex"><p>อีเมล</p><p className="text-[#D92D20]">*</p></label>
                   <input 
@@ -67,8 +143,8 @@ function Signup() {
                   <label className="flex"><p>รหัสผ่าน</p><p className="text-[#D92D20]">*</p></label>
                   <input 
                     type="password"
-                    id="passwd"
-                    value={Regdata.passwd}
+                    id="password"
+                    value={Regdata.password}
                     placeholder="เพิ่มรหัสผ่าน"
                     onChange={handleChange}
                     className="pl-[14px] pr-[14px] pt-[10px] pb-[10px] border-[1px] border-[#D0D5DD] rounded-md"
@@ -92,7 +168,7 @@ function Signup() {
               {/* row */}
               <div className="flex justify-center gap-[5px] mt-[32px]">
                 <p>มีบัญชีแล้ว ?</p>
-                <a href="./login"><p className="font-bold text-[#FF8A00]">เข้าสู่ระบบ</p></a>
+                <a href="./restlogin"><p className="font-bold text-[#FF8A00]">เข้าสู่ระบบ</p></a>
               </div>
             </div>
           </div>
@@ -110,4 +186,4 @@ function Signup() {
   );
 }
 
-export default Signup;
+export default SignupRestaurant;

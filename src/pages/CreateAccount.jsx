@@ -12,7 +12,36 @@ import RestBank from "../subpages/CreateAccount/RestBank"
 import Complete from "../subpages/CreateAccount/Complete"
 
 function CreateAccount() {
+    const urlparams = new URLSearchParams(window.location.search)
+    const subpage = urlparams.get('subpage')
+
+    const [accessToken,setAccessToken] = useState("")
+    const [userData,setUserData] =  useState({
+        id:"",
+        name:"",
+        email:"",
+        profile_picture:"",
+        role:"restaurant",
+        bio:"",
+    })
+
+    const [Restid,setRestid] = useState("")
+
     const [Tabindex,setTabindex] = useState(0)
+
+    const [Restpayload,setRestpayload] = useState({
+        name:"",
+        description:"",
+        tax_id:"",
+        sub_location:"",
+        location:""
+    })
+    
+    const [Mainspayload,setMainspayload] = useState([])
+    const [Eventspayload,setEventspayload] = useState([])
+    const [Foodspayload,setFoodspayload] = useState([])
+    
+    const baseUrl = import.meta.env.VITE_BASE_URL
 
     const handleClickBank = (e) => {
         e.preventDefault()
@@ -46,7 +75,6 @@ function CreateAccount() {
         const updated = Subpages.map(item => 
             item.label === 'ประเภทร้านค้า' ? {...item,index:true} : item
         )
-        console.log(Subpages)
         setSubpages(updated)
         const pline2 = document.getElementById('pline2')
         pline2.style.backgroundColor = '#EAECF0'
@@ -67,20 +95,120 @@ function CreateAccount() {
         window.scrollTo({ top: 0, behavior: 'smooth' })
     }
 
-    const handleSend = (e) => {
+    const handleSend = async (e) => {
         e.preventDefault()
-        setTabindex(Tabindex => Tabindex + 1)
+        //Create Restaurant (for mocking)
+        const response1 = await axios.post(baseUrl + "/api/restaurants",Restpayload,{
+            headers:{
+                Authorization:`Bearer ${accessToken}`
+            }
+        })
+        
+        //Post Verification form with status approved (for mocking)
+        const response2 = await axios.post(baseUrl + "/api/verification-forms",{
+            restaurant_id: response1.data.id,
+            verification_info: Restpayload.name + " Mock Verification Approved",
+            status: "approved"
+        },{
+            headers:{
+                Authorization: `Bearer ${accessToken}`
+            }
+        })
 
+        console.log(response2.data)
+
+        setRestid(response1.data.id)
+    }
+
+    const handleSendCtgs = async () => {
+        var response
+        //Send Category Payloads
+        for(let id of Mainspayload){
+            response = await axios.post(baseUrl + "/api/restaurant-main-category-maps",{
+                restaurant_id:Restid,
+                main_category_id:id
+            })
+        }
+        for(let id of Eventspayload){
+            response = await axios.post(baseUrl + "/api/restaurant-event-category-maps",{
+                restaurant_id:Restid,
+                event_category_id:id
+            })
+        }
+        for(let id of Foodspayload){
+            response = await axios.post(baseUrl + "/api/restaurant-food-category-maps",{
+                restaurant_id:Restid,
+                food_category_id:id
+            })
+        }
+
+        //delete cookie
+        document.cookie = "userData=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        document.cookie = "accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
+        setTabindex(Tabindex => Tabindex + 1)
         window.scrollTo({ top: 0, behavior: 'smooth' })
     }
 
+    const checkCookie = () => {
+        if(document.cookie){
+            const parts = document.cookie.split(';').map(part => part.trim());
+            // Extract values
+            const tempdata = JSON.parse(parts.find(p => p.startsWith('userData=')).slice('userData='.length))
+            const temptoken = parts.find(p => p.startsWith('accessToken=')).slice('accessToken='.length)
+            setAccessToken(temptoken)
+            setUserData(tempdata)
+        }
+    }
+
     const [Subpages,setSubpages] = useState([
-        {label: 'ข้อมูลร้านค้า',content: <RestInfo onClick={handleClickType}/>,index:true},
-        {label: 'ประเภทร้านค้า',content: <RestType onClick={handleClickBank} backClick={handleBackType} />,index:false},
-        {label: 'บัญชีธนาคาร',content: <RestBank onClick={handleSend} backClick={handleBackBank} />,index:false},
-        {label: 'ส่งข้อมูลแล้ว',content: <Complete/>}
+        //use key instead of content to prevent one time render which Restcopy has to be updated
+        {label: 'ข้อมูลร้านค้า',key: 'RestInfo',index:true},
+        {label: 'ประเภทร้านค้า',key: 'RestType' ,index:false},
+        {label: 'บัญชีธนาคาร',key: 'RestBank' ,index:false},
+        {label: 'ส่งข้อมูลแล้ว',key: 'Complete'}
     ])
 
+    const RenderContent = (key) => {
+        switch(key){
+            case 'RestInfo':
+                return <RestInfo onClick={handleClickType} sendPayload={setRestpayload} receiveCopy={Restpayload} />
+            case 'RestType':
+                return <RestType 
+                onClick={handleClickBank} 
+                backClick={handleBackType} 
+                sendMains={setMainspayload} 
+                sendEvents={setEventspayload} 
+                sendFoods={setFoodspayload}
+                receiveCopymain={Mainspayload}
+                receiveCopyevent={Eventspayload}
+                receiveCopyfood={Foodspayload}
+                />
+            case 'RestBank':
+                return <RestBank onClick={handleSend} backClick={handleBackBank} />
+            case 'Complete':
+                return <Complete/>
+            default:
+                return null
+        }
+    }
+
+    useEffect(() => {
+        checkCookie()
+        if(subpage == 3){
+            setSubpages([
+                {label: 'ข้อมูลร้านค้า',key: 'RestInfo',index:true},
+                {label: 'ประเภทร้านค้า',key: 'RestType' ,index:true},
+                {label: 'บัญชีธนาคาร',key: 'RestBank' ,index:true},
+                {label: 'ส่งข้อมูลแล้ว',key: 'Complete'}
+            ])
+            setTabindex(subpage)
+        }
+    },[])
+
+    useEffect(() => {
+        if(Restid){ handleSendCtgs() }
+    },[Restid])
 
 return (
     <>
@@ -128,7 +256,7 @@ return (
                 </div>
 
                 {/* Content */}
-                {Subpages[Tabindex].content}
+                {RenderContent(Subpages[Tabindex].key)}
             </div>
         </div>
     </>

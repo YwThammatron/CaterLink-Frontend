@@ -4,17 +4,22 @@ import { useState } from "react";
 import SidebarCustom from "../components/ui/Sidebar-custom";
 
 import CreatePackage from "../subpages/PackageCategory/CreatePackage"
+import DeletePackage from "../subpages/PackageCategory/DeletePackage"
 import ViewCategory from "../subpages/PackageCategory/ViewCategory"
-import CreateCategory from "../subpages/PackageCategory/CreateCategory";
+import CreateCategory from "../subpages/PackageCategory/CreateCategory"
+
 
 
 function PackageCategory() {
     const [Tabindex,setTabindex] = useState(0)
     const [Iscreatectg,setIscreatectg] = useState(false)
 
+    const baseUrl = import.meta.env.VITE_BASE_URL
+
     const subpages = [
         {label: 'หมวดหมู่แพคเกจ',content: <ViewCategory sendClick={() => {setIscreatectg(true)}}/>},
-        {label: 'สร้างแพคเกจ',content: <CreatePackage/>}
+        {label: 'สร้างแพคเกจ',content: <CreatePackage/>},
+        {label: 'ลบแพคเกจ',content: <DeletePackage />}
     ]
 
 return (

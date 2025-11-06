@@ -21,10 +21,6 @@ function RestBank({ onClick,backClick }) {
         owner:"",
         number:""
     })
-    
-    //select tag do not support tailwind or css on text inside every browser
-    const [PlaceholderColor,setPlaceholderColor] = useState("font-[400] text-[#344054]")
-    const isPlaceholder = Payload.bank === ""
 
     const handleChange = (e) => {
         const { id,value } = e.target
@@ -64,7 +60,7 @@ function RestBank({ onClick,backClick }) {
                             <div className="relative">
                                 <select 
                                 id="bank" 
-                                className={`${isPlaceholder ? PlaceholderColor : 'text-black'} appearance-none w-[400px] h-[48px] pl-[14px] pr-[42px] pt-[12px] pb-[12px] border-[1px] border-[#D0D5DD] rounded-md`}
+                                className="appearance-none w-[400px] h-[48px] pl-[14px] pr-[42px] pt-[12px] pb-[12px] border-[1px] border-[#D0D5DD] rounded-md"
                                 value={Payload.bank}
                                 onChange={handleChange}
                                 >
@@ -107,7 +103,7 @@ function RestBank({ onClick,backClick }) {
                     {/* action */}
                     <div className="flex gap-[16px]">
                         <Button id="backbtn" onClick={backClick} enable className="w-[192px] h-[44px] text-[16px] text-black bg-transparent border-[1px] border-[#D0D5DD] rounded-[8px] hover:ฺbg-transparent cursor-pointer transition">ย้อนกลับ</Button>
-                        <Button id="sendbtn" onClick={onClick} className="w-[192px] h-[44px] text-[16px] rounded-[8px] hover:ฺbg-black cursor-pointer transition">ส่งคำขอพิจารณาร้าน</Button>
+                        <Button id="sendbtn" onClick={onClick} className="w-[192px] h-[44px] bg-linear-to-r from-[#F78E1E] to-[#E9580A] text-[16px] rounded-[8px] hover:ฺbg-black cursor-pointer transition">ส่งคำขอพิจารณาร้าน</Button>
                     </div>
                 </div>
             </div>
